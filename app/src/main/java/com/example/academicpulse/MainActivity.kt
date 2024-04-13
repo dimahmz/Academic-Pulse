@@ -22,6 +22,6 @@ class MainActivity : AppCompatActivity() {
 			R.id.route_profile
 		)
 		setupActionBarWithNavController(routesContainer, AppBarConfiguration(routes))
-		appContainer.navigationMenu.setupWithNavController(routesContainer)
+		appContainer.navView.setupWithNavController(routesContainer)
 	}
 }

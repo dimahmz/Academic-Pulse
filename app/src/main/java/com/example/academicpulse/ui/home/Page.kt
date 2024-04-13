@@ -14,8 +14,12 @@ class Page : Fragment() {
 		val page = PageHomeBinding.inflate(inflater, container, false)
 		val viewModel = ViewModelProvider(this)[ViewModel::class.java]
 
-		viewModel.textContent.observe(viewLifecycleOwner) {
-			page.textview.text = it
+		page.increase.setOnClickListener{
+			viewModel.increase()
+		}
+
+		viewModel.counter.observe(viewLifecycleOwner) {
+			page.counter.text = it.toString()
 		}
 		return page.root
 	}

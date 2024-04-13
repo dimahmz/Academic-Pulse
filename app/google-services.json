@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "708812299312",
+    "project_id": "academic-pulse-d0bc2",
+    "storage_bucket": "academic-pulse-d0bc2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:708812299312:android:81bc6fd90a1bf0402b61f5",
+        "android_client_info": {
+          "package_name": "com.example.academicpulse"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQLNA7wZC0OLbmHkq1rIAe3gr0RxSJke0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
