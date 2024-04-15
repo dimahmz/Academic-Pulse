@@ -1,4 +1,4 @@
-package com.example.academicpulse.ui.home
+package com.example.academicpulse.view_model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,12 +6,14 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class ViewModel : ViewModel() {
+class Messages : ViewModel() {
 	private val db = Firebase.firestore
 
 	private val _counter = MutableLiveData<Int>().apply {
 		value = 0
 	}
+	val counter: LiveData<Int> = _counter
+
 	fun increase() {
 		val value = _counter.value?.plus(1)?: 0
 		val message = hashMapOf<String, Any>(
@@ -22,5 +24,4 @@ class ViewModel : ViewModel() {
 				_counter.value = value
 			}
 	}
-	val counter: LiveData<Int> = _counter
 }
