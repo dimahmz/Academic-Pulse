@@ -23,7 +23,7 @@ fun Home() {
 		Button(onClick = { checkOption1(true) }) {
 			Text("Check Option 1 $box1")
 		}
-		Button(onClick = { checkOption2(true) }) {
+		Button(onClick = { checkOption2(null) }) {
 			Text("Check Option 2 $box2")
 		}
 		Button(onClick = { checkOption3(true) }) {

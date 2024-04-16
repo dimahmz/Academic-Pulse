@@ -35,8 +35,9 @@ fun <T> useObserve(lifeData: LiveData<T>, callback: (T) -> Unit) {
  * It returns a Pair containing the current state value and a function to update the state.
  * ```
  * Example usage:
+ * val (counter, setCounter) = useState(0)
+ *
  * Column {
- * 	val (counter, setCounter) = useState(0)
  * 	Text("Counter: $counter")
  * 	Button(onClick = { setCounter(counter + 1) }) {
  * 		Text("Increase")
@@ -68,9 +69,10 @@ fun <T> useState(value: T): Pair<T, (T) -> Unit> {
  * 	}
  * }
  *
+ * val notificationsViewModel = NotificationsViewModel()
+ * val count = useAtom(notificationsViewModel.unreadCount)
+ *
  * Column {
- * 	val notificationsViewModel = NotificationsViewModel()
- * 	val count = useAtom(notificationsViewModel.unreadCount)
  * 	Text("Unread notifications: $count")
  * 	Button(onClick = { notificationsViewModel.clearAll() }) {
  * 		Text("Read All")
@@ -107,8 +109,8 @@ fun <T> useAtom(lifeData: LiveData<T>): T? {
 @Composable
 fun <T> useEffect(list: List<T>, effect: (list: List<T>) -> Unit): () -> Unit {
 	// Ensure that keys only contain primitive values
-	require(list.all { it is Int || it is Boolean || it is String }) {
-		"All dependencies list items must be of type Int, Boolean, or String"
+	require(list.all { it is Int || it is Boolean || it is String || it == null }) {
+		"All dependencies list items must be of type Int, Boolean, or String, or null"
 	}
 	// Create a state to track whether the effect has been killed
 	val (killed, kill) = useState(false)
