@@ -1,5 +1,6 @@
 package com.example.academicpulse.view
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,30 +13,30 @@ import androidx.compose.ui.Modifier
 
 import com.example.academicpulse.theme.AppTheme
 import com.example.academicpulse.utils.saveAppContext
-import com.example.academicpulse.view.layout_components.Router
-import com.example.academicpulse.view.pages.Home
+import com.example.academicpulse.router.*
 
 class Index : ComponentActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		saveAppContext(this)
-		Router.init()
+		val router = Router(this)
 		setContent {
-			App()
+			App(router)
 		}
 	}
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun App() {
+fun App(router: Router) {
 	AppTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
 			Scaffold(
 				bottomBar = {
-					Router.NavBar()
+					NavBar(router)
 				}
 			) {
-				Home()
+				NavigationGraph(router)
 			}
 		}
 	}
