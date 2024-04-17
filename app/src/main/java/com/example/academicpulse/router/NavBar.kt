@@ -10,9 +10,10 @@ import androidx.compose.runtime.Composable
 import com.example.academicpulse.R
 import com.example.academicpulse.utils.Res
 import com.example.academicpulse.utils.useAtom
+import com.example.academicpulse.utils.useState
 
 data class NavbarItem(
-	val root: String,
+	val route: String,
 	val title: Int,
 	val icon: Int,
 	var count: Int = 0,
@@ -26,15 +27,15 @@ val navbarItems = listOf(
 
 @Composable
 fun NavBar() {
-	val navbarVisible = useAtom(Router.isNavBarVisible())
-	val root = useAtom(Router.getRoot())
+	val navBarVisible = useAtom(Router.isNavBarVisible())
+	val route = useAtom(Router.getRoute())
 
-	if (navbarVisible == false) return
+	if (navBarVisible != true) return
 	NavigationBar {
 		navbarItems.forEach {
 			NavigationBarItem(
-				selected = root == it.root,
-				onClick = { Router.redirect("index", it.root, true) },
+				selected = it.route.startsWith(route ?: "home"),
+				onClick = { Router.navigate(it.route, true) },
 				label = {
 					Text(Res.string(it.title))
 				},

@@ -7,8 +7,7 @@ import androidx.navigation.compose.rememberNavController
 
 class Router(navigator: NavHostController) {
 	private var navController = navigator
-	private var root = MutableLiveData("home")
-	private var route = MutableLiveData("index")
+	private var route = MutableLiveData("home")
 	private var navBarVisible = MutableLiveData(true)
 
 	// Note: Static variables and methods are used just to hold the created Router instance and be accessible in anywhere without passing it via any component props
@@ -19,31 +18,39 @@ class Router(navigator: NavHostController) {
 		@Composable
 		fun AppRouter() {
 			val navigator = rememberNavController()
-			appRouter.add(Router(navigator))
+			if (appRouter.isEmpty()) appRouter.add(Router(navigator))
 		}
 
 		fun getNavController(): NavHostController {
 			return appRouter[0].navController
 		}
 
-		fun getRoot(): MutableLiveData<String> {
-			return appRouter[0].root
+		fun isNavBarVisible(): MutableLiveData<Boolean> {
+			return appRouter[0].navBarVisible
+		}
+
+		fun setNavBarVisibleState(state: Boolean) {
+			appRouter[0].navBarVisible.value = state
 		}
 
 		fun getRoute(): MutableLiveData<String> {
 			return appRouter[0].route
 		}
 
-		fun isNavBarVisible(): MutableLiveData<Boolean> {
-			return appRouter[0].navBarVisible
+		fun navigate(target: String, navBarVisible: Boolean) {
+			appRouter[0].navBarVisible.value = navBarVisible
+			appRouter[0].route.value = target
+			appRouter[0].navController.navigate(target)
 		}
 
-		fun redirect(route: String, root: String, navbar: Boolean? = null) {
-			appRouter[0].route.value = route
-			appRouter[0].root.value = root
-			if (navbar != null) appRouter[0].navBarVisible.value = navbar
-			else appRouter[0].navBarVisible.value = route == "index"
-			appRouter[0].navController.navigate(route)
+		fun replace(target: String, navBarVisible: Boolean) {
+			appRouter[0].navBarVisible.value = navBarVisible
+			appRouter[0].route.value = target
+			appRouter[0].navController.navigate(target) {
+				popUpTo(target) {
+					inclusive = true
+				}
+			}
 		}
 	}
 }

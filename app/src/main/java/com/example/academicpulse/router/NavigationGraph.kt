@@ -1,5 +1,6 @@
 package com.example.academicpulse.router
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
@@ -15,26 +16,36 @@ import com.example.academicpulse.view.pages.profile.ProfilePage
 import com.example.academicpulse.view_model.HomeViewModel
 import com.example.academicpulse.view_model.InboxViewModel
 import com.example.academicpulse.view_model.ProfileViewModel
+import kotlin.system.exitProcess
 
 @Composable
 fun NavigationGraph() {
 	NavHost(navController = Router.getNavController(), startDestination = "home") {
-		navigation(route = "home", startDestination = "index") {
-			composable(route = "index") {
+		navigation(route = "home", startDestination = "home/index") {
+			composable(route = "home/index") {
 				val viewModel = it.sharedViewModel<HomeViewModel>(Router.getNavController())
 				HomePage(viewModel)
+				BackHandler {
+					exitProcess(0)
+				}
 			}
 		}
-		navigation(route = "inbox", startDestination = "index") {
-			composable(route = "index") {
+		navigation(route = "inbox", startDestination = "inbox/index") {
+			composable(route = "inbox/index") {
 				val viewModel = it.sharedViewModel<InboxViewModel>(Router.getNavController())
 				InboxPage(viewModel)
+				BackHandler {
+					Router.replace("home", true)
+				}
 			}
 		}
-		navigation(route = "profile", startDestination = "index") {
-			composable(route = "index") {
+		navigation(route = "profile", startDestination = "profile/index") {
+			composable(route = "profile/index") {
 				val viewModel = it.sharedViewModel<ProfileViewModel>(Router.getNavController())
 				ProfilePage(viewModel)
+				BackHandler {
+					Router.replace("home", true)
+				}
 			}
 		}
 	}
