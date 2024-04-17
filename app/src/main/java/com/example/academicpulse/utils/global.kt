@@ -7,12 +7,17 @@ import androidx.compose.runtime.remember
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 
-/** The App context that represents the active instance of the current activity which is `Index` as we have a single activity (Single Page App). */
-var appContext: Context? = null
+/** The App context that represents the active instance of the current activity which is `Index` as we have a single activity (Single Page App).
+ * Note: An array type is used instead of Context to avoid null checks. We are certain that the context will not be null as saveAppContext the first function called in the whole app.
+ */
+private var appContext = mutableListOf<Context>()
+fun getAppContext(): Context {
+	return appContext[0]
+}
 
-/** Set the active instance of the current activity as the global App context to be accessible anywhere */
-fun saveAppContext(ctx: Context) {
-	appContext = ctx
+/** This function will only be called in the `onCreate` method of the newly opened activity. (So, this function will not be utilized until another activity, aside from `Index`, is created.) */
+fun saveAppContext(context: Context) {
+	appContext.add(context)
 }
 
 /** Observe a LiveData object and invokes a callback function whenever the LiveData's value changes.
@@ -28,7 +33,7 @@ fun saveAppContext(ctx: Context) {
  * @param callback The callback function to invoke when the LiveData's value changes
  */
 fun <T> useObserve(lifeData: LiveData<T>, callback: (T) -> Unit) {
-	appContext?.let { context -> lifeData.observe(context as LifecycleOwner) { callback(it) } }
+	lifeData.observe(getAppContext() as LifecycleOwner) { callback(it) }
 }
 
 /** A composable hook function used to create and manage state within another Composable function.
@@ -51,8 +56,11 @@ fun <T> useObserve(lifeData: LiveData<T>, callback: (T) -> Unit) {
 fun <T> useState(value: T): Pair<T, (T) -> Unit> {
 	// Create and remember a mutable state variable initialized with the provided data
 	val state = remember { mutableStateOf(value) }
+
 	// Function to update the state
-	fun setData(data: T) { state.value = data }
+	fun setData(data: T) {
+		state.value = data
+	}
 	// Return the current state value and the function to update it
 	return Pair(state.value, ::setData)
 }

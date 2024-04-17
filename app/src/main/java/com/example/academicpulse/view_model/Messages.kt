@@ -15,7 +15,7 @@ class Messages : ViewModel() {
 	val counter: LiveData<Int> = _counter
 
 	fun increase() {
-		val value = _counter.value?.plus(1)?: 0
+		val value = _counter.value?.plus(1) ?: 0
 		val message = hashMapOf<String, Any>(
 			"value" to value
 		)

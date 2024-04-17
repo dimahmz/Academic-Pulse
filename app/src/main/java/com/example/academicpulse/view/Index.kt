@@ -19,24 +19,24 @@ class Index : ComponentActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		saveAppContext(this)
-		val router = Router(this)
 		setContent {
-			App(router)
+			Router.AppRouter()
+			App()
 		}
 	}
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun App(router: Router) {
+fun App() {
 	AppTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
 			Scaffold(
 				bottomBar = {
-					NavBar(router)
+					NavBar()
 				}
 			) {
-				NavigationGraph(router)
+				NavigationGraph()
 			}
 		}
 	}

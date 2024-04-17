@@ -9,31 +9,42 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.example.academicpulse.view.components.Page
+import com.example.academicpulse.view.pages.home.HomePage
+import com.example.academicpulse.view.pages.inbox.InboxPage
+import com.example.academicpulse.view.pages.profile.ProfilePage
 import com.example.academicpulse.view_model.HomeViewModel
+import com.example.academicpulse.view_model.InboxViewModel
+import com.example.academicpulse.view_model.ProfileViewModel
 
 @Composable
-fun NavigationGraph(router: Router) {
-	NavHost(navController = router.navController, startDestination = "home") {
-		navigation(route = "home", startDestination = "home") {
-			composable("home") {
-				val sharedViewModel = it.sharedViewModel<HomeViewModel>(router.navController)
-				Page(sharedViewModel, router, "home", "home", "article/45")
+fun NavigationGraph() {
+	NavHost(navController = Router.getNavController(), startDestination = "home") {
+		navigation(route = "home", startDestination = "index") {
+			composable(route = "index") {
+				val viewModel = it.sharedViewModel<HomeViewModel>(Router.getNavController())
+				HomePage(viewModel)
 			}
-			composable("article/45") {
-				val sharedViewModel = it.sharedViewModel<HomeViewModel>(router.navController)
-				Page(sharedViewModel, router, "home", "article/45", "articles")
+		}
+		navigation(route = "inbox", startDestination = "index") {
+			composable(route = "index") {
+				val viewModel = it.sharedViewModel<InboxViewModel>(Router.getNavController())
+				InboxPage(viewModel)
+			}
+		}
+		navigation(route = "profile", startDestination = "index") {
+			composable(route = "index") {
+				val viewModel = it.sharedViewModel<ProfileViewModel>(Router.getNavController())
+				ProfilePage(viewModel)
 			}
 		}
 	}
 }
 
 @Composable
-inline fun <reified T: ViewModel> NavBackStackEntry.sharedViewModel(navController: NavController): HomeViewModel {
-//	val navGraphRoute = destination.parent?.route ?: return viewModel()
-//	val parentEntry = remember(this) {
-//		navController.getBackStackEntry(navGraphRoute)
-//	}
-//	return viewModel(parentEntry)
-	return HomeViewModel()
+inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(navController: NavController): T {
+	val navGraphRoute = destination.parent?.route ?: return viewModel()
+	val parentEntry = remember(this) {
+		navController.getBackStackEntry(navGraphRoute)
+	}
+	return viewModel(parentEntry)
 }

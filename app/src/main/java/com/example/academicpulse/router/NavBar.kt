@@ -13,29 +13,28 @@ import com.example.academicpulse.utils.useAtom
 
 data class NavbarItem(
 	val root: String,
-	val destination: String,
 	val title: Int,
 	val icon: Int,
 	var count: Int = 0,
 )
 
 val navbarItems = listOf(
-	NavbarItem("home", "home", R.string.title_home, R.drawable.icon_home),
-	NavbarItem("inbox", "list", R.string.title_inbox, R.drawable.icon_inbox),
-	NavbarItem("profile", "settings", R.string.title_profile, R.drawable.icon_profile),
+	NavbarItem("home", R.string.title_home, R.drawable.icon_home),
+	NavbarItem("inbox", R.string.title_inbox, R.drawable.icon_inbox),
+	NavbarItem("profile", R.string.title_profile, R.drawable.icon_profile),
 )
 
 @Composable
-fun NavBar(router: Router) {
-	val navbarVisible = useAtom(router.navbarVisible)
-	val root = useAtom(router.root)
+fun NavBar() {
+	val navbarVisible = useAtom(Router.isNavBarVisible())
+	val root = useAtom(Router.getRoot())
 
 	if (navbarVisible == false) return
 	NavigationBar {
 		navbarItems.forEach {
 			NavigationBarItem(
 				selected = root == it.root,
-				onClick = { router.redirect(it.destination, it.root, true) },
+				onClick = { Router.redirect("index", it.root, true) },
 				label = {
 					Text(Res.string(it.title))
 				},
