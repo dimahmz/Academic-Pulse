@@ -77,8 +77,8 @@ fun <T> useState(value: T): Pair<T, (T) -> Unit> {
  * 	}
  * }
  *
- * val notificationsViewModel = NotificationsViewModel()
- * val count = useAtom(notificationsViewModel.unreadCount)
+ * val vm = NotificationsViewModel()
+ * val count = useAtom(vm.unreadCount)
  *
  * Column {
  * 	Text("Unread notifications: $count")
@@ -110,8 +110,8 @@ fun <T> useAtom(lifeData: LiveData<T>): T? {
  * 	println("One of the checkboxes changed")
  * }
  * ```
- * @param effect The side effect function to run
  * @param list List of dependencies to watch for changes
+ * @param effect The side effect function to run
  * @return A function that can be called to stop the effect from running
  */
 @Composable

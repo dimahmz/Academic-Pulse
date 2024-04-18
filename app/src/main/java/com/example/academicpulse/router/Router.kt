@@ -12,17 +12,28 @@ class Router(navigator: NavHostController) {
 
 	// Note: Static variables and methods are used just to hold the created Router instance and be accessible in anywhere without passing it via any component props
 	companion object {
-		// Note: An array type is used instead of Router to avoid null checks. We are certain that the app router will not be null as AppRouter is the second function called in the whole app after saveAppContext.
+		// Note: An array type is used instead of Router to avoid null checks. We are certain that the app router will not be null as Provider method is the second function called in the whole app after saveAppContext.
 		private val appRouter = mutableListOf<Router>()
 
+		/** Provider initialize the router instance that will be used across the entire App */
 		@Composable
-		fun AppRouter() {
-			val navigator = rememberNavController()
-			if (appRouter.isEmpty()) appRouter.add(Router(navigator))
+		fun Provider() {
+			if (appRouter.isEmpty()) {
+				val navigator = rememberNavController()
+				appRouter.add(Router(navigator))
+			}
 		}
 
-		fun getNavController(): NavHostController {
-			return appRouter[0].navController
+		/** Bottom NavBar UI element containing main root routes with their icons, allowing direct navigation to them */
+		@Composable
+		fun NavBar() {
+			return Navbar()
+		}
+
+		/** Graph is a schema that contains all the pages used in the App, each page with it's path key and back button handler behavior */
+		@Composable
+		fun NavGraph() {
+			NavGraph(appRouter[0].navController)
 		}
 
 		fun isNavBarVisible(): MutableLiveData<Boolean> {
@@ -37,12 +48,14 @@ class Router(navigator: NavHostController) {
 			return appRouter[0].route
 		}
 
+		/** Use a normal navigation by adding the current page to backstack and redirect to the next page */
 		fun navigate(target: String, navBarVisible: Boolean) {
 			appRouter[0].navBarVisible.value = navBarVisible
 			appRouter[0].route.value = target
 			appRouter[0].navController.navigate(target)
 		}
 
+		/** Navigate to the next page without adding the current page to backstack */
 		fun replace(target: String, navBarVisible: Boolean) {
 			appRouter[0].navBarVisible.value = navBarVisible
 			appRouter[0].route.value = target

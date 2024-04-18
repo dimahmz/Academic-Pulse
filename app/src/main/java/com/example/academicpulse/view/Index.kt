@@ -13,14 +13,13 @@ import androidx.compose.ui.Modifier
 
 import com.example.academicpulse.theme.AppTheme
 import com.example.academicpulse.utils.saveAppContext
-import com.example.academicpulse.router.*
+import com.example.academicpulse.router.Router
 
 class Index : ComponentActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		saveAppContext(this)
 		setContent {
-			Router.AppRouter()
 			App()
 		}
 	}
@@ -29,14 +28,15 @@ class Index : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun App() {
+	Router.Provider()
 	AppTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
 			Scaffold(
 				bottomBar = {
-					NavBar()
+					Router.NavBar()
 				}
 			) {
-				NavigationGraph()
+				Router.NavGraph()
 			}
 		}
 	}

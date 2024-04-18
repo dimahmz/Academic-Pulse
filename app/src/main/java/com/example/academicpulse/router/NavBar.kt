@@ -10,25 +10,26 @@ import androidx.compose.runtime.Composable
 import com.example.academicpulse.R
 import com.example.academicpulse.utils.Res
 import com.example.academicpulse.utils.useAtom
-import com.example.academicpulse.utils.useState
 
-data class NavbarItem(
+// A helper class used below to render th NavBar
+private data class NavbarItem(
 	val route: String,
 	val title: Int,
 	val icon: Int,
 	var count: Int = 0,
 )
 
-val navbarItems = listOf(
+private val navbarItems = listOf(
 	NavbarItem("home", R.string.title_home, R.drawable.icon_home),
 	NavbarItem("inbox", R.string.title_inbox, R.drawable.icon_inbox),
 	NavbarItem("profile", R.string.title_profile, R.drawable.icon_profile),
 )
 
+/** Bottom NavBar UI element containing main root routes with their icons, allowing direct navigation to them */
 @Composable
-fun NavBar() {
-	val navBarVisible = useAtom(Router.isNavBarVisible())
+fun Navbar() {
 	val route = useAtom(Router.getRoute())
+	val navBarVisible = useAtom(Router.isNavBarVisible())
 
 	if (navBarVisible != true) return
 	NavigationBar {
