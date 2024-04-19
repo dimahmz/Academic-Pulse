@@ -123,7 +123,7 @@ fun <T> useEffect(list: List<T>, effect: (list: List<T>) -> Unit): () -> Unit {
 	// Create a state to track whether the effect has been killed
 	val (killed, kill) = useState(false)
 	if (!killed) {
-		// Generate a unique key for each combination of keys
+		// Generate a simple string key for the useState value
 		val joinList = list.joinToString(separator = "-")
 		val (key, setKey) = useState(joinList)
 		// Re-run the effect function whenever the key changes

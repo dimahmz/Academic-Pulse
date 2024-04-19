@@ -11,7 +11,7 @@ import com.example.academicpulse.R
 import com.example.academicpulse.utils.Res
 import com.example.academicpulse.utils.useAtom
 
-// A helper class used below to render th NavBar
+// A helper class used below to render the NavBar
 private data class NavbarItem(
 	val route: String,
 	val title: Int,
@@ -20,9 +20,9 @@ private data class NavbarItem(
 )
 
 private val navbarItems = listOf(
-	NavbarItem("home", R.string.title_home, R.drawable.icon_home),
-	NavbarItem("inbox", R.string.title_inbox, R.drawable.icon_inbox),
-	NavbarItem("profile", R.string.title_profile, R.drawable.icon_profile),
+	NavbarItem("home", R.string.home, R.drawable.icon_home),
+	NavbarItem("inbox", R.string.inbox, R.drawable.icon_inbox),
+	NavbarItem("profile", R.string.profile, R.drawable.icon_profile),
 )
 
 /** Bottom NavBar UI element containing main root routes with their icons, allowing direct navigation to them */

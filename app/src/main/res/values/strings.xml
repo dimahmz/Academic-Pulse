@@ -1,6 +1,35 @@
 <resources>
-    <string name="app_name">Academic Pulse</string>
-    <string name="title_home">Home</string>
-    <string name="title_inbox">Inbox</string>
-    <string name="title_profile">Profile</string>
+    <string name="app_name" translatable="false">Academic Pulse</string>
+    <string name="home">Home</string>
+    <string name="inbox">Inbox</string>
+    <string name="profile">Profile</string>
+
+    <string name="welcome">Welcome!</string>
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="continued">Continue</string>
+
+    <string name="login">Login</string>
+    <string name="signup">Signup</string>
+    <string name="email_address">Email Address</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="new_member">Not a member?</string>
+    <string name="register_now">Register now</string>
+    <string name="institution_info">Show where you conduct research</string>
+    <string name="institution_info_description">Enter your institution details to quickly find your colleagues and keep up with their research.</string>
+    <string name="institution">Institution</string>
+    <string name="department">Department</string>
+    <string name="position">Position</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="institution_email">Your institution email</string>
+    <string name="password">Password</string>
+    <string name="create_password">Create a password</string>
+    <string name="confirmation">Enter confirmation code</string>
+    <string name="confirmation_description">A 4-digit code was sent to {{ email }}</string>
+    <string name="confirmation_error">Invalid or Incorrect OTP. Try Again</string>
+    <string name="resend_code">Resend code</string>
+    <string name="verified">Verified</string>
+    <string name="verified_description">Your account has been verified successfully.</string>
+    <string name="back_login">Back to Login</string>
 </resources>
