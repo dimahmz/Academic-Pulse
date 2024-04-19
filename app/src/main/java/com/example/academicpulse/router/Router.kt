@@ -26,14 +26,18 @@ class Router(navigator: NavHostController) {
 
 		/** Bottom NavBar UI element containing main root routes with their icons, allowing direct navigation to them */
 		@Composable
-		fun NavBar() {
-			return Navbar()
+		fun NavBar(startDestination: String) {
+			if (startDestination !== appRouter[0].route.value) {
+				appRouter[0].route.value = startDestination
+				appRouter[0].navBarVisible.value = false
+			}
+			return NavBar()
 		}
 
 		/** Graph is a schema that contains all the pages used in the App, each page with it's path key and back button handler behavior */
 		@Composable
-		fun NavGraph() {
-			NavGraph(appRouter[0].navController)
+		fun NavGraph(startDestination: String) {
+			NavGraph(appRouter[0].navController, startDestination)
 		}
 
 		fun isNavBarVisible(): MutableLiveData<Boolean> {

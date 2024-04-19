@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import com.example.academicpulse.theme.AppTheme
 import com.example.academicpulse.utils.saveAppContext
 import com.example.academicpulse.router.Router
+import com.example.academicpulse.utils.useState
 
 class Index : ComponentActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,15 +29,17 @@ class Index : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun App() {
+	val (startDestination) = useState("auth")
+
 	Router.Provider()
 	AppTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
 			Scaffold(
 				bottomBar = {
-					Router.NavBar()
+					Router.NavBar(startDestination)
 				}
 			) {
-				Router.NavGraph()
+				Router.NavGraph(startDestination)
 			}
 		}
 	}

@@ -11,9 +11,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.example.academicpulse.view.pages.home.HomePage
-import com.example.academicpulse.view.pages.inbox.InboxPage
-import com.example.academicpulse.view.pages.profile.ProfilePage
+import com.example.academicpulse.view.pages.auth.*
+import com.example.academicpulse.view.pages.home.*
+import com.example.academicpulse.view.pages.inbox.*
+import com.example.academicpulse.view.pages.profile.*
+import com.example.academicpulse.view_model.AuthViewModel
 import com.example.academicpulse.view_model.HomeViewModel
 import com.example.academicpulse.view_model.InboxViewModel
 import com.example.academicpulse.view_model.ProfileViewModel
@@ -21,8 +23,8 @@ import kotlin.system.exitProcess
 
 /** Graph is a schema that contains all the pages used in the App, each page with it's path key and back button handler behavior */
 @Composable
-fun NavGraph(nav: NavHostController) {
-	NavHost(navController = nav, startDestination = "home") {
+fun NavGraph(nav: NavHostController, startDestination: String) {
+	NavHost(navController = nav, startDestination = startDestination) {
 		navigation(route = "home", startDestination = "home/index") {
 			composable(route = "home/index") {
 				val viewModel = it.sharedViewModel<HomeViewModel>(nav)
@@ -47,6 +49,15 @@ fun NavGraph(nav: NavHostController) {
 				ProfilePage(viewModel)
 				BackHandler {
 					Router.replace("home", true)
+				}
+			}
+		}
+		navigation(route = "auth", startDestination = "auth/sign-up") {
+			composable(route = "auth/sign-up") {
+				val viewModel = it.sharedViewModel<AuthViewModel>(nav)
+				SignUpPage(viewModel)
+				BackHandler {
+					exitProcess(0)
 				}
 			}
 		}

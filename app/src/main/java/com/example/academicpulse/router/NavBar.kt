@@ -27,7 +27,7 @@ private val navbarItems = listOf(
 
 /** Bottom NavBar UI element containing main root routes with their icons, allowing direct navigation to them */
 @Composable
-fun Navbar() {
+fun NavBar() {
 	val route = useAtom(Router.getRoute())
 	val navBarVisible = useAtom(Router.isNavBarVisible())
 
