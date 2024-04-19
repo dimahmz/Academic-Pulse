@@ -1,7 +1,7 @@
 <resources>
-    <dimen name="header_font_size">16dp </dimen>
-    <dimen name="parag_font_size">14dp </dimen>
-    <dimen name="text_font_size"> 12dp </dimen>
-    <dimen name="btn_Y_padding"> 15dp </dimen>
-    <dimen name="btn_X_padding"> 10dp </dimen>
+    <dimen name="header_font_size">16dp</dimen>
+    <dimen name="parag_font_size">14dp</dimen>
+    <dimen name="text_font_size">12dp</dimen>
+    <dimen name="btn_Y_padding">15dp</dimen>
+    <dimen name="btn_X_padding">10dp</dimen>
 </resources>
