@@ -14,16 +14,9 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 @Composable
-fun AppTheme(
-	darkTheme: Boolean = isSystemInDarkTheme(),
-	dynamicColor: Boolean = true,
-	content: @Composable () -> Unit
-) {
+fun AppTheme(content: @Composable () -> Unit) {
+	val darkTheme = isSystemInDarkTheme()
 	val colorScheme = when {
-		dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-			val context = LocalContext.current
-			if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-		}
 		darkTheme -> DarkColorScheme
 		else -> LightColorScheme
 	}

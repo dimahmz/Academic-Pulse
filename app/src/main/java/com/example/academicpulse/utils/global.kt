@@ -53,13 +53,14 @@ fun <T> useObserve(lifeData: LiveData<T>, callback: (T) -> Unit) {
  * @return A Pair containing the current state value and a function to update it
  */
 @Composable
-fun <T> useState(value: T): Pair<T, (T) -> Unit> {
+fun <T> useState(value: T, onChange: ((value: T, oldValue: T) -> Unit)? = null): Pair<T, (T) -> Unit> {
 	// Create and remember a mutable state variable initialized with the provided data
 	val state = remember { mutableStateOf(value) }
-
 	// Function to update the state
-	fun setData(data: T) {
-		state.value = data
+	fun setData(value: T) {
+		val oldValue = state.value
+		state.value = value
+		if (value != oldValue) onChange?.invoke(value, oldValue)
 	}
 	// Return the current state value and the function to update it
 	return Pair(state.value, ::setData)

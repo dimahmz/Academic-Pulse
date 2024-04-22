@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import com.example.academicpulse.R
 import com.example.academicpulse.utils.Res
 import com.example.academicpulse.utils.useAtom
+import com.example.academicpulse.view.components.material.Icon
 
 // A helper class used below to render the NavBar
 private data class NavbarItem(
@@ -49,10 +50,7 @@ fun NavBar() {
 								}
 						}
 					) {
-						Icon(
-							imageVector = Res.drawable(it.icon),
-							contentDescription = Res.string(it.title)
-						)
+						Icon(it.icon)
 					}
 				}
 			)
