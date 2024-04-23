@@ -55,9 +55,16 @@ fun NavGraph(nav: NavHostController, startDestination: String) {
 		navigation(route = "auth", startDestination = "auth/sign-up") {
 			composable(route = "auth/sign-up") {
 				val viewModel = it.sharedViewModel<AuthViewModel>(nav)
-				SignUpPage(viewModel)
+				SignUpInstitutionPage(viewModel)
 				BackHandler {
 					exitProcess(0)
+				}
+			}
+			composable(route = "auth/sign-up-user") {
+				val viewModel = it.sharedViewModel<AuthViewModel>(nav)
+				SignUpUserPage(viewModel)
+				BackHandler {
+					Router.back()
 				}
 			}
 		}
