@@ -69,5 +69,10 @@ class Router(navigator: NavHostController) {
 				}
 			}
 		}
+
+		/** Navigate to the previous page */
+		fun back() {
+			appRouter[0].navController.popBackStack()
+		}
 	}
 }
