@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -20,11 +21,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.academicpulse.R
 import com.example.academicpulse.theme.inputGray
-import com.example.academicpulse.theme.inputLabelAndFieldDistance
-import com.example.academicpulse.theme.inputRadius
+import com.example.academicpulse.theme.inputHeight
+import com.example.academicpulse.theme.inputLabelGap
+import com.example.academicpulse.theme.radius
 import com.example.academicpulse.utils.useState
 
 @Composable
@@ -78,9 +79,7 @@ fun Input(
 	 * val (focusRequester) = useState(FocusRequester())
 	 *
 	 * Column {
-	 * 	Button(onClick = { focusRequester.requestFocus() }) {
-	 * 		Text("Click")
-	 * 	}
+	 * 	Button("Click") { focusRequester.requestFocus() }
 	 * 	Input(focusRequester = focusRequester)
 	 * }
 	 * ```
@@ -144,7 +143,7 @@ fun Input(
 		if (label != null) {
 			Row(
 				modifier = Modifier
-					.padding(bottom = inputLabelAndFieldDistance)
+					.padding(bottom = inputLabelGap)
 					.clickable { focus.requestFocus() }) {
 				Text(text = label)
 				if (required) Text(text = " *", color = MaterialTheme.colorScheme.error)
@@ -156,8 +155,8 @@ fun Input(
 			value = value,
 			onValueChange = {
 				if (!readOnly) {
-					onChange?.invoke(it)
 					if (required) onChangeValidity?.invoke(it != "")
+					onChange?.invoke(it)
 				}
 			},
 			placeholder = {
@@ -167,8 +166,9 @@ fun Input(
 			// Styling
 			modifier = Modifier
 				.focusRequester(focus)
-				.fillMaxWidth(),
-			shape = RoundedCornerShape(inputRadius),
+				.fillMaxWidth()
+				.height(inputHeight),
+			shape = RoundedCornerShape(radius),
 			colors = OutlinedTextFieldDefaults.colors(
 				unfocusedBorderColor = if (valid) inputGray else MaterialTheme.colorScheme.error,
 				focusedBorderColor = if (valid) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,

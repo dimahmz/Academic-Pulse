@@ -44,9 +44,7 @@ fun <T> useObserve(lifeData: LiveData<T>, callback: (T) -> Unit) {
  *
  * Column {
  * 	Text("Counter: $counter")
- * 	Button(onClick = { setCounter(counter + 1) }) {
- * 		Text("Increase")
- * 	}
+ * 	Button("Increase") { setCounter(counter + 1) }
  * }
  * ```
  * @param value The initial value of the state
@@ -83,9 +81,7 @@ fun <T> useState(value: T, onChange: ((value: T, oldValue: T) -> Unit)? = null):
  *
  * Column {
  * 	Text("Unread notifications: $count")
- * 	Button(onClick = { notificationsViewModel.clearAll() }) {
- * 		Text("Read All")
- * 	}
+ * 	Button("Read All") { notificationsViewModel.clearAll() }
  * }
  * ```
  * @param lifeData The LiveData object to observe
