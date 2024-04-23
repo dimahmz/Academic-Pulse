@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
@@ -32,7 +33,7 @@ fun SignUpInstitutionPage(viewModel: AuthViewModel) {
 			.padding(horizontal = pagePaddingX)
 			.fillMaxHeight()
 	) {
-		Header(R.string.signup, false)
+		Header(title = R.string.signup, arrow = false)
 
 		Column(modifier = Modifier.padding(bottom = 30.dp)) {
 			Title(R.string.institution_info)
@@ -40,6 +41,9 @@ fun SignUpInstitutionPage(viewModel: AuthViewModel) {
 		}
 
 		Column(verticalArrangement = Arrangement.spacedBy(gap)) {
+			val (departmentFocus) = useState(FocusRequester())
+			val (positionFocus) = useState(FocusRequester())
+
 			Input(
 				value = institution,
 				onChange = setInstitution,
@@ -47,6 +51,7 @@ fun SignUpInstitutionPage(viewModel: AuthViewModel) {
 				required = true,
 				valid = institutionValid,
 				onChangeValidity = setInstitutionValidity,
+				focusNext = departmentFocus,
 			)
 			Input(
 				value = department,
@@ -55,6 +60,8 @@ fun SignUpInstitutionPage(viewModel: AuthViewModel) {
 				required = true,
 				valid = departmentValid,
 				onChangeValidity = setDepartmentValidity,
+				focusRequester = departmentFocus,
+				focusNext = positionFocus,
 			)
 			Input(
 				value = position,
@@ -63,13 +70,14 @@ fun SignUpInstitutionPage(viewModel: AuthViewModel) {
 				required = true,
 				valid = positionValid,
 				onChangeValidity = setPositionValidity,
+				focusRequester = positionFocus,
 			)
 		}
 
 		Spacer(Modifier.weight(1f)) // Apply flex-grow: 1 on a fake block to move the below buttons to the bottom of page.
 
-		Column(modifier = Modifier.padding(bottom = 60.dp)) {
-			Button(text = R.string.next, modifier = Modifier.padding(bottom = gap)) {
+		Column(modifier = Modifier.padding(bottom = 60.dp), verticalArrangement = Arrangement.spacedBy(gap)) {
+			Button(text = R.string.next) {
 				Router.navigate("auth/sign-up-user", false)
 			}
 			Button(text = R.string.skip, ghost = true) {

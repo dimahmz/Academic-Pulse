@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
@@ -33,7 +34,7 @@ fun SignUpUserPage(viewModel: AuthViewModel) {
 			.padding(horizontal = pagePaddingX)
 			.fillMaxHeight()
 	) {
-		Header(R.string.signup)
+		Header(title = R.string.signup)
 
 		Column(modifier = Modifier.padding(bottom = 30.dp)) {
 			Title(R.string.institution_info)
@@ -41,6 +42,10 @@ fun SignUpUserPage(viewModel: AuthViewModel) {
 		}
 
 		Column(verticalArrangement = Arrangement.spacedBy(gap)) {
+			val (lastNameFocus) = useState(FocusRequester())
+			val (emailFocus) = useState(FocusRequester())
+			val (passwordFocus) = useState(FocusRequester())
+
 			Input(
 				value = firstName,
 				onChange = setFirstName,
@@ -48,6 +53,7 @@ fun SignUpUserPage(viewModel: AuthViewModel) {
 				required = true,
 				valid = firstNameValid,
 				onChangeValidity = setFirstNameValidity,
+				focusNext = lastNameFocus,
 			)
 			Input(
 				value = lastName,
@@ -56,6 +62,8 @@ fun SignUpUserPage(viewModel: AuthViewModel) {
 				required = true,
 				valid = lastNameValid,
 				onChangeValidity = setLastNameValidity,
+				focusRequester = lastNameFocus,
+				focusNext = emailFocus,
 			)
 			Input(
 				value = email,
@@ -64,15 +72,19 @@ fun SignUpUserPage(viewModel: AuthViewModel) {
 				required = true,
 				valid = emailValid,
 				onChangeValidity = setEmailValidity,
+				focusRequester = emailFocus,
+				focusNext = passwordFocus,
 			)
 			Input(
 				value = password,
 				onChange = setPassword,
 				label = Res.string(R.string.password),
 				placeholder = Res.string(R.string.create_password),
+				password = true,
 				required = true,
 				valid = passwordValid,
 				onChangeValidity = setPasswordValidity,
+				focusRequester = passwordFocus,
 			)
 		}
 

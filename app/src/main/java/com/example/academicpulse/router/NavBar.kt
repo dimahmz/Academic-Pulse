@@ -2,15 +2,13 @@ package com.example.academicpulse.router
 
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
-import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.example.academicpulse.R
-import com.example.academicpulse.utils.Res
 import com.example.academicpulse.utils.useAtom
 import com.example.academicpulse.view.components.material.Icon
+import com.example.academicpulse.view.components.material.Text
 
 // A helper class used below to render the NavBar
 private data class NavbarItem(
@@ -39,7 +37,7 @@ fun NavBar() {
 				selected = it.route.startsWith(route ?: "home"),
 				onClick = { Router.navigate(it.route, true) },
 				label = {
-					Text(Res.string(it.title))
+					Text(it.title)
 				},
 				icon = {
 					BadgedBox(

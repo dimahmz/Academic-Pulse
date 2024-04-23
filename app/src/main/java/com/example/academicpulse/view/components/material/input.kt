@@ -10,7 +10,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -85,6 +84,21 @@ fun Input(
 	 * ```
 	 */
 	focusRequester: FocusRequester? = null,
+
+	/** When you have multiple fields in a page that you expect from the user to fill the sequence.
+	 * Give them the option of focusing on the next field from the keyboard for better UX.
+	 * ```
+	 * Example usage:
+	 *
+	 * Column {
+	 * 	val (secondFieldFocus) = useState(FocusRequester())
+	 *
+	 * 	Input(focusNext = secondFieldFocus)
+	 * 	Input(focusRequester = secondFieldFocus)
+	 * }
+	 * ```
+	 */
+	focusNext: FocusRequester? = null,
 
 	// Events
 
@@ -202,12 +216,15 @@ fun Input(
 			// Keyboard Options
 			keyboardOptions = KeyboardOptions(
 				keyboardType = if (password) KeyboardType.Password else keyboardType,
-				imeAction = okIcon,
+				imeAction = if (focusNext != null) ImeAction.Next else okIcon,
 			),
 			keyboardActions = KeyboardActions(
 				onDone = { onOk?.invoke() },
 				onGo = { onOk?.invoke() },
-				onNext = { onOk?.invoke() },
+				onNext = {
+					focusNext?.requestFocus()
+					onOk?.invoke()
+				},
 				onPrevious = { onOk?.invoke() },
 				onSearch = { onOk?.invoke() },
 				onSend = { onOk?.invoke() },
