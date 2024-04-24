@@ -11,6 +11,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
+import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.utils.Res
@@ -89,7 +90,9 @@ fun SignUpUserPage(viewModel: AuthViewModel) {
 		}
 
 		Spacer(Modifier.weight(1f))
-		Button(text = R.string.continued, modifier = Modifier.padding(bottom = 80.dp))
+		Button(text = R.string.continued, modifier = Modifier.padding(bottom = 80.dp)){
+			Router.navigate("auth/verified-email", false)
+		}
 	}
 }
 

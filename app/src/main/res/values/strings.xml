@@ -25,11 +25,12 @@
     <string name="institution_email">Your institution email</string>
     <string name="password">Password</string>
     <string name="create_password">Create a password</string>
-    <string name="confirmation">Enter confirmation code</string>
+    <string name="confirmation_title">Enter confirmation code</string>
+    <string name="confirmation_page_title">Confirmation</string>
     <string name="confirmation_description">A 4-digit code was sent to {{ email }}</string>
     <string name="confirmation_error">Invalid or Incorrect OTP. Try Again</string>
     <string name="resend_code">Resend code</string>
-    <string name="verified">Verified</string>
-    <string name="verified_description">Your account has been verified successfully.</string>
+    <string name="email_verified">Email Verified</string>
+    <string name="email_verified_description">Your email has been verified. We Have received your information. We will send you an email after verifying your account </string>
     <string name="back_login">Back to Login</string>
 </resources>

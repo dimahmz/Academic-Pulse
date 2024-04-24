@@ -67,6 +67,14 @@ fun NavGraph(nav: NavHostController, startDestination: String) {
 					Router.back()
 				}
 			}
+			composable(route = "auth/verified-email") {
+				val viewModel = it.sharedViewModel<AuthViewModel>(nav)
+				VerifiedEmailPage(viewModel)
+				BackHandler {
+					Router.replace("home", true)
+				}
+			}
+
 		}
 	}
 }
