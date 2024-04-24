@@ -12,7 +12,7 @@ import com.example.academicpulse.view.pages.inbox.*
 import com.example.academicpulse.view.pages.profile.*
 import kotlin.system.exitProcess
 
-/** Graph is a schema that contains all the pages used in the App, each page with it's path key and back button handler behavior */
+/** Graph is a schema that contains all the pages used in the App. Each page is declared with its instance, path key and back handler button behavior */
 @Composable
 fun NavGraph(nav: NavHostController, startDestination: String) {
 	NavHost(navController = nav, startDestination = startDestination) {
@@ -41,9 +41,7 @@ fun NavGraph(nav: NavHostController, startDestination: String) {
 			}
 			composable(route = "auth/sign-up-user") {
 				SignUpUserPage()
-				BackHandler {
-					Router.back(/* to = auth/sign-up */)
-				}
+				BackHandler { Router.back(/* to = auth/sign-up */) }
 			}
 			composable(route = "auth/confirm-email") {
 				ConfirmEmailPage()
