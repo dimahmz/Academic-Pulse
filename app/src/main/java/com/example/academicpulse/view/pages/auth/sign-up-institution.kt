@@ -37,7 +37,7 @@ fun SignUpInstitutionPage(viewModel: AuthViewModel) {
 
 		Column(modifier = Modifier.padding(bottom = 30.dp)) {
 			Title(R.string.institution_info)
-			Description(R.string.institution_info_description)
+			Description(text=R.string.institution_info_description)
 		}
 
 		Column(verticalArrangement = Arrangement.spacedBy(gap)) {

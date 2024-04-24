@@ -20,58 +20,76 @@ private val font = FontFamily(Font(R.font.regular_font))
 
 @Composable
 fun Text(text: String = "", color: Color = LocalContentColor.current) {
-	UIText(text = text, fontFamily = font, color = color, fontSize = textSize,)
+    UIText(text = text, fontFamily = font, color = color, fontSize = textSize)
 }
 
 @Composable
 fun Text(text: Int) {
-	Text(Res.string(text))
+    Text(Res.string(text))
 }
 
 @Composable
 fun Title(text: String) {
-	UIText(
-		text = text,
-		fontWeight = FontWeight.Bold,
-		fontFamily = font,
-		fontSize = textSize,
-	)
+    UIText(
+        text = text,
+        fontWeight = FontWeight.Bold,
+        fontFamily = font,
+        fontSize = textSize,
+    )
 }
 
 @Composable
 fun Title(text: Int) {
-	Title(Res.string(text))
+    Title(Res.string(text))
 }
 
 @Composable
-fun Description(text: String) {
-	UIText(
-		text = text,
-		fontWeight = FontWeight.Light,
-		fontFamily = font,
-		fontSize = textSize,
-		lineHeight = (textSize.value * 10 / 7).sp,
-		color = fontsColorText
-	)
+fun Description(
+    modifier: Modifier = Modifier,
+    text: String,
+    align: TextAlign = TextAlign.Start
+) {
+    UIText(
+        text = text,
+        fontWeight = FontWeight.Light,
+        fontFamily = font,
+        fontSize = textSize,
+        lineHeight = (textSize.value * 10 / 7).sp,
+        color = fontsColorText
+    )
 }
 
 @Composable
-fun Description(text: Int) {
-	Description(Res.string(text))
+fun Description(
+    modifier: Modifier = Modifier,
+    text: Int,
+    align: TextAlign = TextAlign.Start
+) {
+    Description(modifier = modifier, text = Res.string(text), align = align)
 }
 
 @Composable
 fun H1(
-	modifier : Modifier = Modifier,
-	text: String,
-	align: TextAlign = TextAlign.Start
+    modifier: Modifier = Modifier,
+    text: String,
+    align: TextAlign = TextAlign.Start
 ) {
-	UIText(
-		modifier = modifier,
-		text = text,
-		fontWeight = FontWeight.Bold,
-		fontFamily = font,
-		fontSize = h1TextSize,
-		textAlign = align,
-	)
+    UIText(
+        modifier = modifier,
+        text = text,
+        fontWeight = FontWeight.Bold,
+        fontFamily = font,
+        fontSize = h1TextSize,
+        textAlign = align,
+    )
+}
+
+@Composable
+fun H1(
+    modifier: Modifier = Modifier,
+    text: Int,
+    align: TextAlign = TextAlign.Start
+) {
+    H1(modifier = modifier, text = Res.string(text), align = align)
+
 }
