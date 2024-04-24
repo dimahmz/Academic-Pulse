@@ -29,7 +29,7 @@ import com.example.academicpulse.utils.useState
 
 @Composable
 fun Input(
-	value: String = "",
+	value: String,
 
 	/** A supporting text placed above the field.
 	 * - Note: It can automatically request a focus on the field when it's clicked. */
@@ -113,7 +113,7 @@ fun Input(
 	 * }
 	 * ```
 	 */
-	onChange: ((String) -> Unit)? = null,
+	onChange: ((String) -> Unit),
 
 	/** The short way to change the field validity depending on the field value if it is an empty string.
 	 *
@@ -170,7 +170,7 @@ fun Input(
 			onValueChange = {
 				if (!readOnly) {
 					if (required) onChangeValidity?.invoke(it != "")
-					onChange?.invoke(it)
+					onChange(it)
 				}
 			},
 			placeholder = {
