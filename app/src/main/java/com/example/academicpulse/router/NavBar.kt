@@ -37,18 +37,18 @@ fun NavBar() {
 				selected = it.route.startsWith(route ?: "home"),
 				onClick = { Router.navigate(it.route, true) },
 				label = {
-					Text(it.title)
+					Text(text = it.title)
 				},
 				icon = {
 					BadgedBox(
 						badge = {
 							if (it.count > 0)
 								Badge {
-									Text(if (it.count > 99) "+99" else it.count.toString())
+									Text(text = if (it.count > 99) "+99" else it.count.toString())
 								}
 						}
 					) {
-						Icon(it.icon)
+						Icon(id = it.icon)
 					}
 				}
 			)

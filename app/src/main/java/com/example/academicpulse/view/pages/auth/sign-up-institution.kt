@@ -17,10 +17,9 @@ import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.utils.Res
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.material.*
-import com.example.academicpulse.view_model.AuthViewModel
 
 @Composable
-fun SignUpInstitutionPage(viewModel: AuthViewModel) {
+fun SignUpInstitutionPage() {
 	val (institution, setInstitution) = useState("")
 	val (institutionValid, setInstitutionValidity) = useState(true)
 	val (department, setDepartment) = useState("")
@@ -36,8 +35,8 @@ fun SignUpInstitutionPage(viewModel: AuthViewModel) {
 		Header(title = R.string.signup, arrow = false)
 
 		Column(modifier = Modifier.padding(bottom = 30.dp)) {
-			Title(R.string.institution_info)
-			Description(text=R.string.institution_info_description)
+			Title(text = R.string.institution_info)
+			Description(text = R.string.institution_info_description)
 		}
 
 		Column(verticalArrangement = Arrangement.spacedBy(gap)) {
@@ -76,7 +75,10 @@ fun SignUpInstitutionPage(viewModel: AuthViewModel) {
 
 		Spacer(Modifier.weight(1f)) // Apply flex-grow: 1 on a fake block to move the below buttons to the bottom of page.
 
-		Column(modifier = Modifier.padding(bottom = 60.dp), verticalArrangement = Arrangement.spacedBy(gap)) {
+		Column(
+			modifier = Modifier.padding(bottom = 60.dp),
+			verticalArrangement = Arrangement.spacedBy(gap)
+		) {
 			Button(text = R.string.next) {
 				Router.navigate("auth/sign-up-user", false)
 			}
@@ -90,5 +92,5 @@ fun SignUpInstitutionPage(viewModel: AuthViewModel) {
 @Preview(showSystemUi = true)
 @Composable
 fun PreviewSignUpInstitutionPage() {
-	SignUpInstitutionPage(AuthViewModel())
+	SignUpInstitutionPage()
 }

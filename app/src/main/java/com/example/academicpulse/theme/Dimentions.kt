@@ -11,3 +11,4 @@ val inputLabelGap = 4.dp
 
 val h1TextSize = 23.sp
 val textSize = 14.sp
+val descriptionTextSize = 11.sp

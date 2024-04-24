@@ -174,7 +174,7 @@ fun Input(
 				}
 			},
 			placeholder = {
-				if (placeholder != null || label != null) Text(placeholder ?: label ?: "")
+				if (placeholder != null || label != null) Text(text = placeholder ?: label ?: "")
 			},
 
 			// Styling
@@ -199,10 +199,10 @@ fun Input(
 			maxLines = 1,
 
 			// Icons & Password Visibility
-			leadingIcon = if (icon != null) ({ Icon(icon) }) else null,
+			leadingIcon = if (icon != null) ({ Icon(id = icon) }) else null,
 			trailingIcon = if (!password) null else ({
 				Icon(
-					if (passwordVisible) R.drawable.icon_line_confirm else R.drawable.icon_close
+					id = if (passwordVisible) R.drawable.icon_line_confirm else R.drawable.icon_close
 				) {
 					setPasswordVisibility(!passwordVisible)
 				}

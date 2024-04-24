@@ -42,7 +42,7 @@ fun Button(
 		),
 	) {
 		if (icon != null) {
-			Icon(icon)
+			Icon(id = icon)
 			if (text != null) Spacer(Modifier.width(8.dp))
 		}
 		if (text != null) Text(text = text)

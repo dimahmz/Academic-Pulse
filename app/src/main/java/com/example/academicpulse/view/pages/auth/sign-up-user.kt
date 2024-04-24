@@ -17,10 +17,9 @@ import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.utils.Res
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.material.*
-import com.example.academicpulse.view_model.AuthViewModel
 
 @Composable
-fun SignUpUserPage(viewModel: AuthViewModel) {
+fun SignUpUserPage() {
 	val (firstName, setFirstName) = useState("")
 	val (firstNameValid, setFirstNameValidity) = useState(true)
 	val (lastName, setLastName) = useState("")
@@ -38,8 +37,8 @@ fun SignUpUserPage(viewModel: AuthViewModel) {
 		Header(title = R.string.signup)
 
 		Column(modifier = Modifier.padding(bottom = 30.dp)) {
-			Title(R.string.institution_info)
-			Description(text=R.string.institution_info_description)
+			Title(text = R.string.institution_info)
+			Description(text = R.string.institution_info_description)
 		}
 
 		Column(verticalArrangement = Arrangement.spacedBy(gap)) {
@@ -90,7 +89,7 @@ fun SignUpUserPage(viewModel: AuthViewModel) {
 		}
 
 		Spacer(Modifier.weight(1f))
-		Button(text = R.string.continued, modifier = Modifier.padding(bottom = 80.dp)){
+		Button(text = R.string.continued, modifier = Modifier.padding(bottom = 80.dp)) {
 			Router.navigate("auth/verified-email", false)
 		}
 	}
@@ -99,5 +98,5 @@ fun SignUpUserPage(viewModel: AuthViewModel) {
 @Preview(showSystemUi = true)
 @Composable
 fun PreviewSignUpUserPage() {
-	SignUpUserPage(AuthViewModel())
+	SignUpUserPage()
 }

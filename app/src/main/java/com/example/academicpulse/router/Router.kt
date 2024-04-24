@@ -44,10 +44,6 @@ class Router(navigator: NavHostController) {
 			return appRouter[0].navBarVisible
 		}
 
-		fun setNavBarVisibleState(state: Boolean) {
-			appRouter[0].navBarVisible.value = state
-		}
-
 		fun getRoute(): MutableLiveData<String> {
 			return appRouter[0].route
 		}

@@ -1,6 +1,5 @@
 package com.example.academicpulse.view.pages.auth
 
-import SuccessMark
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,50 +17,43 @@ import com.example.academicpulse.R
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.view.components.material.*
-import com.example.academicpulse.view_model.AuthViewModel
 
 @Composable
-fun VerifiedEmailPage(viewModel: AuthViewModel) {
+fun VerifiedEmailPage() {
+	Column(
+		modifier = Modifier
+			.padding(horizontal = pagePaddingX)
+			.fillMaxHeight(),
+		verticalArrangement = Arrangement.Center,
+		horizontalAlignment = Alignment.CenterHorizontally
+	) {
+		Column(modifier = Modifier.padding(bottom = 30.dp, top = 60.dp)) {
+			Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+				Image(id = R.drawable.icon_success_circle, modifier = Modifier.size(70.dp))
+			}
 
-    Column(
-        modifier = Modifier
-            .padding(horizontal = pagePaddingX)
-            .fillMaxHeight(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+			H1(
+				text = R.string.email_verified,
+				align = TextAlign.Center,
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(20.dp)
+			)
+			Description(
+				modifier = Modifier.fillMaxWidth(),
+				text = R.string.email_verified_description,
+				align = TextAlign.Center
+			)
+		}
 
-
-        Column(modifier = Modifier.padding(bottom = 30.dp, top = 60.dp)) {
-            SuccessMark(
-                modifier = Modifier
-                    .size(70.dp)
-            )
-            H1(
-                text = R.string.email_verified,
-                align = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(20.dp)
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(), contentAlignment = Alignment.Center
-            ) {
-                Description(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    text = R.string.email_verified_description,
-                    align = TextAlign.Center
-                )
-            }
-        }
-        Button(text = R.string.back_login, modifier = Modifier.padding(bottom = 80.dp)) {
-            Router.navigate("auth/sign-up-user", false)
-        }
-    }
+		Button(text = R.string.back_login, modifier = Modifier.padding(bottom = 80.dp)) {
+			Router.back(/* to = auth/sign-up-user */)
+		}
+	}
 }
 
 @Preview(showSystemUi = true)
 @Composable
 fun PreviewVerifiedEmailPage() {
-    VerifiedEmailPage(AuthViewModel())
+	VerifiedEmailPage()
 }
