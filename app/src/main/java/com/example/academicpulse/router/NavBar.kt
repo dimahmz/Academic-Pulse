@@ -7,8 +7,8 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
 import com.example.academicpulse.R
 import com.example.academicpulse.utils.useAtom
-import com.example.academicpulse.view.components.material.Icon
-import com.example.academicpulse.view.components.material.Text
+import com.example.academicpulse.view.components.basic.Icon
+import com.example.academicpulse.view.components.basic.Text
 
 // A helper class used below to render the NavBar
 private data class NavbarItem(

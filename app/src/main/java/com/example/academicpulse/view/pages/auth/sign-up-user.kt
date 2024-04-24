@@ -16,7 +16,8 @@ import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.utils.Res
 import com.example.academicpulse.utils.useState
-import com.example.academicpulse.view.components.material.*
+import com.example.academicpulse.view.components.basic.*
+import com.example.academicpulse.view.components.global.Header
 
 @Composable
 fun SignUpUserPage() {

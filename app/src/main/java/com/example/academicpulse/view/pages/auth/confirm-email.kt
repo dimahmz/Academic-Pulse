@@ -17,7 +17,8 @@ import com.example.academicpulse.R
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.utils.useState
-import com.example.academicpulse.view.components.material.*
+import com.example.academicpulse.view.components.basic.*
+import com.example.academicpulse.view.components.global.Header
 
 @Composable
 fun ConfirmEmailPage() {

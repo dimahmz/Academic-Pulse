@@ -1,4 +1,4 @@
-package com.example.academicpulse.view.components.material
+package com.example.academicpulse.view.components.basic
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

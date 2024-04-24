@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.pagePaddingX
-import com.example.academicpulse.view.components.material.*
+import com.example.academicpulse.view.components.basic.*
 
 @Composable
 fun VerifiedEmailPage() {
