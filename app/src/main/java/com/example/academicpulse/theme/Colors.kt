@@ -21,14 +21,14 @@ val fontsColorText = Color(0xFF71727A)
 val inputGray = Color(0xFFCCCCCC)
 
 val DarkColorScheme = darkColorScheme(
-	primary = green,
+	primary = primary,
 	secondary = blue,
 	tertiary = white,
 	error = danger,
 )
 
 val LightColorScheme = lightColorScheme(
-	primary = green,
+	primary = primary,
 	secondary = blue,
 	tertiary = white,
 	error = danger,

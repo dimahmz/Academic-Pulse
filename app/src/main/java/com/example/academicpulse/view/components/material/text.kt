@@ -29,18 +29,19 @@ fun Text(text: Int) {
 }
 
 @Composable
-fun Title(text: String) {
+fun Title(text: String, color: Color = LocalContentColor.current) {
     UIText(
         text = text,
         fontWeight = FontWeight.Bold,
         fontFamily = font,
         fontSize = textSize,
+        color = color,
     )
 }
 
 @Composable
-fun Title(text: Int) {
-    Title(Res.string(text))
+fun Title(text: Int, color: Color = LocalContentColor.current) {
+    Title(Res.string(text), color)
 }
 
 @Composable
@@ -50,12 +51,14 @@ fun Description(
     align: TextAlign = TextAlign.Start
 ) {
     UIText(
+        modifier = modifier,
         text = text,
         fontWeight = FontWeight.Light,
         fontFamily = font,
         fontSize = textSize,
         lineHeight = (textSize.value * 10 / 7).sp,
-        color = fontsColorText
+        color = fontsColorText,
+        textAlign = align
     )
 }
 
@@ -72,7 +75,8 @@ fun Description(
 fun H1(
     modifier: Modifier = Modifier,
     text: String,
-    align: TextAlign = TextAlign.Start
+    align: TextAlign = TextAlign.Start,
+    color: Color = Color.Black
 ) {
     UIText(
         modifier = modifier,
@@ -81,6 +85,7 @@ fun H1(
         fontFamily = font,
         fontSize = h1TextSize,
         textAlign = align,
+        color = color
     )
 }
 
@@ -88,8 +93,8 @@ fun H1(
 fun H1(
     modifier: Modifier = Modifier,
     text: Int,
-    align: TextAlign = TextAlign.Start
+    align: TextAlign = TextAlign.Start,
+    color: Color = Color.Black
 ) {
-    H1(modifier = modifier, text = Res.string(text), align = align)
-
+    H1(modifier = modifier, text = Res.string(text), align = align, color = color)
 }

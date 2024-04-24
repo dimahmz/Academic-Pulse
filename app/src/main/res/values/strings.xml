@@ -27,7 +27,7 @@
     <string name="create_password">Create a password</string>
     <string name="confirmation_title">Enter confirmation code</string>
     <string name="confirmation_page_title">Confirmation</string>
-    <string name="confirmation_description">A 4-digit code was sent to {{ email }}</string>
+    <string name="confirmation_description">A 4-digit code was sent to your email</string>
     <string name="confirmation_error">Invalid or Incorrect OTP. Try Again</string>
     <string name="resend_code">Resend code</string>
     <string name="email_verified">Email Verified</string>
