@@ -34,7 +34,9 @@ class Router(navigator: NavHostController) {
 			return NavBar()
 		}
 
-		/** Graph is a schema that contains all the pages used in the App, each page with it's path key and back button handler behavior */
+		/** NavGraph is a schema that contains all the pages used in the App.
+		 * - Each page is declared with its instance, path key and back handler button behavior.
+		 */
 		@Composable
 		fun NavGraph(startDestination: String) {
 			NavGraph(appRouter[0].navController, startDestination)
