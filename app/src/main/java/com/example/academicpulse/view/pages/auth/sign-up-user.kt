@@ -5,9 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
@@ -15,20 +15,30 @@ import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.utils.Res
-import com.example.academicpulse.utils.useState
+import com.example.academicpulse.utils.useField
+import com.example.academicpulse.utils.useForm
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view.components.global.Header
 
 @Composable
 fun SignUpUserPage() {
-	val (firstName, setFirstName) = useState("")
-	val (firstNameValid, setFirstNameValidity) = useState(true)
-	val (lastName, setLastName) = useState("")
-	val (lastNameValid, setLastNameValidity) = useState(true)
-	val (email, setEmail) = useState("")
-	val (emailValid, setEmailValidity) = useState(true)
-	val (password, setPassword) = useState("")
-	val (passwordValid, setPasswordValidity) = useState(true)
+	val form = useForm()
+	val firstName = useField(
+		form = form,
+		value = "",
+	)
+	val lastName = useField(
+		form = form,
+		value = "",
+	)
+	val email = useField(
+		form = form,
+		value = "",
+	)
+	val password = useField(
+		form = form,
+		value = "",
+	)
 
 	Column(
 		modifier = Modifier
@@ -43,47 +53,30 @@ fun SignUpUserPage() {
 		}
 
 		Column(verticalArrangement = Arrangement.spacedBy(gap)) {
-			val (lastNameFocus) = useState(FocusRequester())
-			val (emailFocus) = useState(FocusRequester())
-			val (passwordFocus) = useState(FocusRequester())
-
 			Input(
-				value = firstName,
-				onChange = setFirstName,
+				field = firstName,
 				label = Res.string(R.string.first_name),
-				valid = firstNameValid,
-				onChangeValidity = setFirstNameValidity,
-				focusNext = lastNameFocus,
+				focusNext = lastName.focusRequester,
 			)
 			Input(
-				value = lastName,
-				onChange = setLastName,
+				field = lastName,
 				label = Res.string(R.string.last_name),
-				valid = lastNameValid,
-				onChangeValidity = setLastNameValidity,
-				focusRequester = lastNameFocus,
-				focusNext = emailFocus,
+				focusNext = email.focusRequester,
 			)
 			Input(
-				value = email,
-				onChange = setEmail,
+				field = email,
 				label = Res.string(R.string.institution_email),
-				valid = emailValid,
-				onChangeValidity = setEmailValidity,
-				focusRequester = emailFocus,
-				focusNext = passwordFocus,
+				focusNext = password.focusRequester,
 			)
 			Input(
-				value = password,
-				onChange = setPassword,
+				field = password,
 				label = Res.string(R.string.password),
 				placeholder = Res.string(R.string.create_password),
 				password = true,
-				valid = passwordValid,
-				onChangeValidity = setPasswordValidity,
-				focusRequester = passwordFocus,
 			)
+			Text(text = form.error.value, color = MaterialTheme.colorScheme.error)
 		}
+		form.Error()
 
 		Spacer(Modifier.weight(1f))
 		Button(text = R.string.continued, modifier = Modifier.padding(bottom = 80.dp)) {

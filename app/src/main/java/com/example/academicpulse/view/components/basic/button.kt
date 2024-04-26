@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -45,7 +46,7 @@ fun Button(
 			Icon(id = icon)
 			if (text != null) Spacer(Modifier.width(8.dp))
 		}
-		if (text != null) Text(text = text)
+		if (text != null) Text(text = text, color = LocalContentColor.current)
 	}
 }
 

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -25,6 +26,8 @@ import com.example.academicpulse.theme.inputGray
 import com.example.academicpulse.theme.inputHeight
 import com.example.academicpulse.theme.inputLabelGap
 import com.example.academicpulse.theme.radius
+import com.example.academicpulse.model.Field
+import com.example.academicpulse.theme.textColor
 import com.example.academicpulse.utils.useState
 
 @Composable
@@ -51,9 +54,6 @@ fun Input(
 	/** Pass `true` to apply the custom hide/show icons with their logic */
 	password: Boolean = false,
 
-	/** Pass `true` to make the field unmodifiable */
-	readOnly: Boolean = false,
-
 	/** The prefix icon resource ID.
 	 * ```
 	 * Example usage:
@@ -75,7 +75,7 @@ fun Input(
 	/** Used if there is any external Element or script that can trigger focus on the input
 	 * ```
 	 * Example usage:
-	 * val (focusRequester) = useState(FocusRequester())
+	 * val (focusRequester) = useState({ FocusRequester() })
 	 *
 	 * Column {
 	 * 	Button("Click") { focusRequester.requestFocus() }
@@ -91,7 +91,7 @@ fun Input(
 	 * Example usage:
 	 *
 	 * Column {
-	 * 	val (secondFieldFocus) = useState(FocusRequester())
+	 * 	val (secondFieldFocus) = useState({ FocusRequester() })
 	 *
 	 * 	Input(focusNext = secondFieldFocus)
 	 * 	Input(focusRequester = secondFieldFocus)
@@ -151,7 +151,7 @@ fun Input(
 	onOk: (() -> Any)? = null,
 ) {
 	val (passwordVisible, setPasswordVisibility) = useState(false)
-	val (focus) = useState(focusRequester ?: FocusRequester())
+	val (focus) = useState({ focusRequester ?: FocusRequester() })
 
 	Column {
 		if (label != null) {
@@ -168,13 +168,15 @@ fun Input(
 			// Value Handling
 			value = value,
 			onValueChange = {
-				if (!readOnly) {
-					if (required) onChangeValidity?.invoke(it != "")
-					onChange(it)
-				}
+				if (required) onChangeValidity?.invoke(it != "")
+				onChange(it)
 			},
 			placeholder = {
-				if (placeholder != null || label != null) Text(text = placeholder ?: label ?: "")
+				if (placeholder != null || label != null)
+					Text(
+						text = placeholder ?: label ?: "",
+						color = LocalContentColor.current
+					)
 			},
 
 			// Styling
@@ -184,6 +186,8 @@ fun Input(
 				.height(inputHeight),
 			shape = RoundedCornerShape(radius),
 			colors = OutlinedTextFieldDefaults.colors(
+				unfocusedTextColor = textColor,
+				focusedTextColor = textColor,
 				unfocusedBorderColor = if (valid) inputGray else MaterialTheme.colorScheme.error,
 				focusedBorderColor = if (valid) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
 				cursorColor = MaterialTheme.colorScheme.primary,
@@ -193,7 +197,6 @@ fun Input(
 
 			// Statue & Lines
 			enabled = true,
-			readOnly = readOnly,
 			singleLine = true,
 			minLines = 1,
 			maxLines = 1,
@@ -231,4 +234,85 @@ fun Input(
 			),
 		)
 	}
+}
+
+@Composable
+fun Input(
+	field: Field,
+
+	/** A supporting text placed above the field.
+	 * - Note: It can automatically request a focus on the field when it's clicked. */
+	label: String? = null,
+
+	/** A supporting text placed inside the field.
+	 * - Note: If it's null, it takes the label value if present. */
+	placeholder: String? = null,
+
+	/** Pass `true` to apply the custom hide/show icons with their logic */
+	password: Boolean = false,
+
+	/** The prefix icon resource ID.
+	 * ```
+	 * Example usage:
+	 * Input(placeholder = "Search", icon = R.drawable.icon_search)
+	 * ```
+	 */
+	icon: Int? = null,
+
+	/** The icon type of the keyboard OK button, e.g. `ImeAction.Done`, `ImeAction.Next`, `ImeAction.Send`
+	 * - See also [onOk] to set a custom behavior when clicking on this button
+	 */
+	okIcon: ImeAction = ImeAction.Default,
+
+	/** The keyboard type, e.g. `KeyboardType.Text`, `KeyboardType.Email`, `KeyboardType.Decimal`
+	 * - Note: It has no effect if [password] is `true`, as `KeyboardType.Password` is applied automatically.
+	 */
+	keyboardType: KeyboardType = KeyboardType.Password,
+
+	/** When you have multiple fields in a page that you expect from the user to fill the sequence.
+	 * Give them the option of focusing on the next field from the keyboard for better UX.
+	 * ```
+	 * Example usage:
+	 *
+	 * Column {
+	 * 	val secondFieldFocus = useField(value = "")
+	 *
+	 * 	Input(focusNext = secondField.focusRequester)
+	 * 	Input(field = secondField)
+	 * }
+	 * ```
+	 */
+	focusNext: FocusRequester? = null,
+
+	// Events
+
+	/** Emits when pressing the keyboard Ok button.
+	 * - See also: [okIcon] to customize the icon of this button.
+	 * ```
+	 * Example usage:
+	 * Input(
+	 * 	field = message,
+	 * 	okIcon = ImeAction.Send,
+	 * 	onOk = { sendMessage(message.value) }
+	 * )
+	 * ```
+	 */
+	onOk: (() -> Any)? = null,
+) {
+	Input(
+		value = field.value(),
+		label = label,
+		placeholder = placeholder,
+		required = field.required,
+		valid = field.valid(),
+		password = password,
+		icon = icon,
+		okIcon = okIcon,
+		keyboardType = keyboardType,
+		focusRequester = field.focusRequester,
+		focusNext = focusNext,
+		onChange = { field.value(it) },
+		onChangeValidity = { field.valid(it) },
+		onOk = onOk,
+	)
 }

@@ -1,6 +1,5 @@
 package com.example.academicpulse.view.components.basic
 
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,6 +14,7 @@ import com.example.academicpulse.theme.titleColor
 import com.example.academicpulse.theme.descriptionColor
 import com.example.academicpulse.theme.descriptionTextSize
 import com.example.academicpulse.theme.h1TextSize
+import com.example.academicpulse.theme.textColor
 import com.example.academicpulse.theme.textSize
 import com.example.academicpulse.utils.Res
 
@@ -24,7 +24,7 @@ private val font = FontFamily(Font(R.font.regular_font))
 fun Text(
 	modifier: Modifier = Modifier,
 	text: String,
-	color: Color = LocalContentColor.current,
+	color: Color = textColor,
 	size: TextUnit = textSize,
 	weight: FontWeight? = null,
 	align: TextAlign = TextAlign.Start,
@@ -47,7 +47,7 @@ fun Text(
 fun Text(
 	modifier: Modifier = Modifier,
 	text: Int,
-	color: Color = LocalContentColor.current,
+	color: Color = textColor,
 	size: TextUnit = textSize,
 	weight: FontWeight? = null,
 	align: TextAlign = TextAlign.Start,
