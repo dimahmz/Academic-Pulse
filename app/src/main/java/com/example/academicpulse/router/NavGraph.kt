@@ -1,6 +1,10 @@
 package com.example.academicpulse.router
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -12,10 +16,39 @@ import com.example.academicpulse.view.pages.inbox.*
 import com.example.academicpulse.view.pages.profile.*
 import kotlin.system.exitProcess
 
-/** Graph is a schema that contains all the pages used in the App. Each page is declared with its instance, path key and back handler button behavior */
+/** NavGraph is a schema that contains all the pages used in the App.
+ * - Each page is declared with its instance, path key and back handler button behavior.
+ */
 @Composable
 fun NavGraph(nav: NavHostController, startDestination: String) {
-	NavHost(navController = nav, startDestination = startDestination) {
+	NavHost(
+		navController = nav,
+		startDestination = startDestination,
+		enterTransition = {
+			fadeIn(animationSpec = tween(300)) + slideIntoContainer(
+				AnimatedContentTransitionScope.SlideDirection.Left,
+				tween(300)
+			)
+		},
+		exitTransition = {
+			fadeOut(animationSpec = tween(300)) + slideOutOfContainer(
+				AnimatedContentTransitionScope.SlideDirection.Left,
+				tween(300)
+			)
+		},
+		popEnterTransition = {
+			fadeIn(animationSpec = tween(300)) + slideIntoContainer(
+				AnimatedContentTransitionScope.SlideDirection.Right,
+				tween(300)
+			)
+		},
+		popExitTransition = {
+			fadeOut(animationSpec = tween(300)) + slideOutOfContainer(
+				AnimatedContentTransitionScope.SlideDirection.Right,
+				tween(300)
+			)
+		},
+	) {
 		navigation(route = "home", startDestination = "home/index") {
 			composable(route = "home/index") {
 				HomePage()

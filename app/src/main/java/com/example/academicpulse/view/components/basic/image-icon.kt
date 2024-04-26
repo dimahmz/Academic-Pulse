@@ -22,8 +22,8 @@ fun Icon(
 	color: Color = LocalContentColor.current,
 	onClick: (() -> Unit)? = null
 ) {
-	val internalModifier = modifier.size(size)
-	if (onClick != null) internalModifier.clickable { onClick() }
+	var internalModifier = modifier.size(size)
+	if (onClick != null) internalModifier = internalModifier.clickable { onClick() }
 
 	androidx.compose.material3.Icon(
 		modifier = internalModifier,
