@@ -40,7 +40,7 @@ fun SignUpInstitutionPage() {
 			.padding(horizontal = pagePaddingX)
 			.fillMaxHeight()
 	) {
-		Header(title = R.string.signup, arrow = false)
+		Header(title = R.string.signup)
 
 		Column(modifier = Modifier.padding(bottom = 30.dp)) {
 			Title(text = R.string.institution_info)

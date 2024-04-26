@@ -11,9 +11,11 @@
 
     <string name="login">Login</string>
     <string name="signup">Signup</string>
+    <string name="inactive_account">Your Account hasn\'t been activated yet</string>
+    <string name="inactive_account_description">The Administration stuff haven\'t activated your account yet.\nYou will receive an email after activating your email</string>
     <string name="email_address">Email Address</string>
     <string name="forgot_password">Forgot password?</string>
-    <string name="new_member">Not a member?</string>
+    <string name="new_member">Not a member ?</string>
     <string name="register_now">Register now</string>
     <string name="institution_info">Show where you conduct research</string>
     <string name="institution_info_description">Enter your institution details to quickly find your colleagues and keep up with their research.</string>

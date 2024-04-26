@@ -67,10 +67,14 @@ fun NavGraph(nav: NavHostController, startDestination: String) {
 				BackHandler { Router.replace("home", true) }
 			}
 		}
-		navigation(route = "auth", startDestination = "auth/sign-up") {
+		navigation(route = "auth", startDestination = "auth/login-user") {
+			composable(route = "auth/login-user") {
+				LogInUserPage()
+				BackHandler { exitProcess(0) }
+			}
 			composable(route = "auth/sign-up") {
 				SignUpInstitutionPage()
-				BackHandler { exitProcess(0) }
+				BackHandler { Router.back(/* to = auth/login-user */) }
 			}
 			composable(route = "auth/sign-up-user") {
 				SignUpUserPage()
@@ -79,6 +83,10 @@ fun NavGraph(nav: NavHostController, startDestination: String) {
 			composable(route = "auth/confirm-email") {
 				ConfirmEmailPage()
 				BackHandler { Router.back(/* to = auth/sign-up-user */) }
+			}
+			composable(route = "auth/activate-account") {
+				ActivateAccountPage()
+				BackHandler { exitProcess(0) }
 			}
 			composable(route = "auth/verified-email") {
 				VerifiedEmailPage()
