@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.router.Router
+import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.view.components.basic.*
 
@@ -46,8 +47,16 @@ fun VerifiedEmailPage() {
 			)
 		}
 
-		Button(text = R.string.back_login, modifier = Modifier.padding(bottom = 80.dp)) {
-			Router.back(/* to = auth/sign-up-user */)
+		Column(
+			modifier = Modifier.padding(bottom = 60.dp),
+			verticalArrangement = Arrangement.spacedBy(gap)
+		) {
+			Button(text = R.string.continue_home) {
+				Router.replace("home", true)
+			}
+			Button(text = R.string.back_login, ghost = true) {
+				Router.back(/* to = auth/confirm-email */)
+			}
 		}
 	}
 }

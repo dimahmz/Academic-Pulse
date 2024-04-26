@@ -8,6 +8,7 @@ val primary = Color(0xFF0B8AA0)
 val secondary = Color(0xFFEAF2FF)
 val error = Color(0xFFD70000)
 val white = Color(0xFFFFFFFF)
+val navBavIconColor = Color(0xFF74757D)
 
 val brown = Color(0xFF655D53)
 val primaryBackground = Color(0xFFFFFFFF)

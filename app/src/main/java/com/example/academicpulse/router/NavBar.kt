@@ -2,10 +2,15 @@ package com.example.academicpulse.router
 
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
+import com.example.academicpulse.theme.navBavIconColor
 import com.example.academicpulse.utils.useAtom
 import com.example.academicpulse.view.components.basic.Icon
 import com.example.academicpulse.view.components.basic.Text
@@ -31,13 +36,18 @@ fun NavBar() {
 	val navBarVisible = useAtom(Router.isNavBarVisible())
 
 	if (navBarVisible != true) return
-	NavigationBar {
+	NavigationBar(containerColor = MaterialTheme.colorScheme.secondary) {
 		navbarItems.forEach {
+			val selected = (route ?: "home").startsWith(it.route)
+			val color = if (selected) MaterialTheme.colorScheme.primary else navBavIconColor
 			NavigationBarItem(
-				selected = it.route.startsWith(route ?: "home"),
+				colors = NavigationBarItemDefaults.colors(
+					indicatorColor = Color.Transparent,
+				),
+				selected = selected,
 				onClick = { Router.navigate(it.route, true) },
 				label = {
-					Text(text = it.title)
+					Text(text = it.title, color = color)
 				},
 				icon = {
 					BadgedBox(
@@ -48,7 +58,7 @@ fun NavBar() {
 								}
 						}
 					) {
-						Icon(id = it.icon)
+						Icon(id = it.icon, color = color, size = 18.dp)
 					}
 				}
 			)
