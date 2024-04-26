@@ -67,7 +67,7 @@ fun ConfirmEmailPage() {
 			align = TextAlign.Center
 		)
 		Button(text = R.string.continued, modifier = Modifier.padding(bottom = 80.dp)) {
-			Router.back(/* to = auth/sign-up-user */)
+			Router.navigate("auth/verified-email", false)
 		}
 	}
 }
