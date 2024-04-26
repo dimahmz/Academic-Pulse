@@ -7,8 +7,8 @@ import androidx.compose.ui.graphics.Color
 val primary = Color(0xFF0B8AA0)
 val secondary = Color(0xFFEAF2FF)
 val error = Color(0xFFD70000)
-
 val white = Color(0xFFFFFFFF)
+
 val brown = Color(0xFF655D53)
 val primaryBackground = Color(0xFFFFFFFF)
 val borderColor = Color(0xFFC5C6CC)
@@ -23,6 +23,7 @@ val DarkColorScheme = darkColorScheme(
 	primary = primary,
 	secondary = secondary,
 	tertiary = white,
+	background = white,
 	error = error,
 )
 
@@ -30,5 +31,6 @@ val LightColorScheme = lightColorScheme(
 	primary = primary,
 	secondary = secondary,
 	tertiary = white,
+	background = white,
 	error = error,
 )

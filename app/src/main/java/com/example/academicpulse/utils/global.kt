@@ -1,9 +1,7 @@
 package com.example.academicpulse.utils
 
 import android.content.Context
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 
@@ -20,84 +18,20 @@ fun saveAppContext(context: Context) {
 	appContext.add(context)
 }
 
-/** Observe a LiveData object and invokes a callback function whenever the LiveData's value changes.
+/** Adds the given observer to the observers list within the lifespan of the given owner.
+ * Observe a LiveData object and invokes a callback function whenever the LiveData's value changes.
  * This function provides a shorter way to use lifeData.observe by automatically handling the lifecycle owner.
  * ```
  * Example usage:
  * val myLiveData = MutableLiveData<String>()
- * useObserve(myLiveData) { value ->
- *     println("LiveData value changed: $value")
- * }
+ * myLiveData.observe(value ->
+ * 	println("LiveData value changed: $value")
+ * )
  * ```
- * @param lifeData The LiveData object to observe
- * @param callback The callback function to invoke when the LiveData's value changes
+ * @param callback The observer that will receive the events when the value changes.
  */
-fun <T> useObserve(lifeData: LiveData<T>, callback: (T) -> Unit) {
-	lifeData.observe(getAppContext() as LifecycleOwner) { callback(it) }
-}
-
-/** A composable hook function used to create and manage state within another Composable function.
- * It returns a Pair containing the current state value and a function to update the state.
- * ```
- * Example usage:
- * val (counter, setCounter) = useState(0)
- *
- * Column {
- * 	Text("Counter: $counter")
- * 	Button("Increase") { setCounter(counter + 1) }
- * }
- * ```
- * @param value The initial value of the state
- * @return A Pair containing the current state value and a function to update it
- */
-@Composable
-fun <T> useState(
-	value: T,
-	onChange: ((value: T, oldValue: T) -> Unit)? = null
-): Pair<T, (T) -> Unit> {
-	// Create and remember a mutable state variable initialized with the provided data
-	val state = remember { mutableStateOf(value) }
-	// Function to update the state
-	fun setData(value: T) {
-		val oldValue = state.value
-		state.value = value
-		if (value != oldValue) onChange?.invoke(value, oldValue)
-	}
-	// Return the current state value and the function to update it
-	return Pair(state.value, ::setData)
-}
-
-/** A composable hook function similar to useState, used to observe a LiveData object and update a state variable within another Composable function.
- * However, instead of returning a setter function within a Pair, it directly observes the LiveData object and updates the state variable when the LiveData changes.
- * It is mainly used for variables that already have a built-in setter that can be used across the app.
- * ```
- * Example usage:
- * class NotificationsViewModel: ViewModel {
- * 	val unreadCount: MutableLiveData(0)
- * 	fun clearAll() {
- * 		database.mutation("example to clear").addOnSuccessListener { unreadCount.value = 0 }
- * 	}
- * }
- *
- * val vm = NotificationsViewModel()
- * val count = useAtom(vm.unreadCount)
- *
- * Column {
- * 	Text("Unread notifications: $count")
- * 	Button("Read All") { notificationsViewModel.clearAll() }
- * }
- * ```
- * @param lifeData The LiveData object to observe
- * @return The current value of the observed LiveData
- */
-@Composable
-fun <T> useAtom(lifeData: LiveData<T>): T? {
-	// Create and remember a mutable state variable initialized with the current value of the LiveData
-	val state = remember { mutableStateOf(lifeData.value) }
-	// Observe the LiveData and update the state variable when it changes
-	useObserve(lifeData) { state.value = it }
-	// Return the current value of the state variable
-	return state.value
+fun <T> LiveData<T>.observe(callback: (T) -> Unit) {
+	this.observe(getAppContext() as LifecycleOwner) { callback(it) }
 }
 
 /** A Composable hook function that allows performing side effects in another Composable function.

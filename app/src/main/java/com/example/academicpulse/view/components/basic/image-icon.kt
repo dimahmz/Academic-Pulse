@@ -15,25 +15,6 @@ import androidx.compose.ui.unit.dp
 import com.example.academicpulse.utils.Res
 
 @Composable
-fun Icon(
-	modifier: Modifier = Modifier,
-	id: Int,
-	size: Dp = 14.dp,
-	color: Color = LocalContentColor.current,
-	onClick: (() -> Unit)? = null
-) {
-	var internalModifier = modifier.size(size)
-	if (onClick != null) internalModifier = internalModifier.clickable { onClick() }
-
-	androidx.compose.material3.Icon(
-		modifier = internalModifier,
-		imageVector = Res.drawable(id),
-		contentDescription = null,
-		tint = color,
-	)
-}
-
-@Composable
 fun Image(
 	modifier: Modifier = Modifier,
 	id: Int,
@@ -50,5 +31,24 @@ fun Image(
 		contentScale = scale,
 		alpha = alpha,
 		colorFilter = colorFilter,
+	)
+}
+
+@Composable
+fun Icon(
+	modifier: Modifier = Modifier,
+	id: Int,
+	size: Dp = 14.dp,
+	color: Color = LocalContentColor.current,
+	onClick: (() -> Unit)? = null
+) {
+	var internalModifier = modifier.size(size)
+	if (onClick != null) internalModifier = internalModifier.clickable { onClick() }
+
+	androidx.compose.material3.Icon(
+		modifier = internalModifier,
+		imageVector = Res.drawable(id),
+		contentDescription = null,
+		tint = color,
 	)
 }

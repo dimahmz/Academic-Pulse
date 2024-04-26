@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
@@ -15,18 +14,26 @@ import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.utils.Res
-import com.example.academicpulse.utils.useState
+import com.example.academicpulse.utils.useField
+import com.example.academicpulse.utils.useForm
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view.components.global.Header
 
 @Composable
 fun SignUpInstitutionPage() {
-	val (institution, setInstitution) = useState("")
-	val (institutionValid, setInstitutionValidity) = useState(true)
-	val (department, setDepartment) = useState("")
-	val (departmentValid, setDepartmentValidity) = useState(true)
-	val (position, setPosition) = useState("")
-	val (positionValid, setPositionValidity) = useState(true)
+	val form = useForm()
+	val institution = useField(
+		form = form,
+		value = "",
+	)
+	val department = useField(
+		form = form,
+		value = "",
+	)
+	val position = useField(
+		form = form,
+		value = "",
+	)
 
 	Column(
 		modifier = Modifier
@@ -41,38 +48,24 @@ fun SignUpInstitutionPage() {
 		}
 
 		Column(verticalArrangement = Arrangement.spacedBy(gap)) {
-			val (departmentFocus) = useState(FocusRequester())
-			val (positionFocus) = useState(FocusRequester())
-
 			Input(
-				value = institution,
-				onChange = setInstitution,
+				field = institution,
 				label = Res.string(R.string.institution),
-				valid = institutionValid,
-				onChangeValidity = setInstitutionValidity,
-				focusNext = departmentFocus,
+				focusNext = department.focusRequester,
 			)
 			Input(
-				value = department,
-				onChange = setDepartment,
+				field = department,
 				label = Res.string(R.string.department),
-				valid = departmentValid,
-				onChangeValidity = setDepartmentValidity,
-				focusRequester = departmentFocus,
-				focusNext = positionFocus,
+				focusNext = position.focusRequester,
 			)
 			Input(
-				value = position,
-				onChange = setPosition,
+				field = position,
 				label = Res.string(R.string.position),
-				valid = positionValid,
-				onChangeValidity = setPositionValidity,
-				focusRequester = positionFocus,
 			)
 		}
+		form.Error()
 
 		Spacer(Modifier.weight(1f)) // Apply flex-grow: 1 on a fake block to move the below buttons to the bottom of page.
-
 		Column(
 			modifier = Modifier.padding(bottom = 60.dp),
 			verticalArrangement = Arrangement.spacedBy(gap)
