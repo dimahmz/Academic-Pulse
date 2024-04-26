@@ -84,6 +84,10 @@ fun NavGraph(nav: NavHostController, startDestination: String) {
 				VerifiedEmailPage()
 				BackHandler { Router.replace("home", true) }
 			}
+			composable(route = "auth/login-user") {
+				LogInUserPage()
+				BackHandler { exitProcess(0) }
+			}
 		}
 	}
 }
