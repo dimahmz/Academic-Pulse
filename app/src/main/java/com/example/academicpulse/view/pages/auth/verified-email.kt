@@ -47,7 +47,7 @@ fun VerifiedEmailPage() {
 		}
 
 		Button(text = R.string.back_login, modifier = Modifier.padding(bottom = 80.dp)) {
-			Router.navigate("auth/login-user", false)		}
+			Router.navigate("auth/activate-account", false)		}
 	}
 }
 

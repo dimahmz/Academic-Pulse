@@ -88,6 +88,10 @@ fun NavGraph(nav: NavHostController, startDestination: String) {
 				LogInUserPage()
 				BackHandler { exitProcess(0) }
 			}
+			composable(route = "auth/activate-account") {
+				ActivateAccountPage()
+				BackHandler { exitProcess(0) }
+			}
 		}
 	}
 }
