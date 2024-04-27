@@ -59,8 +59,13 @@ fun SignUpUserPage() {
 	fun navigate() {
 		if (form.validate()) {
 			auth.saveUserInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
-			auth.setVerificationCode("1443")
-			Router.navigate("auth/confirm-email", false)
+			auth.signup { emailAlreadyExist ->
+				if (emailAlreadyExist) {
+					form.error(false, "This is email already exist.")
+					email.valid(false)
+					email.focusRequester.requestFocus()
+				} else Router.navigate("auth/confirm-email", false)
+			}
 		} else form.focusOnFirstInvalidField()
 	}
 

@@ -1,5 +1,6 @@
 package com.example.academicpulse.view.pages.auth
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -84,6 +85,11 @@ fun ConfirmEmailPage() {
 			)
 			Button(text = R.string.continued) { validate() }
 		}
+	}
+
+	BackHandler {
+		auth.setConfirmationCode("")
+		Router.back(/* to = auth/sign-up-user */)
 	}
 }
 

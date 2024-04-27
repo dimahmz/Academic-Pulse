@@ -36,14 +36,14 @@ fun LogInUserPage() {
 	val form = useForm()
 	val email = useField(
 		form = form,
-		value = auth.signUpInfo.email,
+		value = auth.loginInfo.email,
 		regex = Form.email,
 		ifEmpty = "The email is required.",
 		ifInvalid = "The email is invalid."
 	)
 	val password = useField(
 		form = form,
-		value = auth.signUpInfo.password,
+		value = auth.loginInfo.password,
 		regex = Form.password,
 		ifEmpty = "The password is required.",
 		ifInvalid = "The password is invalid."
@@ -52,7 +52,12 @@ fun LogInUserPage() {
 	fun validate() {
 		if (form.validate()) {
 			auth.saveLoginInfo(email.trim(), password.trim())
-			Router.navigate("auth/activate-account", false)
+			auth.login { loggedIn ->
+				if (loggedIn) {
+					auth.clearLogin()
+					Router.navigate("home", true)
+				} else Router.navigate("auth/activate-account", false)
+			}
 		} else form.focusOnFirstInvalidField()
 	}
 

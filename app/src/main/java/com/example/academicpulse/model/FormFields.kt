@@ -106,6 +106,11 @@ class Form {
 		return valid.value
 	}
 
+	fun error(valid: Boolean, error: String) {
+		this.valid.value = valid
+		this.error.value = error
+	}
+
 	fun addField(field: Field) {
 		fields.add(field)
 	}

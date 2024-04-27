@@ -6,6 +6,7 @@ class LoginInfo {
 }
 
 class SignUpInfo {
+	var institutionSkipped: Boolean = false
 	var institution: String = ""
 	var department: String = ""
 	var position: String = ""
