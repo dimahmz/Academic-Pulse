@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
@@ -49,7 +48,7 @@ fun SignUpUserPage() {
 	val password = useField(
 		form = form,
 		value = "",
-		regex = "^.{8,}$",
+		regex = Form.password,
 		ifEmpty = "The password is required.",
 		ifInvalid = "The password should be strong."
 	)
@@ -62,8 +61,8 @@ fun SignUpUserPage() {
 
 	Column(
 		modifier = Modifier
-			.padding(horizontal = pagePaddingX)
 			.fillMaxHeight()
+			.padding(horizontal = pagePaddingX),
 	) {
 		Header(title = R.string.signup)
 

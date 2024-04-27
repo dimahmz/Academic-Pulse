@@ -37,7 +37,7 @@ class Field(
 	fun valid(valid: Boolean) {
 		this.valid.value = valid
 	}
-	
+
 	private fun trim(): String {
 		val value = this.value().trim()
 		if (value != this.value()) this.value(value)
@@ -129,5 +129,6 @@ class Form {
 	companion object {
 		const val name = "^[\\sA-Za-zÀ-ÖÙ-Ýà-öù-ýĀ-ž']*\$"
 		const val email = "^\\s*(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))\\s*\$"
+		const val password = "^.{8,}$"
 	}
 }

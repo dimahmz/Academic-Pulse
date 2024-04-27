@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.router.Router
@@ -16,10 +17,11 @@ import com.example.academicpulse.view.components.basic.H1
 import com.example.academicpulse.view.components.basic.Icon
 
 @Composable
-fun Header(title: Int, arrow: Boolean = true) {
+fun Header(title: Int, arrow: Boolean = true, paddingBottom: Dp = 0.dp) {
 	Box(
 		modifier = Modifier
 			.padding(vertical = 25.dp)
+			.padding(bottom = paddingBottom)
 			.fillMaxWidth(),
 		contentAlignment = Alignment.CenterStart
 	) {

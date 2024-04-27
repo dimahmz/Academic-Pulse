@@ -3,8 +3,10 @@ package com.example.academicpulse.view.pages.auth
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -23,32 +25,21 @@ import com.example.academicpulse.view.components.basic.*
 fun VerifiedEmailPage() {
 	Column(
 		modifier = Modifier
-			.padding(horizontal = pagePaddingX)
-			.fillMaxHeight(),
+			.fillMaxHeight()
+			.padding(horizontal = pagePaddingX),
 		verticalArrangement = Arrangement.Center,
 		horizontalAlignment = Alignment.CenterHorizontally
 	) {
-		Column(modifier = Modifier.padding(bottom = 30.dp, top = 60.dp)) {
-			Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-				Image(id = R.drawable.icon_success_circle, modifier = Modifier.size(70.dp))
-			}
-
-			H1(
-				text = R.string.email_verified,
-				align = TextAlign.Center,
-				modifier = Modifier
-					.fillMaxWidth()
-					.padding(20.dp)
-			)
-			Description(
-				modifier = Modifier.fillMaxWidth(),
-				text = R.string.email_verified_description,
-				align = TextAlign.Center
-			)
+		Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+			Image(id = R.drawable.icon_success_circle, modifier = Modifier.size(70.dp))
 		}
 
+		Spacer(Modifier.height(20.dp))
+		H1(text = R.string.email_verified, align = TextAlign.Center)
+		Description(text = R.string.email_verified_description, align = TextAlign.Center)
+
 		Column(
-			modifier = Modifier.padding(bottom = 60.dp),
+			modifier = Modifier.padding(vertical = 30.dp),
 			verticalArrangement = Arrangement.spacedBy(gap)
 		) {
 			Button(text = R.string.continue_home) {

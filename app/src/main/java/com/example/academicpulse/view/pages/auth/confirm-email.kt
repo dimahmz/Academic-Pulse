@@ -20,7 +20,6 @@ import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.utils.Res
 import com.example.academicpulse.utils.useField
 import com.example.academicpulse.utils.useForm
-import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view.components.global.Header
 
@@ -43,40 +42,44 @@ fun ConfirmEmailPage() {
 
 	Column(
 		modifier = Modifier
-			.padding(horizontal = pagePaddingX)
 			.fillMaxHeight()
+			.padding(horizontal = pagePaddingX),
 	) {
-		Header(title = R.string.confirmation_page_title)
+		Header(title = R.string.confirmation_page_title, paddingBottom = 60.dp)
 
 		Column(
-			modifier = Modifier
-				.padding(bottom = 30.dp, top = 60.dp)
-				.fillMaxWidth(),
-			verticalArrangement = Arrangement.Center,
-			horizontalAlignment = Alignment.CenterHorizontally
+			modifier = Modifier.fillMaxWidth(),
+			horizontalAlignment = Alignment.CenterHorizontally,
+			verticalArrangement = Arrangement.spacedBy(40.dp)
 		) {
-			Title(text = R.string.confirmation_title)
-			Spacer(Modifier.padding(vertical = 4.dp))
-			Description(text = R.string.confirmation_description)
-			Spacer(Modifier.padding(vertical = 20.dp))
+			Column(
+				verticalArrangement = Arrangement.spacedBy(8.dp),
+				horizontalAlignment = Alignment.CenterHorizontally
+			) {
+				Title(text = R.string.confirmation_title)
+				Description(text = R.string.confirmation_description)
+			}
 			Input(
 				field = code,
 				placeholder = Res.string(R.string.confirmation_title),
 				keyboardType = KeyboardType.Number,
 			)
-			form.Error(40)
+			form.Error()
 		}
 
 		Spacer(Modifier.weight(1f))
-		H1(
-			modifier = Modifier
-				.padding(vertical = 25.dp)
-				.fillMaxWidth(),
-			text = R.string.resend_code,
-			color = MaterialTheme.colorScheme.primary,
-			align = TextAlign.Center
-		)
-		Button(text = R.string.continued, modifier = Modifier.padding(bottom = 60.dp)) { validate() }
+		Column(
+			modifier = Modifier.padding(bottom = 60.dp),
+			verticalArrangement = Arrangement.spacedBy(25.dp)
+		) {
+			H1(
+				text = R.string.resend_code,
+				color = MaterialTheme.colorScheme.primary,
+				modifier = Modifier.fillMaxWidth(),
+				align = TextAlign.Center,
+			)
+			Button(text = R.string.continued) { validate() }
+		}
 	}
 }
 

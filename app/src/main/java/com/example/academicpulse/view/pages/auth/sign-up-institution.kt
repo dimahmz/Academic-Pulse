@@ -38,7 +38,7 @@ fun SignUpInstitutionPage() {
 		ifEmpty = "The position is required",
 	)
 
-	fun validate () {
+	fun validate() {
 		if (form.validate()) {
 			Router.navigate("auth/sign-up-user", false)
 		} else form.focusOnFirstInvalidField()
@@ -46,8 +46,8 @@ fun SignUpInstitutionPage() {
 
 	Column(
 		modifier = Modifier
-			.padding(horizontal = pagePaddingX)
 			.fillMaxHeight()
+			.padding(horizontal = pagePaddingX),
 	) {
 		Header(title = R.string.signup)
 
