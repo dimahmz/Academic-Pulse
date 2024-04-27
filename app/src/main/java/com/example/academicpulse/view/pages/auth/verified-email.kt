@@ -44,6 +44,7 @@ fun VerifiedEmailPage() {
 			verticalArrangement = Arrangement.spacedBy(gap)
 		) {
 			Button(text = R.string.continue_home) {
+				Store.auth().clearLogin()
 				Store.auth().clearSignUp()
 				Router.replace("home", true)
 			}

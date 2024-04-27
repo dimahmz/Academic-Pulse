@@ -29,7 +29,6 @@ import com.example.academicpulse.view_model.Store
 fun ConfirmEmailPage() {
 	val auth = Store.auth()
 	val error = Res.string(R.string.confirmation_error)
-
 	val form = useForm()
 	val code = useField(form = form, value = "") { field ->
 		return@useField field.customCheck {

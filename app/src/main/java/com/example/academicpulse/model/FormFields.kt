@@ -102,6 +102,10 @@ class Form {
 	private val valid: MutableState<Boolean> = mutableStateOf(true)
 	private val fields: MutableList<Field> = mutableListOf()
 
+	fun valid(): Boolean {
+		return valid.value
+	}
+
 	fun addField(field: Field) {
 		fields.add(field)
 	}

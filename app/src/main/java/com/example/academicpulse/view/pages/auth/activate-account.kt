@@ -41,7 +41,7 @@ fun ActivateAccountPage() {
 			text = R.string.back_login,
 			modifier = Modifier.padding(vertical = 30.dp)
 		) {
-			Router.navigate("auth/login-user", false)
+			Router.back(/* to = auth/login-user */)
 		}
 	}
 }

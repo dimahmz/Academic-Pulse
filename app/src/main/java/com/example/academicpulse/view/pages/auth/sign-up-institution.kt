@@ -24,7 +24,6 @@ import com.example.academicpulse.view_model.Store
 @Composable
 fun SignUpInstitutionPage() {
 	val auth = Store.auth()
-
 	val form = useForm()
 	val institution = useField(
 		form = form,
