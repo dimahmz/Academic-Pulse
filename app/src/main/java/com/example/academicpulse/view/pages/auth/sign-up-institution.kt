@@ -25,15 +25,24 @@ fun SignUpInstitutionPage() {
 	val institution = useField(
 		form = form,
 		value = "",
+		ifEmpty = "The institution is required",
 	)
 	val department = useField(
 		form = form,
 		value = "",
+		ifEmpty = "The department is required",
 	)
 	val position = useField(
 		form = form,
 		value = "",
+		ifEmpty = "The position is required",
 	)
+
+	fun validate () {
+		if (form.validate()) {
+			Router.navigate("auth/sign-up-user", false)
+		} else form.focusOnFirstInvalidField()
+	}
 
 	Column(
 		modifier = Modifier
@@ -62,17 +71,15 @@ fun SignUpInstitutionPage() {
 				field = position,
 				label = Res.string(R.string.position),
 			)
+			form.Error()
 		}
-		form.Error()
 
 		Spacer(Modifier.weight(1f)) // Apply flex-grow: 1 on a fake block to move the below buttons to the bottom of page.
 		Column(
 			modifier = Modifier.padding(bottom = 60.dp),
 			verticalArrangement = Arrangement.spacedBy(gap)
 		) {
-			Button(text = R.string.next) {
-				Router.navigate("auth/sign-up-user", false)
-			}
+			Button(text = R.string.next) { validate() }
 			Button(text = R.string.skip, ghost = true) {
 				Router.navigate("auth/sign-up-user", false)
 			}

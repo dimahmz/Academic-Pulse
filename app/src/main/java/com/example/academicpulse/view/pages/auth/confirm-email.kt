@@ -10,22 +10,36 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.pagePaddingX
+import com.example.academicpulse.utils.Res
+import com.example.academicpulse.utils.useField
+import com.example.academicpulse.utils.useForm
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view.components.global.Header
 
 @Composable
 fun ConfirmEmailPage() {
-	val (optCode, setOptCode) = useState("")
-	val (optCodeValid, setOptCodeValidity) = useState(true)
-	val (showErrorMsg, setShowErrorMsg) = useState(false);
-	val (isOptCodeCorrect, setIsOptCodeCorrectness) = useState(false);
+	val form = useForm()
+	val code = useField(
+		form = form,
+		value = "",
+		regex = "^[0-9]{4}\$",
+		ifEmpty = Res.string(R.string.confirmation_error),
+		ifInvalid = Res.string(R.string.confirmation_error),
+	)
+
+	fun validate() {
+		if (form.validate()) {
+			Router.navigate("auth/verified-email", false)
+		} else form.focusOnFirstInvalidField()
+	}
 
 	Column(
 		modifier = Modifier
@@ -46,15 +60,11 @@ fun ConfirmEmailPage() {
 			Description(text = R.string.confirmation_description)
 			Spacer(Modifier.padding(vertical = 20.dp))
 			Input(
-				value = optCode,
-				onChange = setOptCode,
-				valid = optCodeValid,
-				onChangeValidity = setOptCodeValidity,
+				field = code,
+				placeholder = Res.string(R.string.confirmation_title),
+				keyboardType = KeyboardType.Number,
 			)
-			Spacer(Modifier.padding(vertical = 20.dp))
-			// confirmation_error
-			if (showErrorMsg)
-				Title(text = R.string.confirmation_error, color = MaterialTheme.colorScheme.error)
+			form.Error(40)
 		}
 
 		Spacer(Modifier.weight(1f))
@@ -66,9 +76,7 @@ fun ConfirmEmailPage() {
 			color = MaterialTheme.colorScheme.primary,
 			align = TextAlign.Center
 		)
-		Button(text = R.string.continued, modifier = Modifier.padding(bottom = 80.dp)) {
-			Router.navigate("auth/verified-email", false)
-		}
+		Button(text = R.string.continued, modifier = Modifier.padding(bottom = 60.dp)) { validate() }
 	}
 }
 

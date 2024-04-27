@@ -37,6 +37,12 @@ class Field(
 	fun valid(valid: Boolean) {
 		this.valid.value = valid
 	}
+	
+	private fun trim(): String {
+		val value = this.value().trim()
+		if (value != this.value()) this.value(value)
+		return value
+	}
 
 	/** USE ONLY FOR CHECKING: Use this for executing the validator declared when creating the Field instance */
 	fun validate(): Boolean {
@@ -45,7 +51,7 @@ class Field(
 
 	/** USE ONLY IN DECLARATION: Use this if the field is required and it should follow certain pattern. */
 	fun validator(regex: String, ifEmpty: String, ifInvalid: String): Boolean {
-		val value = this.value()
+		val value = trim()
 		valid(true)
 		if (required && value == "") {
 			valid(false)
@@ -59,7 +65,7 @@ class Field(
 
 	/** USE ONLY IN DECLARATION: Use this if the field is only required. */
 	fun validator(ifEmpty: String): Boolean {
-		val value = this.value()
+		val value = trim()
 		valid(true)
 		if (required && value == "") {
 			valid(false)
@@ -70,7 +76,7 @@ class Field(
 
 	/** USE ONLY IN DECLARATION: Use this if the field is not required but it should follow certain pattern. */
 	fun validator(regex: String, ifInvalid: String): Boolean {
-		val value = this.value()
+		val value = trim()
 		valid(true)
 		if (!Regex(regex).matches(value)) {
 			valid(false)
@@ -90,12 +96,22 @@ class Form {
 		fields.add(field)
 	}
 
-	fun validate() {
+	fun validate(): Boolean {
 		valid.value = true
 		error.value = ""
 		for (field in fields.reversed()) {
 			val isValid = field.validate()
-			if (isValid != valid.value) valid.value = valid.value
+			if (!isValid && valid.value) valid.value = false
+		}
+		return valid.value
+	}
+
+	fun focusOnFirstInvalidField() {
+		for (field in fields) {
+			if (!field.valid()) {
+				field.focusRequester.requestFocus()
+				break
+			}
 		}
 	}
 
@@ -108,5 +124,10 @@ class Form {
 				modifier = Modifier.padding(top = paddingTop.dp)
 			)
 		}
+	}
+
+	companion object {
+		const val name = "^[\\sA-Za-zÀ-ÖÙ-Ýà-öù-ýĀ-ž']*\$"
+		const val email = "^\\s*(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))\\s*\$"
 	}
 }
