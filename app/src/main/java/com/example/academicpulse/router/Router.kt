@@ -10,9 +10,9 @@ class Router(navigator: NavHostController) {
 	private var route = MutableLiveData("home")
 	private var navBarVisible = MutableLiveData(true)
 
-	// Note: Static variables and methods are used just to hold the created Router instance and be accessible in anywhere without passing it via any component props
+	// Note: Static variables and methods are used just to hold the global Router instance and be accessible in anywhere.
 	companion object {
-		// Note: An array type is used instead of Router to avoid null checks. We are certain that the app router will not be null as Provider method is the second function called in the whole app after saveAppContext.
+		// Note: An array type is used instead of Router to avoid null checks. We are certain that the app router will not be null as Provider method is one of the first functions called in the lifecycle.
 		private val appRouter = mutableListOf<Router>()
 
 		/** Provider initialize the router instance that will be used across the entire App */

@@ -14,13 +14,13 @@ fun useForm(): Form {
 @Composable
 fun useField(
 	form: Form? = null,
-	value: String,
+	value: String?,
 	required: Boolean = true,
 	validator: ((Field) -> Boolean)? = null,
 ): Field {
 	return useState({
 		val field = Field(
-			value = value,
+			value = value ?: "",
 			required = required,
 			error = form?.error ?: mutableStateOf(""),
 			focusRequester = FocusRequester(),
@@ -34,7 +34,7 @@ fun useField(
 @Composable
 fun useField(
 	form: Form? = null,
-	value: String,
+	value: String?,
 	required: Boolean = true,
 	regex: String? = null,
 	ifEmpty: String? = null,
@@ -50,7 +50,7 @@ fun useField(
 		else null
 
 		val field = Field(
-			value = value,
+			value = value ?: "",
 			required = required,
 			error = form?.error ?: mutableStateOf(""),
 			focusRequester = FocusRequester(),

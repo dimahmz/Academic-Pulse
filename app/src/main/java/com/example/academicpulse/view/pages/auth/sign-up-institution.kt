@@ -1,5 +1,6 @@
 package com.example.academicpulse.view.pages.auth
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,28 +19,32 @@ import com.example.academicpulse.utils.useField
 import com.example.academicpulse.utils.useForm
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view.components.global.Header
+import com.example.academicpulse.view_model.Store
 
 @Composable
 fun SignUpInstitutionPage() {
+	val auth = Store.auth()
+
 	val form = useForm()
 	val institution = useField(
 		form = form,
-		value = "",
+		value = auth.signUpInfo.institution,
 		ifEmpty = "The institution is required",
 	)
 	val department = useField(
 		form = form,
-		value = "",
+		value = auth.signUpInfo.department,
 		ifEmpty = "The department is required",
 	)
 	val position = useField(
 		form = form,
-		value = "",
+		value = auth.signUpInfo.position,
 		ifEmpty = "The position is required",
 	)
 
-	fun validate() {
-		if (form.validate()) {
+	fun navigate(validate: Boolean) {
+		if (!validate || form.validate()) {
+			auth.saveInstitutionInfo(institution.trim(), department.trim(), position.trim())
 			Router.navigate("auth/sign-up-user", false)
 		} else form.focusOnFirstInvalidField()
 	}
@@ -79,11 +84,14 @@ fun SignUpInstitutionPage() {
 			modifier = Modifier.padding(bottom = 60.dp),
 			verticalArrangement = Arrangement.spacedBy(gap)
 		) {
-			Button(text = R.string.next) { validate() }
-			Button(text = R.string.skip, ghost = true) {
-				Router.navigate("auth/sign-up-user", false)
-			}
+			Button(text = R.string.next) { navigate(validate = true) }
+			Button(text = R.string.skip, ghost = true) { navigate(validate = false) }
 		}
+	}
+
+	BackHandler {
+		auth.clearSignUp()
+		Router.back(/* to = auth/login-user */)
 	}
 }
 

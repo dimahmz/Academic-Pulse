@@ -20,6 +20,7 @@ import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.view.components.basic.*
+import com.example.academicpulse.view_model.Store
 
 @Composable
 fun VerifiedEmailPage() {
@@ -43,6 +44,7 @@ fun VerifiedEmailPage() {
 			verticalArrangement = Arrangement.spacedBy(gap)
 		) {
 			Button(text = R.string.continue_home) {
+				Store.auth().clearSignUp()
 				Router.replace("home", true)
 			}
 			Button(text = R.string.back_login, ghost = true) {

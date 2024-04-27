@@ -6,7 +6,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 
 /** The App context that represents the active instance of the current activity which is `Index` as we have a single activity (Single Page App).
- * Note: An array type is used instead of Context to avoid null checks. We are certain that the context will not be null as saveAppContext the first function called in the whole app.
+ * Note: An array type is used instead of Context to avoid null checks. We are certain that the context will not be null as saveAppContext is one of the first functions called in the lifecycle.
  */
 private var appContext = mutableListOf<Context>()
 fun getAppContext(): Context {

@@ -18,21 +18,26 @@ import com.example.academicpulse.R
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.utils.Res
+import com.example.academicpulse.utils.observe
 import com.example.academicpulse.utils.useField
 import com.example.academicpulse.utils.useForm
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view.components.global.Header
+import com.example.academicpulse.view_model.Store
 
 @Composable
 fun ConfirmEmailPage() {
+	val auth = Store.auth()
+	val error = Res.string(R.string.confirmation_error)
+
 	val form = useForm()
-	val code = useField(
-		form = form,
-		value = "",
-		regex = "^[0-9]{4}\$",
-		ifEmpty = Res.string(R.string.confirmation_error),
-		ifInvalid = Res.string(R.string.confirmation_error),
-	)
+	val code = useField(form = form, value = "") { field ->
+		return@useField field.customCheck {
+			val isValid = (Regex("^[0-9]{4}\$").matches(it) && it == auth.signUpInfo.code)
+			if (!isValid) field.error(error)
+			return@customCheck isValid
+		}
+	}
 
 	fun validate() {
 		if (form.validate()) {

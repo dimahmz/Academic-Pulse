@@ -73,12 +73,10 @@ fun NavGraph(nav: NavHostController, startDestination: String) {
 				BackHandler { exitProcess(0) }
 			}
 			composable(route = "auth/sign-up") {
-				SignUpInstitutionPage()
-				BackHandler { Router.back(/* to = auth/login-user */) }
+				SignUpInstitutionPage(/* BackHandler is declared inside the page */)
 			}
 			composable(route = "auth/sign-up-user") {
-				SignUpUserPage()
-				BackHandler { Router.back(/* to = auth/sign-up */) }
+				SignUpUserPage(/* BackHandler is declared inside the page */)
 			}
 			composable(route = "auth/confirm-email") {
 				ConfirmEmailPage()
