@@ -33,6 +33,8 @@
     <string name="confirmation_error">Invalid or Incorrect OTP. Try Again</string>
     <string name="resend_code">Resend code</string>
     <string name="email_verified">Email Verified</string>
+    <string name="verify_email">Waiting for Email Verification</string>
+    <string name="verify_email_description">We have sent you and email that contains a verification link</string>
     <string name="email_verified_description">Your email has been verified. We Have received your information. We will send you an email after verifying your account </string>
     <string name="back_login">Back to Login</string>
     <string name="continue_home">Continue to Home</string>
