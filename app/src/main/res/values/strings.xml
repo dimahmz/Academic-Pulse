@@ -38,4 +38,6 @@
     <string name="email_verified_description">Your email has been verified. We Have received your information. We will send you an email after verifying your account </string>
     <string name="back_login">Back to Login</string>
     <string name="continue_home">Continue to Home</string>
+    <string name="login_verify_email">Waiting for Email Verification, We have sent you an email that contains a verification link</string>
+
 </resources>

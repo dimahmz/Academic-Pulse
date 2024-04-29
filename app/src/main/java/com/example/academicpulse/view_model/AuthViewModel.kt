@@ -7,10 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.academicpulse.model.LoginInfo
 import com.example.academicpulse.model.SignUpInfo
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
+import com.google.firebase.auth.auth
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 
 class AuthViewModel : ViewModel() {
 
@@ -30,10 +30,7 @@ class AuthViewModel : ViewModel() {
     }
 
     fun saveInstitutionInfo(
-        institution: String,
-        department: String,
-        position: String,
-        skipped: Boolean
+        institution: String, department: String, position: String, skipped: Boolean
     ) {
         signUpInfo.institution = institution
         signUpInfo.department = department
@@ -46,7 +43,6 @@ class AuthViewModel : ViewModel() {
         signUpInfo.lastName = lastName
         signUpInfo.email = email
         signUpInfo.password = password
-
     }
 
     fun setConfirmationCode(value: String) {
@@ -66,20 +62,28 @@ class AuthViewModel : ViewModel() {
         signUpInfo.code = ""
     }
 
-    fun login(onSuccess: (Boolean) -> Unit) {
+    fun login(onSuccess: (Boolean, String) -> Unit) {
         val email = loginInfo.email
         val password = loginInfo.password
-
         // Lunch a separated async script to log in
         viewModelScope.launch {
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        onSuccess(true)
+            auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val user = auth.currentUser
+                    // email is unverified
+                    if (!user!!.isEmailVerified) {
+                        onSuccess(false, "Must verify User before Login")
+                        Log.w(TAG, "Must verify User before Login")
                     } else {
-                        onSuccess(false)
+                        Log.w(TAG, "Logged In Successfully")
                     }
+                } else {
+                    // If sign in fails, display an error message to the user.
+                    onSuccess(false, "An error has occurred please try again later")
+                    // console log
+                    Log.w(TAG, "signInWithEmail:failure", task.exception)
                 }
+            }
         }
     }
 
@@ -96,54 +100,49 @@ class AuthViewModel : ViewModel() {
 
         // Lunch a separated async script to sign up
         viewModelScope.launch {
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        // get the current user
-                        val user = auth.currentUser
-                        // Exit if user is null
-                        val uid = user?.uid ?: return@addOnCompleteListener
-                        // create a new user collection
-                        val userRef = db.collection("users").document(uid)
-                        // collection fields
-                        val userData = hashMapOf(
-                            "uid" to uid,
-                            "email" to email,
-                            "firstName" to firstName,
-                            "lastName" to lastName,
-                            "institution" to institution,
-                            "department" to department,
-                            "position" to position,
-                            "role" to "user"
-                        )
-                        // add user data to the users collection
-                        userRef.set(userData)
-                            .addOnSuccessListener {
-                                // send an email verification to the user
-                                user?.sendEmailVerification()
-                                    ?.addOnCompleteListener { task ->
-                                        if (task.isSuccessful) {
-                                            // user has been created
-                                            onSuccess(true, "Account has been created")
-                                            Log.d(TAG, "Email sent.")
-                                        } else {
-                                            onSuccess(
-                                                false,
-                                                task.exception?.message
-                                                    ?: "An unknown error occurred"
-                                            )
-                                        }
-                                    }
+            auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // get the current user
+                    val user = auth.currentUser
+                    // Exit if user is null
+                    val uid = user?.uid ?: return@addOnCompleteListener
+                    // create a new user collection
+                    val userRef = db.collection("users").document(uid)
+                    // collection fields
+                    val userData = hashMapOf(
+                        "uid" to uid,
+                        "email" to email,
+                        "firstName" to firstName,
+                        "lastName" to lastName,
+                        "institution" to institution,
+                        "department" to department,
+                        "position" to position,
+                        "role" to "user",
+                        "activated" to false
+                    )
+                    // add user data to the users collection
+                    userRef.set(userData).addOnSuccessListener {
+                        // send an email verification to the user
+                        user?.sendEmailVerification()?.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                // user has been created
+                                onSuccess(true, "Account has been created")
+                                Log.d(TAG, "Email sent.")
+                            } else {
+                                onSuccess(
+                                    false, task.exception?.message ?: "An unknown error occurred"
+                                )
                             }
-                            .addOnFailureListener { exception ->
-                                Log.e(TAG, "Error creating user document: ", exception)
-                                onSuccess(false, exception.message ?: "An unknown error occurred")
-                            }
-                    } else {
-                        onSuccess(false, task.exception?.message ?: "An unknown error occurred")
-                        Log.e(TAG, "Error creating user:", task.exception)
+                        }
+                    }.addOnFailureListener { exception ->
+                        Log.e(TAG, "Error creating user document: ", exception)
+                        onSuccess(false, exception.message ?: "An unknown error occurred")
                     }
+                } else {
+                    onSuccess(false, task.exception?.message ?: "An unknown error occurred")
+                    Log.e(TAG, "Error creating user:", task.exception)
                 }
+            }
         }
     }
 }
