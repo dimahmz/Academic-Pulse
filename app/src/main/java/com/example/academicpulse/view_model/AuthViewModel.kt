@@ -1,14 +1,26 @@
 package com.example.academicpulse.view_model
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.academicpulse.model.LoginInfo
 import com.example.academicpulse.model.SignUpInfo
-import kotlinx.coroutines.delay
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 class AuthViewModel : ViewModel() {
+
+	//Firebase Authentication
+	private val auth: FirebaseAuth = Firebase.auth
+
+	// Could Firestore database
+	private val db = Firebase.firestore
+
+
 	val loginInfo: LoginInfo = LoginInfo()
 	val signUpInfo: SignUpInfo = SignUpInfo()
 
@@ -29,6 +41,7 @@ class AuthViewModel : ViewModel() {
 		signUpInfo.lastName = lastName
 		signUpInfo.email = email
 		signUpInfo.password = password
+
 	}
 
 	fun setConfirmationCode(value: String) {
@@ -54,13 +67,18 @@ class AuthViewModel : ViewModel() {
 
 		// Lunch a separated async script to log in
 		viewModelScope.launch {
-			delay(2000L)
-			val loggedIn = Random.nextBoolean()
-			onSuccess(loggedIn)
+			auth.createUserWithEmailAndPassword(email, password)
+				.addOnCompleteListener { task ->
+					if (task.isSuccessful) {
+						onSuccess(true)
+					} else {
+						onSuccess(false)
+					}
+				}
 		}
 	}
 
-	fun signup(onSuccess: (Boolean) -> Unit) {
+	fun signup(onSuccess: (Boolean, String) -> Unit) {
 		val firstName = signUpInfo.firstName
 		val lastName = signUpInfo.lastName
 		val email = signUpInfo.email
@@ -70,12 +88,54 @@ class AuthViewModel : ViewModel() {
 		val department = if (skipped) null else signUpInfo.department
 		val position = if (skipped) null else signUpInfo.position
 
+
 		// Lunch a separated async script to sign up
 		viewModelScope.launch {
-			delay(2000L)
-			setConfirmationCode("1443")
-			val emailAlreadyExist = Random.nextBoolean()
-			onSuccess(emailAlreadyExist)
+			auth.createUserWithEmailAndPassword(email, password)
+				.addOnCompleteListener { task ->
+					if (task.isSuccessful) {
+						// get the current user
+						val user = auth.currentUser
+						// Exit if user is null
+						val uid = user?.uid ?: return@addOnCompleteListener
+						// create a new user collection
+						val userRef = db.collection("users").document(uid)
+						// collection fields
+						val userData = hashMapOf(
+							"uid" to uid,
+							"email" to email,
+							"firstName" to firstName,
+							"lastName" to lastName,
+							"institution" to institution,
+							"department" to department,
+							"position" to position,
+							"role"  to "user"
+						)
+						// add user data to the users collection
+						userRef.set(userData)
+							.addOnSuccessListener {
+								// send an email verification to the user
+								user?.sendEmailVerification()
+									?.addOnCompleteListener { task ->
+										if (task.isSuccessful) {
+											// user has been created
+											onSuccess(true, "Account has been created")
+											Log.d(TAG, "Email sent.")
+										}
+										else{
+											onSuccess(false, task.exception?.message ?: "An unknown error occurred")
+										}
+									}
+							}
+							.addOnFailureListener { exception ->
+								Log.e(TAG, "Error creating user document: ", exception)
+								onSuccess(false,exception.message ?: "An unknown error occurred")
+							}
+					} else {
+						onSuccess(false, task.exception?.message ?: "An unknown error occurred")
+						Log.e(TAG, "Error creating user:", task.exception)
+					}
+				}
 		}
 	}
 }

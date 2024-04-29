@@ -59,12 +59,12 @@ fun SignUpUserPage() {
 	fun navigate() {
 		if (form.validate()) {
 			auth.saveUserInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
-			auth.signup { emailAlreadyExist ->
-				if (emailAlreadyExist) {
-					form.error(false, "This is email already exist.")
+			auth.signup { success, message ->
+				if (!success) {
+					form.error(false, message)
 					email.valid(false)
 					email.focusRequester.requestFocus()
-				} else Router.navigate("auth/confirm-email", false)
+				} else Router.navigate("auth/verify-email", false)
 			}
 		} else form.focusOnFirstInvalidField()
 	}
