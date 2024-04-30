@@ -83,12 +83,11 @@ fun <T> useState(
  * 	}
  * }
  *
- * val vm = NotificationsViewModel()
- * val count = useAtom(vm.unreadCount)
+ * val count = useAtom(Store.notifications().unreadCount)
  *
  * Column {
  * 	Text("Unread notifications: $count")
- * 	Button("Read All") { vm.clearAll() }
+ * 	Button("Read All") { Store.notifications().clearAll() }
  * }
  * ```
  * @param lifeData The LiveData object to observe

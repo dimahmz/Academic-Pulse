@@ -25,103 +25,103 @@ import com.example.academicpulse.view_model.Store
 
 @Composable
 fun SignUpUserPage() {
-    val auth = Store.auth()
-    val form = useForm()
-    val firstName = useField(
-        form = form,
-        value = auth.signUpInfo.firstName,
-        regex = Form.name,
-        ifEmpty = "The first name is required.",
-        ifInvalid = "The first name is invalid."
-    )
-    val lastName = useField(
-        form = form,
-        value = auth.signUpInfo.lastName,
-        regex = Form.name,
-        ifEmpty = "The last name is required.",
-        ifInvalid = "The last name is invalid."
-    )
-    val email = useField(
-        form = form,
-        value = auth.signUpInfo.email,
-        regex = Form.email,
-        ifEmpty = "The email is required.",
-        ifInvalid = "The email must be a valid email."
-    )
-    val password = useField(
-        form = form,
-        value = auth.signUpInfo.password,
-        regex = Form.password,
-        ifEmpty = "The password is required.",
-        ifInvalid = "The password should be strong."
-    )
+	val auth = Store.auth()
+	val form = useForm()
+	val firstName = useField(
+		form = form,
+		value = auth.signUpInfo.firstName,
+		regex = Form.name,
+		ifEmpty = "The first name is required.",
+		ifInvalid = "The first name is invalid."
+	)
+	val lastName = useField(
+		form = form,
+		value = auth.signUpInfo.lastName,
+		regex = Form.name,
+		ifEmpty = "The last name is required.",
+		ifInvalid = "The last name is invalid."
+	)
+	val email = useField(
+		form = form,
+		value = auth.signUpInfo.email,
+		regex = Form.email,
+		ifEmpty = "The email is required.",
+		ifInvalid = "The email must be a valid email."
+	)
+	val password = useField(
+		form = form,
+		value = auth.signUpInfo.password,
+		regex = Form.password,
+		ifEmpty = "The password is required.",
+		ifInvalid = "The password should be strong."
+	)
 
-    fun navigate() {
-        if (form.validate()) {
-            auth.saveUserInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
-            auth.signup { success, message ->
-                if (!success) {
-                    form.error(false, message)
-                    email.valid(false)
-                    email.focusRequester.requestFocus()
-                } else Router.navigate("auth/verify-email", false)
-            }
-        } else form.focusOnFirstInvalidField()
-    }
+	fun navigate() {
+		if (form.validate()) {
+			auth.saveUserInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
+			auth.signup { success, message ->
+				if (!success) {
+					form.error(false, message)
+					email.valid(false)
+					email.focusRequester.requestFocus()
+				} else Router.navigate("auth/verify-email", false)
+			}
+		} else form.focusOnFirstInvalidField()
+	}
 
-    Column(
-        modifier = Modifier
-			.fillMaxHeight()
-			.padding(horizontal = pagePaddingX),
-    ) {
-        Header(title = R.string.signup)
+	Column(
+		modifier = Modifier
+        .fillMaxHeight()
+        .padding(horizontal = pagePaddingX),
+	) {
+		Header(title = R.string.signup)
 
-        Column(modifier = Modifier.padding(bottom = 30.dp)) {
-            Title(text = R.string.institution_info)
-            Description(text = R.string.institution_info_description)
-        }
+		Column(modifier = Modifier.padding(bottom = 30.dp)) {
+			Title(text = R.string.institution_info)
+			Description(text = R.string.institution_info_description)
+		}
 
-        Column(verticalArrangement = Arrangement.spacedBy(gap)) {
-            Input(
-                field = firstName,
-                label = Res.string(R.string.first_name),
-                focusNext = lastName.focusRequester,
-            )
-            Input(
-                field = lastName,
-                label = Res.string(R.string.last_name),
-                focusNext = email.focusRequester,
-            )
-            Input(
-                field = email,
-                label = Res.string(R.string.institution_email),
-                focusNext = password.focusRequester,
-                keyboardType = KeyboardType.Email,
-            )
-            Input(
-                field = password,
-                label = Res.string(R.string.password),
-                placeholder = Res.string(R.string.create_password),
-                password = true,
-            )
-            form.Error()
-        }
+		Column(verticalArrangement = Arrangement.spacedBy(gap)) {
+			Input(
+				field = firstName,
+				label = Res.string(R.string.first_name),
+				focusNext = lastName.focusRequester,
+			)
+			Input(
+				field = lastName,
+				label = Res.string(R.string.last_name),
+				focusNext = email.focusRequester,
+			)
+			Input(
+				field = email,
+				label = Res.string(R.string.institution_email),
+				focusNext = password.focusRequester,
+				keyboardType = KeyboardType.Email,
+			)
+			Input(
+				field = password,
+				label = Res.string(R.string.password),
+				placeholder = Res.string(R.string.create_password),
+				password = true,
+			)
+			form.Error()
+		}
 
-        Spacer(Modifier.weight(1f))
-        Button(
-            text = R.string.continued,
-            modifier = Modifier.padding(bottom = 60.dp)
-        ) { navigate() }
-    }
+		Spacer(Modifier.weight(1f))
+		Button(
+			text = R.string.continued,
+			modifier = Modifier.padding(bottom = 60.dp)
+		) { navigate() }
+	}
 
-    BackHandler {
-        auth.saveUserInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
-        Router.back(/* to = auth/sign-up */)
-    }
+	BackHandler {
+		auth.saveUserInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
+		Router.back(/* to = auth/sign-up */)
+	}
 }
 
 @Preview(showSystemUi = true)
 @Composable
 fun PreviewSignUpUserPage() {
-    SignUpUserPage()
+	SignUpUserPage()
 }
