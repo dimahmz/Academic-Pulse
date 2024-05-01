@@ -69,17 +69,16 @@ fun NavGraph(nav: NavHostController, startDestination: String) {
 		}
 		navigation(route = "auth", startDestination = "auth/login-user") {
 			composable(route = "auth/login-user") {
-				LogInUserPage(/* BackHandler is declared inside page, backTo = exit the app */)
+				LogInUserPage(/* BackHandler, exit the app */)
 			}
 			composable(route = "auth/sign-up-institution") {
-				SignUpInstitutionPage(/* BackHandler is declared inside page, backTo = auth/login-user */)
+				SignUpInstitutionPage(/* BackHandler, to = auth/login-user */)
 			}
 			composable(route = "auth/sign-up-user") {
-				SignUpUserPage(/* BackHandler is declared inside page, backTo = auth/sign-up-institution */)
+				SignUpUserPage(/* BackHandler, to = auth/sign-up-institution */)
 			}
 			composable(route = "auth/verify-email") {
-				VerifyEmailPage()
-				BackHandler { Router.replace("auth/login-user", false )}
+				VerifyEmailPage(/* BackHandler, to = auth/login-user */)
 			}
 		}
 	}

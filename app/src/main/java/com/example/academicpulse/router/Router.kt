@@ -50,14 +50,14 @@ class Router(navigator: NavHostController) {
 			return appRouter[0].route
 		}
 
-		/** Use a normal navigation by adding the current page to backstack and redirect to the next page */
+		/** Use a normal navigation by adding the current page to backstack and redirect to the next page. */
 		fun navigate(target: String, navBarVisible: Boolean) {
 			appRouter[0].navBarVisible.value = navBarVisible
 			appRouter[0].route.value = target
 			appRouter[0].navController.navigate(target)
 		}
 
-		/** Navigate to the next page without adding the current page to backstack */
+		/** Navigate to the next page without adding the current page to backstack. */
 		fun replace(target: String, navBarVisible: Boolean) {
 			appRouter[0].navBarVisible.value = navBarVisible
 			appRouter[0].route.value = target
@@ -68,9 +68,9 @@ class Router(navigator: NavHostController) {
 			}
 		}
 
-		/** Navigate to the previous page */
-		fun back() {
-			appRouter[0].navController.popBackStack()
+		/** Navigate to a previous page. */
+		fun back(step: Int = 1) {
+			repeat(step) { appRouter[0].navController.popBackStack() }
 		}
 	}
 }

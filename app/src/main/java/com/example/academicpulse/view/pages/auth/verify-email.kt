@@ -1,5 +1,6 @@
 package com.example.academicpulse.view.pages.auth
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,8 +42,12 @@ fun VerifyEmailPage() {
 			text = R.string.back_login,
 			modifier = Modifier.padding(vertical = 30.dp)
 		) {
-			Router.navigate("auth/login-user", false)
+			Router.back(step = 3)
 		}
+	}
+
+	BackHandler {
+		Router.back(step = 3)
 	}
 }
 
