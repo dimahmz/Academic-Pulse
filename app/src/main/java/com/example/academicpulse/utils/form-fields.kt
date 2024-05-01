@@ -40,23 +40,20 @@ fun useField(
 	ifEmpty: String? = null,
 	ifInvalid: String? = null
 ): Field {
-	return useState({
-		val validator = if (regex != null && ifEmpty != null && ifInvalid != null)
+	val validator = useState({
+		if (regex != null && ifEmpty != null && ifInvalid != null)
 			fun(field: Field): Boolean { return field.validator(regex, ifEmpty, ifInvalid) }
 		else if (regex != null && ifInvalid != null)
 			fun(field: Field): Boolean { return field.validator(regex, ifInvalid) }
 		else if (ifEmpty != null)
 			fun(field: Field): Boolean { return field.validator(ifEmpty) }
 		else null
+	})
 
-		val field = Field(
-			value = value ?: "",
-			required = required,
-			error = form?.error ?: mutableStateOf(""),
-			focusRequester = FocusRequester(),
-			validator = validator,
-		)
-		form?.addField(field)
-		field
-	}).first
+	return useField(
+		form = form,
+		value = value,
+		required = required,
+		validator = validator.first,
+	)
 }

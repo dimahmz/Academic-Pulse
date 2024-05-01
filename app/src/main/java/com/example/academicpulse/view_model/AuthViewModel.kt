@@ -53,15 +53,21 @@ class AuthViewModel : ViewModel() {
 	fun login(callback: (Boolean, String) -> Unit) {
 		val email = loginInfo.email
 		val password = loginInfo.password
-		auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-			if (task.isSuccessful) {
-				val user = auth.currentUser
-				callback(user != null && user.isEmailVerified, "Must verify User before Login")
-			} else {
-				// If sign in fails, display an error message to the user.
+		auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { login ->
+			val user = auth.currentUser
+			// If any unexpected error occurred.
+			if (user == null || !login.isSuccessful) {
 				callback(false, "An error has occurred, please try again later")
-				logcat("signInWithEmail:failure", task.exception)
+				logcat("signInWithEmail:failure", login.exception)
+				return@addOnCompleteListener
 			}
+			// Check if the email is verified
+			if (!user.isEmailVerified) {
+				callback(false, "Must verify User before Login")
+				return@addOnCompleteListener
+			}
+			// TODO: Check if the user account is activated
+			callback(true, "")
 		}
 	}
 
@@ -74,12 +80,12 @@ class AuthViewModel : ViewModel() {
 		val department = if (institutionSkipped) null else signUpInfo.department
 		val position = if (institutionSkipped) null else signUpInfo.position
 
-		auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+		auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { creating ->
 			val user = auth.currentUser
 			// Exit if the user is null or anything went wrong
-			if (user == null || !task.isSuccessful) {
-				callback(false, task.exception?.message ?: "An unknown error occurred")
-				logcat("Error creating user:", task.exception)
+			if (user == null || !creating.isSuccessful) {
+				callback(false, creating.exception?.message ?: "An unknown error occurred")
+				logcat("Error creating user:", creating.exception)
 				return@addOnCompleteListener
 			}
 
@@ -96,17 +102,19 @@ class AuthViewModel : ViewModel() {
 				"role" to "user",
 				"activated" to false
 			)
-			userRef.set(userData).addOnSuccessListener {
-				// send a verification email to the user
-				user.sendEmailVerification().addOnCompleteListener { task ->
-					if (task.isSuccessful) {
-						callback(true, "Account has been created")
-						logcat("Email sent.")
-					} else callback(false, task.exception?.message ?: "An unknown error occurred")
+			userRef.set(userData).addOnCompleteListener { saving ->
+				if (!saving.isSuccessful) {
+					logcat("Error creating user document: ", saving.exception)
+					callback(false, saving.exception?.message ?: "An unknown error occurred")
+				} else {
+					// Send a verification email to the user
+					user.sendEmailVerification().addOnCompleteListener { sending ->
+						if (sending.isSuccessful) {
+							callback(true, "Account has been created")
+							logcat("Email sent.")
+						} else callback(false, sending.exception?.message ?: "An unknown error occurred")
+					}
 				}
-			}.addOnFailureListener { exception ->
-				logcat("Error creating user document: ", exception)
-				callback(false, exception.message ?: "An unknown error occurred")
 			}
 		}
 	}
