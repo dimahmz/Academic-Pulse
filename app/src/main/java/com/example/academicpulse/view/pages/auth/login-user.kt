@@ -1,7 +1,5 @@
 package com.example.academicpulse.view.pages.auth
 
-import android.content.ContentValues
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -51,16 +49,14 @@ fun LogInUserPage() {
 		ifInvalid = "The password is invalid."
 	)
 
-	fun validate() {
+	fun login() {
 		if (form.validate()) {
 			auth.saveLoginInfo(email.trim(), password.trim())
 			auth.login { loggedIn, message ->
 				if (loggedIn) {
 					auth.clearLogin()
-					Log.w(ContentValues.TAG, message)
-				} else {
-					Log.w(ContentValues.TAG, message)
-				}
+					Router.navigate("home", true)
+				} else form.error(valid = false, error = message)
 			}
 		} else form.focusOnFirstInvalidField()
 	}
@@ -78,8 +74,8 @@ fun LogInUserPage() {
 
 		Column(
 			modifier = Modifier
-          .padding(horizontal = pagePaddingX)
-          .weight(1f)
+				.padding(horizontal = pagePaddingX)
+				.weight(1f)
 		) {
 			H1(
 				text = R.string.welcome,
@@ -103,13 +99,13 @@ fun LogInUserPage() {
 				Button(
 					text = R.string.login,
 					modifier = Modifier.padding(top = (if (form.valid()) 14 else 3).dp),
-				) { validate() }
+				) { login() }
 			}
 
 			Row(
 				modifier = Modifier
-            .padding(top = 20.dp)
-            .fillMaxWidth(),
+					.padding(top = 20.dp)
+					.fillMaxWidth(),
 				horizontalArrangement = Arrangement.Center
 			) {
 				Text(text = R.string.new_member, modifier = Modifier.padding(end = 10.dp))

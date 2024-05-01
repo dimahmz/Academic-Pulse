@@ -2,6 +2,8 @@ package com.example.academicpulse.view_model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -23,6 +25,8 @@ class Store : ViewModel() {
 	// Note: Static variables and methods are used just to hold the global Store instance and be accessible in anywhere.
 	companion object {
 		private val appStore = Store()
+		// Firebase database cloud instance
+		val database by lazy { Firebase.firestore }
 
 		fun isReady(): Boolean {
 			return appStore.isReady.value

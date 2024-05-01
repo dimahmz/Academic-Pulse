@@ -56,23 +56,20 @@ fun SignUpUserPage() {
 		ifInvalid = "The password should be strong."
 	)
 
-	fun navigate() {
+	fun signup() {
 		if (form.validate()) {
-			auth.saveUserInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
+			auth.saveSignUpInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
 			auth.signup { success, message ->
-				if (!success) {
-					form.error(false, message)
-					email.valid(false)
-					email.focusRequester.requestFocus()
-				} else Router.navigate("auth/verify-email", false)
+				if (success) Router.navigate("auth/verify-email", false)
+				else form.error(valid = false, error = message)
 			}
 		} else form.focusOnFirstInvalidField()
 	}
 
 	Column(
 		modifier = Modifier
-        .fillMaxHeight()
-        .padding(horizontal = pagePaddingX),
+			.fillMaxHeight()
+			.padding(horizontal = pagePaddingX),
 	) {
 		Header(title = R.string.signup)
 
@@ -108,15 +105,12 @@ fun SignUpUserPage() {
 		}
 
 		Spacer(Modifier.weight(1f))
-		Button(
-			text = R.string.continued,
-			modifier = Modifier.padding(bottom = 60.dp)
-		) { navigate() }
+		Button(text = R.string.continued, modifier = Modifier.padding(bottom = 60.dp)) { signup() }
 	}
 
 	BackHandler {
-		auth.saveUserInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
-		Router.back(/* to = auth/sign-up */)
+		auth.saveSignUpInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
+		Router.back(/* to = auth/sign-up-institution */)
 	}
 }
 

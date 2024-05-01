@@ -1,28 +1,21 @@
 package com.example.academicpulse.view_model
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.academicpulse.model.LoginInfo
 import com.example.academicpulse.model.SignUpInfo
+import com.example.academicpulse.utils.logcat
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.launch
 import com.google.firebase.auth.auth
 import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
 
 class AuthViewModel : ViewModel() {
 
-	//Firebase Authentication
+	// Firebase Authentication instance
 	private val auth: FirebaseAuth = Firebase.auth
-
-	// Could Firestore database
-	private val db = Firebase.firestore
-
 
 	val loginInfo: LoginInfo = LoginInfo()
 	val signUpInfo: SignUpInfo = SignUpInfo()
+	private var institutionSkipped: Boolean = false
 
 	fun saveLoginInfo(email: String, password: String) {
 		loginInfo.email = email
@@ -35,18 +28,14 @@ class AuthViewModel : ViewModel() {
 		signUpInfo.institution = institution
 		signUpInfo.department = department
 		signUpInfo.position = position
-		signUpInfo.institutionSkipped = skipped
+		institutionSkipped = skipped
 	}
 
-	fun saveUserInfo(firstName: String, lastName: String, email: String, password: String) {
+	fun saveSignUpInfo(firstName: String, lastName: String, email: String, password: String) {
 		signUpInfo.firstName = firstName
 		signUpInfo.lastName = lastName
 		signUpInfo.email = email
 		signUpInfo.password = password
-	}
-
-	fun setConfirmationCode(value: String) {
-		signUpInfo.code = value
 	}
 
 	fun clearLogin() {
@@ -59,88 +48,65 @@ class AuthViewModel : ViewModel() {
 		signUpInfo.password = ""
 		signUpInfo.firstName = ""
 		signUpInfo.lastName = ""
-		signUpInfo.code = ""
 	}
 
-	fun login(onSuccess: (Boolean, String) -> Unit) {
+	fun login(callback: (Boolean, String) -> Unit) {
 		val email = loginInfo.email
 		val password = loginInfo.password
-		// Lunch a separated async script to log in
-		viewModelScope.launch {
-			auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-				if (task.isSuccessful) {
-					val user = auth.currentUser
-					// email is unverified
-					if (!user!!.isEmailVerified) {
-						onSuccess(false, "Must verify User before Login")
-						Log.w(TAG, "Must verify User before Login")
-					} else {
-						Log.w(TAG, "Logged In Successfully")
-					}
-				} else {
-					// If sign in fails, display an error message to the user.
-					onSuccess(false, "An error has occurred please try again later")
-					// console log
-					Log.w(TAG, "signInWithEmail:failure", task.exception)
-				}
+		auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+			if (task.isSuccessful) {
+				val user = auth.currentUser
+				callback(user != null && user.isEmailVerified, "Must verify User before Login")
+			} else {
+				// If sign in fails, display an error message to the user.
+				callback(false, "An error has occurred, please try again later")
+				logcat("signInWithEmail:failure", task.exception)
 			}
 		}
 	}
 
-	fun signup(onSuccess: (Boolean, String) -> Unit) {
+	fun signup(callback: (Boolean, String) -> Unit) {
 		val firstName = signUpInfo.firstName
 		val lastName = signUpInfo.lastName
 		val email = signUpInfo.email
 		val password = signUpInfo.password
-		val skipped = signUpInfo.institutionSkipped
-		val institution = if (skipped) null else signUpInfo.institution
-		val department = if (skipped) null else signUpInfo.department
-		val position = if (skipped) null else signUpInfo.position
+		val institution = if (institutionSkipped) null else signUpInfo.institution
+		val department = if (institutionSkipped) null else signUpInfo.department
+		val position = if (institutionSkipped) null else signUpInfo.position
 
-		// Lunch a separated async script to sign up
-		viewModelScope.launch {
-			auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-				if (task.isSuccessful) {
-					// get the current user
-					val user = auth.currentUser
-					// Exit if user is null
-					val uid = user?.uid ?: return@addOnCompleteListener
-					// create a new user collection
-					val userRef = db.collection("users").document(uid)
-					// collection fields
-					val userData = hashMapOf(
-						"uid" to uid,
-						"email" to email,
-						"firstName" to firstName,
-						"lastName" to lastName,
-						"institution" to institution,
-						"department" to department,
-						"position" to position,
-						"role" to "user",
-						"activated" to false
-					)
-					// add user data to the users collection
-					userRef.set(userData).addOnSuccessListener {
-						// send an email verification to the user
-						user?.sendEmailVerification()?.addOnCompleteListener { task ->
-							if (task.isSuccessful) {
-								// user has been created
-								onSuccess(true, "Account has been created")
-								Log.d(TAG, "Email sent.")
-							} else {
-								onSuccess(
-									false, task.exception?.message ?: "An unknown error occurred"
-								)
-							}
-						}
-					}.addOnFailureListener { exception ->
-						Log.e(TAG, "Error creating user document: ", exception)
-						onSuccess(false, exception.message ?: "An unknown error occurred")
-					}
-				} else {
-					onSuccess(false, task.exception?.message ?: "An unknown error occurred")
-					Log.e(TAG, "Error creating user:", task.exception)
+		auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+			val user = auth.currentUser
+			// Exit if the user is null or anything went wrong
+			if (user == null || !task.isSuccessful) {
+				callback(false, task.exception?.message ?: "An unknown error occurred")
+				logcat("Error creating user:", task.exception)
+				return@addOnCompleteListener
+			}
+
+			// create a new user collection and fill its content
+			val userRef = Store.database.collection("users").document(user.uid)
+			val userData = hashMapOf(
+				"uid" to user.uid,
+				"email" to email,
+				"firstName" to firstName,
+				"lastName" to lastName,
+				"institution" to institution,
+				"department" to department,
+				"position" to position,
+				"role" to "user",
+				"activated" to false
+			)
+			userRef.set(userData).addOnSuccessListener {
+				// send a verification email to the user
+				user.sendEmailVerification().addOnCompleteListener { task ->
+					if (task.isSuccessful) {
+						callback(true, "Account has been created")
+						logcat("Email sent.")
+					} else callback(false, task.exception?.message ?: "An unknown error occurred")
 				}
+			}.addOnFailureListener { exception ->
+				logcat("Error creating user document: ", exception)
+				callback(false, exception.message ?: "An unknown error occurred")
 			}
 		}
 	}

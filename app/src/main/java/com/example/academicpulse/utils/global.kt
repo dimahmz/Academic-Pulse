@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
+import android.util.Log
 
 /** The App context that represents the active instance of the current activity which is `Index` as we have a single activity (Single Page App).
  * Note: An array type is used instead of Context to avoid null checks. We are certain that the context will not be null as saveAppContext is one of the first functions called in the lifecycle.
@@ -68,4 +69,12 @@ fun <T> useEffect(list: List<T>, effect: (list: List<T>) -> Unit): () -> Unit {
 	}
 	// Function to stop the effect from running
 	return { kill(true) }
+}
+
+fun logcat(message: String) {
+	Log.d("Academic Pulse", message)
+}
+
+fun logcat(message: String, exception: Exception?) {
+	Log.e("Academic Pulse", message, exception)
 }
