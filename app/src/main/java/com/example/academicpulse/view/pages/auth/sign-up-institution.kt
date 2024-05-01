@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
@@ -74,6 +75,8 @@ fun SignUpInstitutionPage() {
 			Input(
 				field = position,
 				label = Res.string(R.string.position),
+				okIcon = ImeAction.Next,
+				onOk = { navigate(validate = true) }
 			)
 			form.Error()
 		}

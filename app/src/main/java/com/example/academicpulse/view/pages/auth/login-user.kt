@@ -103,6 +103,7 @@ fun LogInUserPage() {
 					label = Res.string(R.string.password),
 					placeholder = Res.string(R.string.create_password),
 					password = true,
+					onOk = { login() }
 				)
 				form.Error()
 				Button(

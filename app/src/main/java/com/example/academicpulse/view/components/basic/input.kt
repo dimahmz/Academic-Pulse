@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.LocalContentColor
@@ -17,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -66,6 +68,11 @@ fun Input(
 	 * - See also [onOk] to set a custom behavior when clicking on this button
 	 */
 	okIcon: ImeAction = ImeAction.Default,
+
+	/** If the [onOk] callback is not null, by default the keyboard will be hidden before executing it.
+	 * disable it if you need the keyboard to stay visible.
+	 */
+	hideKeyboardOnOk: Boolean = true,
 
 	/** The keyboard type, e.g. `KeyboardType.Text`, `KeyboardType.Email`, `KeyboardType.Decimal`
 	 * - Note: It has no effect if [password] is `true`, as `KeyboardType.Password` is applied automatically.
@@ -138,6 +145,7 @@ fun Input(
 
 	/** Emits when pressing the keyboard Ok button.
 	 * - See also: [okIcon] to customize the icon of this button.
+	 * - See also: [hideKeyboardOnOk] to handle the keyboard closing before executing [onOk].
 	 * ```
 	 * Example usage:
 	 * Input(
@@ -152,6 +160,15 @@ fun Input(
 ) {
 	val (passwordVisible, setPasswordVisibility) = useState(false)
 	val (focus) = useState({ focusRequester ?: FocusRequester() })
+	val keyboardController = LocalSoftwareKeyboardController.current
+
+	val onPressOk: (KeyboardActionScope.() -> Unit) = {
+		focusNext?.requestFocus()
+		if (onOk != null) {
+			if (hideKeyboardOnOk) keyboardController?.hide()
+			onOk()
+		}
+	}
 
 	Column {
 		if (label != null) {
@@ -222,15 +239,12 @@ fun Input(
 				imeAction = if (focusNext != null) ImeAction.Next else okIcon,
 			),
 			keyboardActions = KeyboardActions(
-				onDone = { onOk?.invoke() },
-				onGo = { onOk?.invoke() },
-				onNext = {
-					focusNext?.requestFocus()
-					onOk?.invoke()
-				},
-				onPrevious = { onOk?.invoke() },
-				onSearch = { onOk?.invoke() },
-				onSend = { onOk?.invoke() },
+				onDone = onPressOk,
+				onGo = onPressOk,
+				onNext = onPressOk,
+				onPrevious = onPressOk,
+				onSearch = onPressOk,
+				onSend = onPressOk,
 			),
 		)
 	}

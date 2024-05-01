@@ -109,6 +109,7 @@ fun SignUpUserPage() {
 				label = Res.string(R.string.password),
 				placeholder = Res.string(R.string.create_password),
 				password = true,
+				onOk = { signup() }
 			)
 			form.Error()
 		}
