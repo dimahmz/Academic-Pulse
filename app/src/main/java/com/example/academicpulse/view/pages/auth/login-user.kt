@@ -1,5 +1,6 @@
 package com.example.academicpulse.view.pages.auth
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,8 +28,10 @@ import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.utils.Res
 import com.example.academicpulse.utils.useField
 import com.example.academicpulse.utils.useForm
+import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view_model.Store
+import kotlin.system.exitProcess
 
 @Composable
 fun LogInUserPage() {
@@ -49,10 +52,15 @@ fun LogInUserPage() {
 		ifInvalid = "The password is invalid."
 	)
 
+	val (loading, setLoading) = useState(false)
+
 	fun login() {
+		if (loading) return
 		if (form.validate()) {
+			setLoading(true)
 			auth.saveLoginInfo(email.trim(), password.trim())
 			auth.login { loggedIn, message ->
+				setLoading(false)
 				if (loggedIn) {
 					auth.clearLogin()
 					Router.navigate("home", true)
@@ -96,6 +104,7 @@ fun LogInUserPage() {
 					password = true,
 				)
 				form.Error()
+				if (loading) Text(text = "loading")
 				Button(
 					text = R.string.login,
 					modifier = Modifier.padding(top = (if (form.valid()) 14 else 3).dp),
@@ -120,6 +129,11 @@ fun LogInUserPage() {
 				)
 			}
 		}
+	}
+
+	BackHandler {
+		if (loading) return@BackHandler
+		exitProcess(0)
 	}
 }
 

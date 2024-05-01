@@ -19,6 +19,7 @@ import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.utils.Res
 import com.example.academicpulse.utils.useField
 import com.example.academicpulse.utils.useForm
+import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view.components.global.Header
 import com.example.academicpulse.view_model.Store
@@ -56,10 +57,15 @@ fun SignUpUserPage() {
 		ifInvalid = "The password should be strong."
 	)
 
+	val (loading, setLoading) = useState(false)
+
 	fun signup() {
+		if (loading) return
 		if (form.validate()) {
+			setLoading(true)
 			auth.saveSignUpInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
 			auth.signup { success, message ->
+				setLoading(false)
 				if (success) Router.navigate("auth/verify-email", false)
 				else form.error(valid = false, error = message)
 			}
@@ -105,10 +111,12 @@ fun SignUpUserPage() {
 		}
 
 		Spacer(Modifier.weight(1f))
+		if (loading) Text(text = "loading")
 		Button(text = R.string.continued, modifier = Modifier.padding(bottom = 60.dp)) { signup() }
 	}
 
 	BackHandler {
+		if (loading) return@BackHandler
 		auth.saveSignUpInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
 		Router.back(/* to = auth/sign-up-institution */)
 	}
