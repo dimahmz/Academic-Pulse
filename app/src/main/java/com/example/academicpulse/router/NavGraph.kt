@@ -67,21 +67,21 @@ fun NavGraph(nav: NavHostController, startDestination: String) {
 				BackHandler { Router.replace("home", true) }
 			}
 		}
-		navigation(route = "auth", startDestination = "auth/login-user") {
-			composable(route = "auth/login-user") {
-				LogInUserPage(/* BackHandler, exit the app */)
+		navigation(route = "auth", startDestination = "auth/log-in") {
+			composable(route = "auth/log-in") {
+				LogInPage(/* BackHandler, exit the app */)
 			}
 			composable(route = "auth/activation") {
-				ActivationPage(/* BackHandler, to = auth/login-user */)
+				ActivationPage(/* BackHandler, to = auth/log-in */)
 			}
 			composable(route = "auth/sign-up-institution") {
-				SignUpInstitutionPage(/* BackHandler, to = auth/login-user */)
+				SignUpInstitutionPage(/* BackHandler, to = auth/log-in */)
 			}
-			composable(route = "auth/sign-up-user") {
-				SignUpUserPage(/* BackHandler, to = auth/sign-up-institution */)
+			composable(route = "auth/sign-up") {
+				SignUpPage(/* BackHandler, to = auth/sign-up-institution */)
 			}
-			composable(route = "auth/verify-email") {
-				VerifyEmailPage(/* BackHandler, to = auth/login-user */)
+			composable(route = "auth/verification") {
+				VerificationPage(/* BackHandler, to = auth/log-in */)
 			}
 		}
 	}

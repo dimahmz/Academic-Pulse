@@ -43,12 +43,12 @@ fun ActivationPage() {
 			text = R.string.log_out,
 			modifier = Modifier.padding(top = 40.dp)
 		) {
-			Router.back(/* to = auth/login-user */)
+			Router.back(/* to = auth/log-in */)
 		}
 	}
 
 	BackHandler {
-		Router.back(/* to = auth/login-user */)
+		Router.back(/* to = auth/log-in */)
 	}
 }
 

@@ -33,7 +33,7 @@ import com.example.academicpulse.view_model.Store
 import kotlin.system.exitProcess
 
 @Composable
-fun LogInUserPage() {
+fun LogInPage() {
 	val auth = Store.auth()
 	val form = useForm()
 	val email = useField(
@@ -136,5 +136,5 @@ fun LogInUserPage() {
 @Preview(showSystemUi = true)
 @Composable
 fun PreviewLogInUserPage() {
-	LogInUserPage()
+	LogInPage()
 }

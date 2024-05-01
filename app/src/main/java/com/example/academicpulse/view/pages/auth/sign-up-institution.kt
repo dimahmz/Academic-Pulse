@@ -44,7 +44,7 @@ fun SignUpInstitutionPage() {
 	fun navigate(validate: Boolean) {
 		if (!validate || form.validate()) {
 			auth.saveInstitutionInfo(institution.trim(), department.trim(), position.trim(), !validate)
-			Router.navigate("auth/sign-up-user", false)
+			Router.navigate("auth/sign-up", false)
 		} else form.focusOnFirstInvalidField()
 	}
 
@@ -92,7 +92,7 @@ fun SignUpInstitutionPage() {
 
 	BackHandler {
 		auth.clearSignUp()
-		Router.back(/* to = auth/login-user */)
+		Router.back(/* to = auth/log-in */)
 	}
 }
 

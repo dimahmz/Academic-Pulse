@@ -24,7 +24,7 @@ import com.example.academicpulse.view.components.global.Header
 import com.example.academicpulse.view_model.Store
 
 @Composable
-fun SignUpUserPage() {
+fun SignUpPage() {
 	val auth = Store.auth()
 	val form = useForm()
 	val firstName = useField(
@@ -127,5 +127,5 @@ fun SignUpUserPage() {
 @Preview(showSystemUi = true)
 @Composable
 fun PreviewSignUpUserPage() {
-	SignUpUserPage()
+	SignUpPage()
 }

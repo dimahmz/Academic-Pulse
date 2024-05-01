@@ -22,7 +22,7 @@ import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.view.components.basic.*
 
 @Composable
-fun VerifyEmailPage() {
+fun VerificationPage() {
 	Column(
 		modifier = Modifier
 			.fillMaxHeight()
@@ -43,17 +43,17 @@ fun VerifyEmailPage() {
 			text = R.string.back_login,
 			modifier = Modifier.padding(top = 40.dp)
 		) {
-			Router.back(step = 3 /* to = auth/login-user */)
+			Router.back(step = 3 /* to = auth/log-in */)
 		}
 	}
 
 	BackHandler {
-		Router.back(step = 3 /* to = auth/login-user */)
+		Router.back(step = 3 /* to = auth/log-in */)
 	}
 }
 
 @Preview(showSystemUi = true)
 @Composable
 fun PreviewVerifyEmailPage() {
-	VerifyEmailPage()
+	VerificationPage()
 }

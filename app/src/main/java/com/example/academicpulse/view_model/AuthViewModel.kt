@@ -114,7 +114,7 @@ class AuthViewModel : ViewModel() {
 						if (sending.isSuccessful) {
 							clearSignUp()
 							saveLoginInfo(email, password)
-							Router.navigate("auth/verify-email", false)
+							Router.navigate("auth/verification", false)
 						} else {
 							logcat("Error sending email:", sending.exception)
 							onError(R.string.unknown_error)
