@@ -28,18 +28,4 @@ class SignUpInfo {
 			"activated" to false
 		)
 	}
-
-	companion object {
-		fun fromMap(map: Map<String, Any>): Pair<SignUpInfo, Boolean> {
-			val signUpInfo = SignUpInfo()
-			signUpInfo.email = map["email"].toString()
-			signUpInfo.firstName = map["firstName"].toString()
-			signUpInfo.lastName = map["lastName"].toString()
-			signUpInfo.institution = map["institution"]?.toString() ?: ""
-			signUpInfo.department = map["department"]?.toString() ?: ""
-			signUpInfo.position = map["position"]?.toString() ?: ""
-			signUpInfo.institutionSkipped = (map["institution"] == null)
-			return Pair(signUpInfo, map["activated"] as Boolean)
-		}
-	}
 }

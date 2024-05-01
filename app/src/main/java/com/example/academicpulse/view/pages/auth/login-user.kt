@@ -53,12 +53,12 @@ fun LogInUserPage() {
 
 	val (loading, setLoading) = useState(false)
 
-	fun login() {
+	fun logIn() {
 		if (loading) return
 		if (form.validate()) {
 			setLoading(true)
 			auth.saveLoginInfo(email.trim(), password.trim())
-			auth.login { message ->
+			auth.logIn { message ->
 				setLoading(false)
 				form.error(valid = false, error = message)
 			}
@@ -98,14 +98,14 @@ fun LogInUserPage() {
 					label = R.string.password,
 					placeholder = R.string.create_password,
 					password = true,
-					onOk = { login() }
+					onOk = { logIn() }
 				)
 				form.Error()
 				Button(
-					text = R.string.login,
+					text = R.string.log_in,
 					modifier = Modifier.padding(top = (if (form.valid()) 14 else 3).dp),
 					loading = loading,
-				) { login() }
+				) { logIn() }
 			}
 
 			Row(

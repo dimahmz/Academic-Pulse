@@ -58,12 +58,12 @@ fun SignUpUserPage() {
 
 	val (loading, setLoading) = useState(false)
 
-	fun signup() {
+	fun signUp() {
 		if (loading) return
 		if (form.validate()) {
 			setLoading(true)
 			auth.saveSignUpInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
-			auth.signup { message ->
+			auth.signUp { message ->
 				setLoading(false)
 				form.error(valid = false, error = message)
 			}
@@ -75,7 +75,7 @@ fun SignUpUserPage() {
 			.fillMaxHeight()
 			.padding(horizontal = pagePaddingX),
 	) {
-		Header(title = R.string.signup)
+		Header(title = R.string.sign_up)
 
 		Column(modifier = Modifier.padding(bottom = 30.dp)) {
 			Title(text = R.string.institution_info)
@@ -104,7 +104,7 @@ fun SignUpUserPage() {
 				label = R.string.password,
 				placeholder = R.string.create_password,
 				password = true,
-				onOk = { signup() }
+				onOk = { signUp() }
 			)
 			form.Error()
 		}
@@ -114,7 +114,7 @@ fun SignUpUserPage() {
 			text = R.string.continued,
 			modifier = Modifier.padding(bottom = 60.dp),
 			loading = loading,
-		) { signup() }
+		) { signUp() }
 	}
 
 	BackHandler {

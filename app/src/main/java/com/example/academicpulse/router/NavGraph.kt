@@ -71,6 +71,9 @@ fun NavGraph(nav: NavHostController, startDestination: String) {
 			composable(route = "auth/login-user") {
 				LogInUserPage(/* BackHandler, exit the app */)
 			}
+			composable(route = "auth/activation") {
+				ActivationPage(/* BackHandler, to = auth/login-user */)
+			}
 			composable(route = "auth/sign-up-institution") {
 				SignUpInstitutionPage(/* BackHandler, to = auth/login-user */)
 			}

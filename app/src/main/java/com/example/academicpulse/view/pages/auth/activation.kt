@@ -22,7 +22,7 @@ import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.view.components.basic.*
 
 @Composable
-fun VerifyEmailPage() {
+fun ActivationPage() {
 	Column(
 		modifier = Modifier
 			.fillMaxHeight()
@@ -31,29 +31,29 @@ fun VerifyEmailPage() {
 		horizontalAlignment = Alignment.CenterHorizontally
 	) {
 		Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-			Image(id = R.drawable.icon_receive_email, modifier = Modifier.size(70.dp))
+			Image(id = R.drawable.icon_clock, modifier = Modifier.size(60.dp))
 		}
 
 		Spacer(Modifier.height(20.dp))
-		H1(text = R.string.verify_email, align = TextAlign.Center)
+		H1(text = R.string.account_activation, align = TextAlign.Center)
 		Spacer(Modifier.height(6.dp))
-		Description(text = R.string.verify_email_description, align = TextAlign.Center)
+		Description(text = R.string.account_activation_description, align = TextAlign.Center)
 
 		Button(
-			text = R.string.back_login,
+			text = R.string.log_out,
 			modifier = Modifier.padding(top = 40.dp)
 		) {
-			Router.back(step = 3 /* to = auth/login-user */)
+			Router.back(/* to = auth/login-user */)
 		}
 	}
 
 	BackHandler {
-		Router.back(step = 3 /* to = auth/login-user */)
+		Router.back(/* to = auth/login-user */)
 	}
 }
 
 @Preview(showSystemUi = true)
 @Composable
-fun PreviewVerifyEmailPage() {
-	VerifyEmailPage()
+fun PreviewActivationPage() {
+	ActivationPage()
 }

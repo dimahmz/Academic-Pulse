@@ -51,15 +51,15 @@ class AuthViewModel : ViewModel() {
 		signUpInfo.lastName = ""
 	}
 
-	fun login(onError: (Int) -> Unit) {
+	fun logIn(onError: (Int) -> Unit) {
 		val email = loginInfo.email
 		val password = loginInfo.password
-		auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { login ->
+		auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { logIn ->
 			val user = auth.currentUser
 			// Exit if the user is null or anything went wrong
-			if (user == null || !login.isSuccessful) {
-				onError(R.string.unkown_error)
-				logcat("Error sign in:", login.exception)
+			if (user == null || !logIn.isSuccessful) {
+				onError(R.string.unknown_error)
+				logcat("Error sign in:", logIn.exception)
 				return@addOnCompleteListener
 			}
 
@@ -74,20 +74,22 @@ class AuthViewModel : ViewModel() {
 			userRef.get().addOnCompleteListener { getUser ->
 				val data = getUser.result.data
 				if (data == null || !getUser.isSuccessful) {
-					onError(R.string.unkown_error)
+					onError(R.string.unknown_error)
 					logcat("Error read user document:", getUser.exception)
 				} else {
-					clearLogin()
-					clearSignUp()
-					val (info, activated) = SignUpInfo.fromMap(data)
-					if (activated) Router.replace("home", true)
-					else logcat("Account of {${info.firstName}} is not activated")
+					if (data["activated"] == true) {
+						clearLogin()
+						clearSignUp()
+						Router.replace("home", true)
+					} else {
+						Router.navigate("auth/activation", false)
+					}
 				}
 			}
 		}
 	}
 
-	fun signup(onError: (Int) -> Unit) {
+	fun signUp(onError: (Int) -> Unit) {
 		val email = signUpInfo.email
 		val password = signUpInfo.password
 
@@ -96,7 +98,7 @@ class AuthViewModel : ViewModel() {
 			// Exit if the user is null or anything went wrong
 			if (user == null || !creating.isSuccessful) {
 				logcat("Error creating user:", creating.exception)
-				onError(R.string.unkown_error)
+				onError(R.string.unknown_error)
 				return@addOnCompleteListener
 			}
 
@@ -105,7 +107,7 @@ class AuthViewModel : ViewModel() {
 			userRef.set(signUpInfo.toMap(user.uid)).addOnCompleteListener { saving ->
 				if (!saving.isSuccessful) {
 					logcat("Error creating user document: ", saving.exception)
-					onError(R.string.unkown_error)
+					onError(R.string.unknown_error)
 				} else {
 					// Send a verification email to the user
 					user.sendEmailVerification().addOnCompleteListener { sending ->
@@ -115,7 +117,7 @@ class AuthViewModel : ViewModel() {
 							Router.navigate("auth/verify-email", false)
 						} else {
 							logcat("Error sending email:", sending.exception)
-							onError(R.string.unkown_error)
+							onError(R.string.unknown_error)
 						}
 					}
 				}
