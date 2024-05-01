@@ -63,6 +63,7 @@ fun LogInUserPage() {
 				setLoading(false)
 				if (loggedIn) {
 					auth.clearLogin()
+					auth.clearSignUp()
 					Router.navigate("home", true)
 				} else form.error(valid = false, error = message)
 			}
@@ -104,10 +105,10 @@ fun LogInUserPage() {
 					password = true,
 				)
 				form.Error()
-				if (loading) Text(text = "loading")
 				Button(
 					text = R.string.login,
 					modifier = Modifier.padding(top = (if (form.valid()) 14 else 3).dp),
+					loading = loading,
 				) { login() }
 			}
 
@@ -123,7 +124,6 @@ fun LogInUserPage() {
 					color = MaterialTheme.colorScheme.primary,
 					weight = FontWeight.Bold,
 					modifier = Modifier.clickable {
-						auth.clearLogin()
 						Router.navigate("auth/sign-up-institution", false)
 					}
 				)

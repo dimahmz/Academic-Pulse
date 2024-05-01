@@ -66,8 +66,11 @@ fun SignUpUserPage() {
 			auth.saveSignUpInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
 			auth.signup { success, message ->
 				setLoading(false)
-				if (success) Router.navigate("auth/verify-email", false)
-				else form.error(valid = false, error = message)
+				if (success) {
+					auth.clearSignUp()
+					auth.saveLoginInfo(email.trim(), password.trim())
+					Router.navigate("auth/verify-email", false)
+				} else form.error(valid = false, error = message)
 			}
 		} else form.focusOnFirstInvalidField()
 	}
@@ -111,8 +114,11 @@ fun SignUpUserPage() {
 		}
 
 		Spacer(Modifier.weight(1f))
-		if (loading) Text(text = "loading")
-		Button(text = R.string.continued, modifier = Modifier.padding(bottom = 60.dp)) { signup() }
+		Button(
+			text = R.string.continued,
+			modifier = Modifier.padding(bottom = 60.dp),
+			loading = loading,
+		) { signup() }
 	}
 
 	BackHandler {
