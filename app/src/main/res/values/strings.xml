@@ -41,6 +41,7 @@
     <string name="last_name_required">The last name is required.</string>
     <string name="last_name_invalid">The last name is invalid.</string>
     <string name="verify_email_first">Must verify email before Login!</string>
+    <string name="invalid_credentials">Email or Password is invalid</string>
 
     <string name="verify_email">Waiting for Email Verification</string>
     <string name="verify_email_description">We have sent you and email that contains a verification link</string>

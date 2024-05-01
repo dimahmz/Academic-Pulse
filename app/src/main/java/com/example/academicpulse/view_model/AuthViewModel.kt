@@ -56,10 +56,16 @@ class AuthViewModel : ViewModel() {
 		val password = loginInfo.password
 		auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { logIn ->
 			val user = auth.currentUser
-			// Exit if the user is null or anything went wrong
-			if (user == null || !logIn.isSuccessful) {
+			// the user is null or anything went wrong
+			if (user == null) {
 				onError(R.string.unknown_error)
 				logcat("Error sign in:", logIn.exception)
+				return@addOnCompleteListener
+			}
+
+			// Invalid Credentials
+			if (!logIn.isSuccessful) {
+				onError(R.string.invalid_credentials)
 				return@addOnCompleteListener
 			}
 
