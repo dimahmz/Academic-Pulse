@@ -59,13 +59,9 @@ fun LogInUserPage() {
 		if (form.validate()) {
 			setLoading(true)
 			auth.saveLoginInfo(email.trim(), password.trim())
-			auth.login { loggedIn, message ->
+			auth.login { message ->
 				setLoading(false)
-				if (loggedIn) {
-					auth.clearLogin()
-					auth.clearSignUp()
-					Router.navigate("home", true)
-				} else form.error(valid = false, error = message)
+				form.error(valid = false, error = message)
 			}
 		} else form.focusOnFirstInvalidField()
 	}

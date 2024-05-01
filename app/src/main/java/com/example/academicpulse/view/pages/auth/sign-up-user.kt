@@ -64,13 +64,9 @@ fun SignUpUserPage() {
 		if (form.validate()) {
 			setLoading(true)
 			auth.saveSignUpInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
-			auth.signup { success, message ->
+			auth.signup { message ->
 				setLoading(false)
-				if (success) {
-					auth.clearSignUp()
-					auth.saveLoginInfo(email.trim(), password.trim())
-					Router.navigate("auth/verify-email", false)
-				} else form.error(valid = false, error = message)
+				form.error(valid = false, error = message)
 			}
 		} else form.focusOnFirstInvalidField()
 	}

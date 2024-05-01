@@ -3,6 +3,7 @@ package com.example.academicpulse.view_model
 import androidx.lifecycle.ViewModel
 import com.example.academicpulse.model.LoginInfo
 import com.example.academicpulse.model.SignUpInfo
+import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.logcat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -15,7 +16,6 @@ class AuthViewModel : ViewModel() {
 
 	val loginInfo: LoginInfo = LoginInfo()
 	val signUpInfo: SignUpInfo = SignUpInfo()
-	private var institutionSkipped: Boolean = false
 
 	fun saveLoginInfo(email: String, password: String) {
 		loginInfo.email = email
@@ -28,7 +28,7 @@ class AuthViewModel : ViewModel() {
 		signUpInfo.institution = institution
 		signUpInfo.department = department
 		signUpInfo.position = position
-		institutionSkipped = skipped
+		signUpInfo.institutionSkipped = skipped
 	}
 
 	fun saveSignUpInfo(firstName: String, lastName: String, email: String, password: String) {
@@ -50,69 +50,72 @@ class AuthViewModel : ViewModel() {
 		signUpInfo.lastName = ""
 	}
 
-	fun login(callback: (Boolean, String) -> Unit) {
+	fun login(callback: (String) -> Unit) {
 		val email = loginInfo.email
 		val password = loginInfo.password
 		auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { login ->
 			val user = auth.currentUser
-			// If any unexpected error occurred.
+			// Exit if the user is null or anything went wrong
 			if (user == null || !login.isSuccessful) {
-				callback(false, "An error has occurred, please try again later")
-				logcat("signInWithEmail:failure", login.exception)
+				callback("An error has occurred, please try again later")
+				logcat("Error sign in:", login.exception)
 				return@addOnCompleteListener
 			}
+
 			// Check if the email is verified
 			if (!user.isEmailVerified) {
-				callback(false, "Must verify User before Login")
+				callback("Must verify User before Login")
 				return@addOnCompleteListener
 			}
-			// TODO: Check if the user account is activated
-			callback(true, "")
+
+			// Check if the user account is activated
+			val userRef = Store.database.collection("user").document(user.uid)
+			userRef.get().addOnCompleteListener { getUser ->
+				val data = getUser.result.data
+				if (data == null || !getUser.isSuccessful) {
+					callback("An error has occurred, please try again later")
+					logcat("Error read user document:", getUser.exception)
+				} else {
+					clearLogin()
+					clearSignUp()
+					val (info, activated) = SignUpInfo.fromMap(data)
+					if (activated) Router.replace("home", true)
+					else logcat("Account of {${info.firstName}} is not activated")
+				}
+			}
 		}
 	}
 
-	fun signup(callback: (Boolean, String) -> Unit) {
-		val firstName = signUpInfo.firstName
-		val lastName = signUpInfo.lastName
+	fun signup(callback: (String) -> Unit) {
 		val email = signUpInfo.email
 		val password = signUpInfo.password
-		val institution = if (institutionSkipped) null else signUpInfo.institution
-		val department = if (institutionSkipped) null else signUpInfo.department
-		val position = if (institutionSkipped) null else signUpInfo.position
 
 		auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { creating ->
 			val user = auth.currentUser
 			// Exit if the user is null or anything went wrong
 			if (user == null || !creating.isSuccessful) {
-				callback(false, creating.exception?.message ?: "An unknown error occurred")
 				logcat("Error creating user:", creating.exception)
+				callback(creating.exception?.message ?: "An unknown error occurred")
 				return@addOnCompleteListener
 			}
 
 			// create a new user collection and fill its content
-			val userRef = Store.database.collection("users").document(user.uid)
-			val userData = hashMapOf(
-				"uid" to user.uid,
-				"email" to email,
-				"firstName" to firstName,
-				"lastName" to lastName,
-				"institution" to institution,
-				"department" to department,
-				"position" to position,
-				"role" to "user",
-				"activated" to false
-			)
-			userRef.set(userData).addOnCompleteListener { saving ->
+			val userRef = Store.database.collection("user").document(user.uid)
+			userRef.set(signUpInfo.toMap(user.uid)).addOnCompleteListener { saving ->
 				if (!saving.isSuccessful) {
 					logcat("Error creating user document: ", saving.exception)
-					callback(false, saving.exception?.message ?: "An unknown error occurred")
+					callback(saving.exception?.message ?: "An unknown error occurred")
 				} else {
 					// Send a verification email to the user
 					user.sendEmailVerification().addOnCompleteListener { sending ->
 						if (sending.isSuccessful) {
-							callback(true, "Account has been created")
-							logcat("Email sent.")
-						} else callback(false, sending.exception?.message ?: "An unknown error occurred")
+							clearSignUp()
+							saveLoginInfo(email, password)
+							Router.navigate("auth/verify-email", false)
+						} else {
+							logcat("Error sending email:", sending.exception)
+							callback(sending.exception?.message ?: "An unknown error occurred")
+						}
 					}
 				}
 			}
