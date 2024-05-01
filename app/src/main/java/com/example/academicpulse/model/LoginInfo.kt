@@ -30,7 +30,7 @@ class SignUpInfo {
 	}
 
 	companion object {
-		fun fromMap(map: MutableMap<String, Any>): Pair<SignUpInfo, Boolean> {
+		fun fromMap(map: Map<String, Any>): Pair<SignUpInfo, Boolean> {
 			val signUpInfo = SignUpInfo()
 			signUpInfo.email = map["email"].toString()
 			signUpInfo.firstName = map["firstName"].toString()

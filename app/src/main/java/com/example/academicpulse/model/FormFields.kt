@@ -1,5 +1,6 @@
 package com.example.academicpulse.model
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -16,11 +17,15 @@ class Field(
 	value: String,
 	val required: Boolean,
 	val focusRequester: FocusRequester,
-	private val error: MutableState<String>,
-	private val validator: ((Field) -> Boolean)?,
-	private val valid: MutableState<Boolean> = mutableStateOf(true)
+	private val form: Form,
+	private val validator: ((Field) -> Boolean)? = null,
 ) {
+	private val valid: MutableState<Boolean> = mutableStateOf(true)
 	private val value: MutableState<String> = mutableStateOf(value)
+
+	init {
+		form.addField(this)
+	}
 
 	fun value(): String {
 		return this.value.value
@@ -38,10 +43,6 @@ class Field(
 		this.valid.value = valid
 	}
 
-	fun error(value: String) {
-		error.value = value
-	}
-
 	fun trim(): String {
 		val value = this.value().trim()
 		if (value != this.value()) this.value(value)
@@ -54,70 +55,64 @@ class Field(
 	}
 
 	/** USE ONLY IN DECLARATION: Use this if the field is required and it should follow certain pattern. */
-	fun validator(regex: String, ifEmpty: String, ifInvalid: String): Boolean {
+	fun validator(regex: String, @StringRes ifEmpty: Int, @StringRes ifInvalid: Int): Boolean {
 		val value = trim()
 		valid(true)
 		if (required && value == "") {
 			valid(false)
-			error(ifEmpty)
+			form.error(false, ifEmpty)
 		} else if (!Regex(regex).matches(value)) {
 			valid(false)
-			error(ifInvalid)
+			form.error(false, ifInvalid)
 		}
 		return valid()
 	}
 
 	/** USE ONLY IN DECLARATION: Use this if the field is only required. */
-	fun validator(ifEmpty: String): Boolean {
+	fun validator(@StringRes ifEmpty: Int): Boolean {
 		val value = trim()
 		valid(true)
 		if (required && value == "") {
 			valid(false)
-			error(ifEmpty)
+			form.error(false, ifEmpty)
 		}
 		return valid()
 	}
 
 	/** USE ONLY IN DECLARATION: Use this if the field is not required but it should follow certain pattern. */
-	fun validator(regex: String, ifInvalid: String): Boolean {
+	fun validator(regex: String, @StringRes ifInvalid: Int): Boolean {
 		val value = trim()
 		valid(true)
 		if (!Regex(regex).matches(value)) {
 			valid(false)
-			error(ifInvalid)
+			form.error(false, ifInvalid)
 		}
-		return valid()
-	}
-
-	/** USE ONLY IN DECLARATION: Use this for custom check */
-	fun customCheck(onCheck: (value: String) -> Boolean): Boolean {
-		valid(onCheck(trim()))
 		return valid()
 	}
 }
 
 /** This class is used in the context of forms, to hold a group of [Field]s and validate them as a one piece. */
 class Form {
-	val error: MutableState<String> = mutableStateOf("")
+	private val error: MutableState<Int?> = mutableStateOf(null)
 	private val valid: MutableState<Boolean> = mutableStateOf(true)
 	private val fields: MutableList<Field> = mutableListOf()
-
-	fun valid(): Boolean {
-		return valid.value
-	}
-
-	fun error(valid: Boolean, error: String) {
-		this.valid.value = valid
-		this.error.value = error
-	}
 
 	fun addField(field: Field) {
 		fields.add(field)
 	}
 
+	fun valid(): Boolean {
+		return valid.value
+	}
+
+	fun error(valid: Boolean, @StringRes error: Int?) {
+		this.valid.value = valid
+		this.error.value = error
+	}
+
 	fun validate(): Boolean {
 		valid.value = true
-		error.value = ""
+		error.value = null
 		for (field in fields.reversed()) {
 			val isValid = field.validate()
 			if (!isValid && valid.value) valid.value = false
@@ -136,9 +131,9 @@ class Form {
 
 	@Composable
 	fun Error(paddingTop: Int = 0) {
-		if (!valid.value) {
+		if (!valid.value && error.value != null) {
 			Text(
-				text = error.value,
+				text = error.value!!,
 				color = MaterialTheme.colorScheme.error,
 				modifier = Modifier.padding(top = paddingTop.dp)
 			)

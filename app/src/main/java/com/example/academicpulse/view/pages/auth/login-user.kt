@@ -25,7 +25,6 @@ import com.example.academicpulse.model.Form
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
-import com.example.academicpulse.utils.Res
 import com.example.academicpulse.utils.useField
 import com.example.academicpulse.utils.useForm
 import com.example.academicpulse.utils.useState
@@ -41,15 +40,15 @@ fun LogInUserPage() {
 		form = form,
 		value = auth.loginInfo.email,
 		regex = Form.email,
-		ifEmpty = "The email is required.",
-		ifInvalid = "The email is invalid."
+		ifEmpty = R.string.email_required,
+		ifInvalid = R.string.email_invalid,
 	)
 	val password = useField(
 		form = form,
 		value = auth.loginInfo.password,
 		regex = Form.password,
-		ifEmpty = "The password is required.",
-		ifInvalid = "The password is invalid."
+		ifEmpty = R.string.password_required,
+		ifInvalid = R.string.password_invalid,
 	)
 
 	val (loading, setLoading) = useState(false)
@@ -90,14 +89,14 @@ fun LogInUserPage() {
 			Column(verticalArrangement = Arrangement.spacedBy(gap)) {
 				Input(
 					field = email,
-					label = Res.string(R.string.email_address),
+					label = R.string.email_address,
 					focusNext = password.focusRequester,
 					keyboardType = KeyboardType.Email,
 				)
 				Input(
 					field = password,
-					label = Res.string(R.string.password),
-					placeholder = Res.string(R.string.create_password),
+					label = R.string.password,
+					placeholder = R.string.create_password,
 					password = true,
 					onOk = { login() }
 				)

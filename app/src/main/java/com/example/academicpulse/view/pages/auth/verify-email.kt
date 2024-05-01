@@ -42,12 +42,12 @@ fun VerifyEmailPage() {
 			text = R.string.back_login,
 			modifier = Modifier.padding(vertical = 30.dp)
 		) {
-			Router.back(step = 3)
+			Router.back(step = 3 /* to = auth/login-user */)
 		}
 	}
 
 	BackHandler {
-		Router.back(step = 3)
+		Router.back(step = 3 /* to = auth/login-user */)
 	}
 }
 

@@ -1,6 +1,7 @@
 package com.example.academicpulse.view_model
 
 import androidx.lifecycle.ViewModel
+import com.example.academicpulse.R
 import com.example.academicpulse.model.LoginInfo
 import com.example.academicpulse.model.SignUpInfo
 import com.example.academicpulse.router.Router
@@ -50,21 +51,21 @@ class AuthViewModel : ViewModel() {
 		signUpInfo.lastName = ""
 	}
 
-	fun login(callback: (String) -> Unit) {
+	fun login(onError: (Int) -> Unit) {
 		val email = loginInfo.email
 		val password = loginInfo.password
 		auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { login ->
 			val user = auth.currentUser
 			// Exit if the user is null or anything went wrong
 			if (user == null || !login.isSuccessful) {
-				callback("An error has occurred, please try again later")
+				onError(R.string.unkown_error)
 				logcat("Error sign in:", login.exception)
 				return@addOnCompleteListener
 			}
 
 			// Check if the email is verified
 			if (!user.isEmailVerified) {
-				callback("Must verify User before Login")
+				onError(R.string.verify_email_first)
 				return@addOnCompleteListener
 			}
 
@@ -73,7 +74,7 @@ class AuthViewModel : ViewModel() {
 			userRef.get().addOnCompleteListener { getUser ->
 				val data = getUser.result.data
 				if (data == null || !getUser.isSuccessful) {
-					callback("An error has occurred, please try again later")
+					onError(R.string.unkown_error)
 					logcat("Error read user document:", getUser.exception)
 				} else {
 					clearLogin()
@@ -86,7 +87,7 @@ class AuthViewModel : ViewModel() {
 		}
 	}
 
-	fun signup(callback: (String) -> Unit) {
+	fun signup(onError: (Int) -> Unit) {
 		val email = signUpInfo.email
 		val password = signUpInfo.password
 
@@ -95,7 +96,7 @@ class AuthViewModel : ViewModel() {
 			// Exit if the user is null or anything went wrong
 			if (user == null || !creating.isSuccessful) {
 				logcat("Error creating user:", creating.exception)
-				callback(creating.exception?.message ?: "An unknown error occurred")
+				onError(R.string.unkown_error)
 				return@addOnCompleteListener
 			}
 
@@ -104,7 +105,7 @@ class AuthViewModel : ViewModel() {
 			userRef.set(signUpInfo.toMap(user.uid)).addOnCompleteListener { saving ->
 				if (!saving.isSuccessful) {
 					logcat("Error creating user document: ", saving.exception)
-					callback(saving.exception?.message ?: "An unknown error occurred")
+					onError(R.string.unkown_error)
 				} else {
 					// Send a verification email to the user
 					user.sendEmailVerification().addOnCompleteListener { sending ->
@@ -114,7 +115,7 @@ class AuthViewModel : ViewModel() {
 							Router.navigate("auth/verify-email", false)
 						} else {
 							logcat("Error sending email:", sending.exception)
-							callback(sending.exception?.message ?: "An unknown error occurred")
+							onError(R.string.unkown_error)
 						}
 					}
 				}

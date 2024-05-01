@@ -1,5 +1,6 @@
 package com.example.academicpulse.view.components.basic
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,11 +39,11 @@ fun Input(
 
 	/** A supporting text placed above the field.
 	 * - Note: It can automatically request a focus on the field when it's clicked. */
-	label: String? = null,
+	@StringRes label: Int? = null,
 
 	/** A supporting text placed inside the field.
 	 * - Note: If it's null, it takes the label value if present. */
-	placeholder: String? = null,
+	@StringRes placeholder: Int? = null,
 
 	/** Pass `true` to add a red symbol (`*`) next to the [label] to indicate that the field is required.
 	 * - Note: It has no effect if [label] is `null`.
@@ -156,7 +157,7 @@ fun Input(
 	 * )
 	 * ```
 	 */
-	onOk: (() -> Any)? = null,
+	onOk: (() -> Unit)? = null,
 ) {
 	val (passwordVisible, setPasswordVisibility) = useState(false)
 	val (focus) = useState({ focusRequester ?: FocusRequester() })
@@ -191,7 +192,7 @@ fun Input(
 			placeholder = {
 				if (placeholder != null || label != null)
 					Text(
-						text = placeholder ?: label ?: "",
+						text = placeholder ?: label!!,
 						color = LocalContentColor.current
 					)
 			},
@@ -256,11 +257,11 @@ fun Input(
 
 	/** A supporting text placed above the field.
 	 * - Note: It can automatically request a focus on the field when it's clicked. */
-	label: String? = null,
+	@StringRes label: Int? = null,
 
 	/** A supporting text placed inside the field.
 	 * - Note: If it's null, it takes the label value if present. */
-	placeholder: String? = null,
+	@StringRes placeholder: Int? = null,
 
 	/** Pass `true` to apply the custom hide/show icons with their logic */
 	password: Boolean = false,
@@ -311,7 +312,7 @@ fun Input(
 	 * )
 	 * ```
 	 */
-	onOk: (() -> Any)? = null,
+	onOk: (() -> Unit)? = null,
 ) {
 	Input(
 		value = field.value(),

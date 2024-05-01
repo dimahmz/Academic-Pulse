@@ -15,7 +15,6 @@ import com.example.academicpulse.R
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
-import com.example.academicpulse.utils.Res
 import com.example.academicpulse.utils.useField
 import com.example.academicpulse.utils.useForm
 import com.example.academicpulse.view.components.basic.*
@@ -29,17 +28,17 @@ fun SignUpInstitutionPage() {
 	val institution = useField(
 		form = form,
 		value = auth.signUpInfo.institution,
-		ifEmpty = "The institution is required",
+		ifEmpty = R.string.institution_required,
 	)
 	val department = useField(
 		form = form,
 		value = auth.signUpInfo.department,
-		ifEmpty = "The department is required",
+		ifEmpty = R.string.department_required,
 	)
 	val position = useField(
 		form = form,
 		value = auth.signUpInfo.position,
-		ifEmpty = "The position is required",
+		ifEmpty = R.string.position_required,
 	)
 
 	fun navigate(validate: Boolean) {
@@ -64,17 +63,17 @@ fun SignUpInstitutionPage() {
 		Column(verticalArrangement = Arrangement.spacedBy(gap)) {
 			Input(
 				field = institution,
-				label = Res.string(R.string.institution),
+				label = R.string.institution,
 				focusNext = department.focusRequester,
 			)
 			Input(
 				field = department,
-				label = Res.string(R.string.department),
+				label = R.string.department,
 				focusNext = position.focusRequester,
 			)
 			Input(
 				field = position,
-				label = Res.string(R.string.position),
+				label = R.string.position,
 				okIcon = ImeAction.Next,
 				onOk = { navigate(validate = true) }
 			)

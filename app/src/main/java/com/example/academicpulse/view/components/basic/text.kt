@@ -1,8 +1,10 @@
 package com.example.academicpulse.view.components.basic
 
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -16,7 +18,6 @@ import com.example.academicpulse.theme.descriptionTextSize
 import com.example.academicpulse.theme.h1TextSize
 import com.example.academicpulse.theme.textColor
 import com.example.academicpulse.theme.textSize
-import com.example.academicpulse.utils.Res
 
 private val font = FontFamily(Font(R.font.regular_font))
 
@@ -46,7 +47,7 @@ fun Text(
 @Composable
 fun Text(
 	modifier: Modifier = Modifier,
-	text: Int,
+	@StringRes text: Int,
 	color: Color = textColor,
 	size: TextUnit = textSize,
 	weight: FontWeight? = null,
@@ -55,7 +56,7 @@ fun Text(
 ) {
 	Text(
 		modifier = modifier,
-		text = Res.string(text),
+		text = stringResource(text),
 		color = color,
 		size = size,
 		align = align,
@@ -87,7 +88,7 @@ fun Title(
 @Composable
 fun Title(
 	modifier: Modifier = Modifier,
-	text: Int,
+	@StringRes text: Int,
 	color: Color = titleColor,
 	size: TextUnit = textSize,
 	align: TextAlign = TextAlign.Start,
@@ -95,7 +96,7 @@ fun Title(
 ) {
 	Title(
 		modifier = modifier,
-		text = Res.string(text),
+		text = stringResource(text),
 		color = color,
 		size = size,
 		align = align,
@@ -126,7 +127,7 @@ fun Description(
 @Composable
 fun Description(
 	modifier: Modifier = Modifier,
-	text: Int,
+	@StringRes text: Int,
 	color: Color = descriptionColor,
 	size: TextUnit = descriptionTextSize,
 	align: TextAlign = TextAlign.Start,
@@ -134,7 +135,7 @@ fun Description(
 ) {
 	Description(
 		modifier = modifier,
-		text = Res.string(text),
+		text = stringResource(text),
 		color = color,
 		size = size,
 		align = align,
@@ -164,7 +165,7 @@ fun H1(
 @Composable
 fun H1(
 	modifier: Modifier = Modifier,
-	text: Int,
+	@StringRes text: Int,
 	color: Color = titleColor,
 	size: TextUnit = h1TextSize,
 	align: TextAlign = TextAlign.Start,
@@ -172,7 +173,7 @@ fun H1(
 ) {
 	H1(
 		modifier = modifier,
-		text = Res.string(text),
+		text = stringResource(text),
 		color = color,
 		size = size,
 		align = align,

@@ -1,5 +1,6 @@
 package com.example.academicpulse.view.components.basic
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,10 +13,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.theme.inputHeight
 import com.example.academicpulse.theme.radius
-import com.example.academicpulse.utils.Res
 
 @Composable
 fun Button(
@@ -58,7 +59,7 @@ fun Button(
 @Composable
 fun Button(
 	modifier: Modifier = Modifier,
-	text: Int,
+	@StringRes text: Int,
 	ghost: Boolean = false,
 	icon: Int? = null,
 	loading: Boolean = false,
@@ -67,7 +68,7 @@ fun Button(
 ) {
 	Button(
 		modifier = modifier,
-		text = Res.string(text),
+		text = stringResource(text),
 		ghost = ghost,
 		icon = icon,
 		loading = loading,

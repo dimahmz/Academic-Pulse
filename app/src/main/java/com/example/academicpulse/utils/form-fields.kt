@@ -1,7 +1,7 @@
 package com.example.academicpulse.utils
 
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.focus.FocusRequester
 import com.example.academicpulse.model.Field
 import com.example.academicpulse.model.Form
@@ -13,32 +13,30 @@ fun useForm(): Form {
 
 @Composable
 fun useField(
-	form: Form? = null,
+	form: Form,
 	value: String?,
 	required: Boolean = true,
 	validator: ((Field) -> Boolean)? = null,
 ): Field {
 	return useState({
-		val field = Field(
+		Field(
+			form = form,
 			value = value ?: "",
 			required = required,
-			error = form?.error ?: mutableStateOf(""),
 			focusRequester = FocusRequester(),
 			validator = validator,
 		)
-		form?.addField(field)
-		field
 	}).first
 }
 
 @Composable
 fun useField(
-	form: Form? = null,
+	form: Form,
 	value: String?,
 	required: Boolean = true,
 	regex: String? = null,
-	ifEmpty: String? = null,
-	ifInvalid: String? = null
+	@StringRes ifEmpty: Int? = null,
+	@StringRes ifInvalid: Int? = null
 ): Field {
 	val validator = useState({
 		if (regex != null && ifEmpty != null && ifInvalid != null)

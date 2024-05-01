@@ -16,7 +16,6 @@ import com.example.academicpulse.model.Form
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
-import com.example.academicpulse.utils.Res
 import com.example.academicpulse.utils.useField
 import com.example.academicpulse.utils.useForm
 import com.example.academicpulse.utils.useState
@@ -32,29 +31,29 @@ fun SignUpUserPage() {
 		form = form,
 		value = auth.signUpInfo.firstName,
 		regex = Form.name,
-		ifEmpty = "The first name is required.",
-		ifInvalid = "The first name is invalid."
+		ifEmpty = R.string.first_name_required,
+		ifInvalid = R.string.first_name_invalid,
 	)
 	val lastName = useField(
 		form = form,
 		value = auth.signUpInfo.lastName,
 		regex = Form.name,
-		ifEmpty = "The last name is required.",
-		ifInvalid = "The last name is invalid."
+		ifEmpty = R.string.last_name_required,
+		ifInvalid = R.string.last_name_invalid,
 	)
 	val email = useField(
 		form = form,
 		value = auth.signUpInfo.email,
 		regex = Form.email,
-		ifEmpty = "The email is required.",
-		ifInvalid = "The email must be a valid email."
+		ifEmpty = R.string.email_required,
+		ifInvalid = R.string.email_invalid,
 	)
 	val password = useField(
 		form = form,
 		value = auth.signUpInfo.password,
 		regex = Form.password,
-		ifEmpty = "The password is required.",
-		ifInvalid = "The password should be strong."
+		ifEmpty = R.string.password_required,
+		ifInvalid = R.string.password_not_strong,
 	)
 
 	val (loading, setLoading) = useState(false)
@@ -86,24 +85,24 @@ fun SignUpUserPage() {
 		Column(verticalArrangement = Arrangement.spacedBy(gap)) {
 			Input(
 				field = firstName,
-				label = Res.string(R.string.first_name),
+				label = R.string.first_name,
 				focusNext = lastName.focusRequester,
 			)
 			Input(
 				field = lastName,
-				label = Res.string(R.string.last_name),
+				label = R.string.last_name,
 				focusNext = email.focusRequester,
 			)
 			Input(
 				field = email,
-				label = Res.string(R.string.institution_email),
+				label = R.string.institution_email,
 				focusNext = password.focusRequester,
 				keyboardType = KeyboardType.Email,
 			)
 			Input(
 				field = password,
-				label = Res.string(R.string.password),
-				placeholder = Res.string(R.string.create_password),
+				label = R.string.password,
+				placeholder = R.string.create_password,
 				password = true,
 				onOk = { signup() }
 			)

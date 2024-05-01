@@ -1,5 +1,6 @@
 package com.example.academicpulse.view.components.basic
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.LocalContentColor
@@ -9,15 +10,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.DefaultAlpha
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.academicpulse.utils.Res
 
 @Composable
 fun Image(
 	modifier: Modifier = Modifier,
-	id: Int,
+	@DrawableRes id: Int,
 	align: Alignment = Alignment.Center,
 	scale: ContentScale = ContentScale.Fit,
 	alpha: Float = DefaultAlpha,
@@ -25,7 +27,7 @@ fun Image(
 ) {
 	androidx.compose.foundation.Image(
 		modifier = modifier,
-		imageVector = Res.drawable(id),
+		imageVector = ImageVector.vectorResource(id),
 		contentDescription = null,
 		alignment = align,
 		contentScale = scale,
@@ -37,7 +39,7 @@ fun Image(
 @Composable
 fun Icon(
 	modifier: Modifier = Modifier,
-	id: Int,
+	@DrawableRes id: Int,
 	size: Dp = 14.dp,
 	color: Color = LocalContentColor.current,
 	onClick: (() -> Unit)? = null
@@ -47,7 +49,7 @@ fun Icon(
 
 	androidx.compose.material3.Icon(
 		modifier = internalModifier,
-		imageVector = Res.drawable(id),
+		imageVector = ImageVector.vectorResource(id),
 		contentDescription = null,
 		tint = color,
 	)
