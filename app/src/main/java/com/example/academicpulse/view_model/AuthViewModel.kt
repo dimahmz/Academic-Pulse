@@ -130,4 +130,9 @@ class AuthViewModel : ViewModel() {
 			}
 		}
 	}
+
+	fun logOut(){
+		Firebase.auth.signOut()
+		Router.navigate("auth/log-in", false)
+	}
 }

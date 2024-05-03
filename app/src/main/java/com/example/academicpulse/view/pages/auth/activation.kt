@@ -20,9 +20,15 @@ import com.example.academicpulse.R
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.view.components.basic.*
+import com.example.academicpulse.view_model.Store
 
 @Composable
 fun ActivationPage() {
+	val auth = Store.auth()
+
+	fun logOut(){
+		auth.logOut()
+	}
 	Column(
 		modifier = Modifier
 			.fillMaxHeight()
@@ -43,7 +49,7 @@ fun ActivationPage() {
 			text = R.string.log_out,
 			modifier = Modifier.padding(top = 40.dp)
 		) {
-			Router.back(/* to = auth/log-in */)
+			logOut()
 		}
 	}
 
