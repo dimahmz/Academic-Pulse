@@ -22,6 +22,8 @@ class Index : ComponentActivity() {
 		saveAppContext(this)
 		installSplashScreen().setKeepOnScreenCondition { !Store.isReady() }
 		setContent {
+			Store.Provider()
+			Router.Provider()
 			App()
 		}
 	}
@@ -30,19 +32,12 @@ class Index : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun App() {
-	val startDestination = "auth"
-
-	Router.Provider()
-	Store.Provider()
 	AppTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
 			Scaffold(
-				bottomBar = {
-					Router.NavBar(startDestination)
-				}
-			) {
-				Router.NavGraph(startDestination)
-			}
+				content = { Router.NavGraph() },
+				bottomBar = { Router.NavBar() },
+			)
 		}
 	}
 }

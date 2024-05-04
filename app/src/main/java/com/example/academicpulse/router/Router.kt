@@ -1,14 +1,19 @@
 package com.example.academicpulse.router
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.academicpulse.utils.useAtom
+import com.example.academicpulse.view_model.Store
 
-class Router(navigator: NavHostController) {
-	private var navController = navigator
-	private var route = MutableLiveData("home")
-	private var navBarVisible = MutableLiveData(true)
+class Router(
+	private var navController: NavHostController,
+	private val startDestination: LiveData<String>,
+) {
+	private var route = MutableLiveData("auth")
+	private var navBarVisible = MutableLiveData(false)
 
 	// Note: Static variables and methods are used just to hold the global Router instance and be accessible in anywhere.
 	companion object {
@@ -18,33 +23,25 @@ class Router(navigator: NavHostController) {
 		/** Provider initialize the router instance that will be used across the entire App */
 		@Composable
 		fun Provider() {
-			if (appRouter.isEmpty()) appRouter.add(Router(rememberNavController()))
+			if (appRouter.isEmpty())
+				appRouter.add(Router(rememberNavController(), Store.getStartDestination()))
 		}
 
 		/** Bottom NavBar UI element containing main root routes with their icons, allowing direct navigation to them */
 		@Composable
-		fun NavBar(startDestination: String) {
-			if (startDestination !== appRouter[0].route.value) {
-				appRouter[0].route.value = startDestination
-				appRouter[0].navBarVisible.value = false
-			}
-			return NavBar()
+		fun NavBar() {
+			val route = useAtom(appRouter[0].route) ?: "auth"
+			val navBarVisible = useAtom(appRouter[0].navBarVisible) ?: false
+			return NavBar(route = route, navBarVisible = navBarVisible)
 		}
 
 		/** NavGraph is a schema that contains all the pages used in the App.
 		 * - Each page is declared with its instance, path key and back handler button behavior.
 		 */
 		@Composable
-		fun NavGraph(startDestination: String) {
-			NavGraph(appRouter[0].navController, startDestination)
-		}
-
-		fun isNavBarVisible(): MutableLiveData<Boolean> {
-			return appRouter[0].navBarVisible
-		}
-
-		fun getRoute(): MutableLiveData<String> {
-			return appRouter[0].route
+		fun NavGraph() {
+			val route = useAtom(appRouter[0].startDestination) ?: "auth"
+			NavGraph(navController = appRouter[0].navController, startDestination = route)
 		}
 
 		/** Use a normal navigation by adding the current page to backstack and redirect to the next page. */

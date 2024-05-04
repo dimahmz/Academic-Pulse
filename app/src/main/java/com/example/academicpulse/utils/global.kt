@@ -34,10 +34,7 @@ fun <T> LiveData<T>.observe(callback: (T) -> Unit) {
 	this.observe(getAppContext() as LifecycleOwner) { callback(it) }
 }
 
-fun logcat(message: String) {
-	Log.d("Academic Pulse", message)
-}
-
-fun logcat(message: String, exception: Exception?) {
-	Log.e("Academic Pulse", message, exception)
+fun logcat(message: String, exception: Exception? = null) {
+	if (exception == null) Log.d("Academic Pulse", message)
+	else Log.e("Academic Pulse", message, exception)
 }

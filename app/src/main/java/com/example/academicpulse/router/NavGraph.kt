@@ -20,9 +20,9 @@ import kotlin.system.exitProcess
  * - Each page is declared with its instance, path key and back handler button behavior.
  */
 @Composable
-fun NavGraph(nav: NavHostController, startDestination: String) {
+fun NavGraph(navController: NavHostController, startDestination: String) {
 	NavHost(
-		navController = nav,
+		navController = navController,
 		startDestination = startDestination,
 		enterTransition = {
 			fadeIn(animationSpec = tween(300)) + slideIntoContainer(
@@ -67,12 +67,15 @@ fun NavGraph(nav: NavHostController, startDestination: String) {
 				BackHandler { Router.replace("home", true) }
 			}
 		}
+		composable(route = "authActivation") {
+			ActivationPage(/* BackHandler, exit the app */)
+		}
 		navigation(route = "auth", startDestination = "auth/log-in") {
 			composable(route = "auth/log-in") {
 				LogInPage(/* BackHandler, exit the app */)
 			}
 			composable(route = "auth/activation") {
-				ActivationPage(/* BackHandler, to = auth/log-in */)
+				ActivationPage(/* BackHandler, exit the app */)
 			}
 			composable(route = "auth/sign-up-institution") {
 				SignUpInstitutionPage(/* BackHandler, to = auth/log-in */)

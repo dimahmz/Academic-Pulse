@@ -1,53 +1,54 @@
 package com.example.academicpulse.view_model
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.logcat
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class Store : ViewModel() {
+	private val isReady = MutableStateFlow(false)
+	private val start = MutableLiveData("auth")
+
 	private val auth = AuthViewModel(firebaseAuth)
 	private val home = HomeViewModel()
 	private val inbox = InboxViewModel()
 	private val profile = ProfileViewModel()
-	private val isReady = MutableStateFlow(false)
 
 	init {
-		viewModelScope.launch {
-			val user = firebaseAuth.currentUser
-
-			// no user is logged in
-			if (user == null) {
-				Router.navigate("auth/log-in", false)
-				isReady.value = true
-				return@launch
+		val store = this
+		val tasksCounter = MutableLiveData(2)
+		fun setIsReady() {
+			viewModelScope.launch {
+				delay(600)
+				tasksCounter.value = tasksCounter.value?.minus(1)
+				if (tasksCounter.value == 0) store.isReady.value = true
 			}
-
-			// fetch the user document
-			val userRef =  Firebase.firestore.collection("user").document(user.uid)
-			userRef.get().addOnCompleteListener { getUser ->
-				val data = getUser.result.data
-				// user without a document or unexpected error
-				if (data == null || !getUser.isSuccessful) {
-					Router.navigate("auth/log-in", false)
-					logcat("Error read user document:", getUser.exception)
-				} else {
-					if (data["activated"] == true) {
-						Router.navigate("profile", true)
-					} else {
-						Router.navigate("auth/activation", false)
-					}
-				}
-			}
-			isReady.value = true
 		}
+
+		viewModelScope.launch {
+			delay(1000)
+			setIsReady()
+		}
+
+		// If no user is logged in, keep the router in sign up page, otherwise check for account activation
+		val user = firebaseAuth.currentUser
+		if (user == null) setIsReady()
+		else
+			database.collection("user").document(user.uid).get().addOnCompleteListener { doc ->
+				val data = doc.result.data
+				if (doc.isSuccessful && data!!["activated"] == true) start.value = "home"
+				else if (doc.isSuccessful && data!!["activated"] == false) start.value = "authActivation"
+				setIsReady()
+			}
 	}
 
 	// Note: Static variables and methods are used just to hold the global Store instance and be accessible in anywhere.
@@ -66,7 +67,11 @@ class Store : ViewModel() {
 		}
 
 		fun isReady(): Boolean {
-			return appStore[0].isReady.value
+			return if (appStore.isEmpty()) false else appStore[0].isReady.value
+		}
+
+		fun getStartDestination(): LiveData<String> {
+			return appStore[0].start
 		}
 
 		fun auth(): AuthViewModel {

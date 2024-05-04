@@ -11,7 +11,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.theme.navBavIconColor
-import com.example.academicpulse.utils.useAtom
 import com.example.academicpulse.view.components.basic.Icon
 import com.example.academicpulse.view.components.basic.Text
 
@@ -31,14 +30,11 @@ private val navbarItems = listOf(
 
 /** Bottom NavBar UI element containing main root routes with their icons, allowing direct navigation to them */
 @Composable
-fun NavBar() {
-	val route = useAtom(Router.getRoute())
-	val navBarVisible = useAtom(Router.isNavBarVisible())
-
-	if (navBarVisible != true) return
+fun NavBar(route: String, navBarVisible: Boolean) {
+	if (!navBarVisible) return
 	NavigationBar(containerColor = MaterialTheme.colorScheme.secondary) {
 		navbarItems.forEach {
-			val selected = (route ?: "home").startsWith(it.route)
+			val selected = route.startsWith(it.route)
 			val color = if (selected) MaterialTheme.colorScheme.primary else navBavIconColor
 			NavigationBarItem(
 				colors = NavigationBarItemDefaults.colors(
