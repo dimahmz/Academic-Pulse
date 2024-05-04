@@ -1,5 +1,6 @@
 package com.example.academicpulse.view_model
 
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.academicpulse.router.Router
@@ -51,29 +52,36 @@ class Store : ViewModel() {
 
 	// Note: Static variables and methods are used just to hold the global Store instance and be accessible in anywhere.
 	companion object {
-		private val appStore = Store()
+		// Note: An array type is used instead of Store to avoid null checks. We are certain that the app store will not be null as Provider method is one of the first functions called in the lifecycle.
+		private val appStore = mutableListOf<Store>()
 
 		// Firebase database cloud instance
 		val database by lazy { Firebase.firestore }
 
+		/** Provider initialize the store instance that will be used across the entire App */
+		@Composable
+		fun Provider() {
+			if (appStore.isEmpty()) appStore.add(Store())
+		}
+
 		fun isReady(): Boolean {
-			return appStore.isReady.value
+			return appStore[0].isReady.value
 		}
 
 		fun auth(): AuthViewModel {
-			return appStore.auth
+			return appStore[0].auth
 		}
 
 		fun home(): HomeViewModel {
-			return appStore.home
+			return appStore[0].home
 		}
 
 		fun inbox(): InboxViewModel {
-			return appStore.inbox
+			return appStore[0].inbox
 		}
 
 		fun profile(): ProfileViewModel {
-			return appStore.profile
+			return appStore[0].profile
 		}
 	}
 }

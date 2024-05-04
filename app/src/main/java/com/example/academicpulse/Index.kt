@@ -33,6 +33,7 @@ fun App() {
 	val startDestination = "auth"
 
 	Router.Provider()
+	Store.Provider()
 	AppTheme {
 		Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
 			Scaffold(

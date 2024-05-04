@@ -18,10 +18,7 @@ class Router(navigator: NavHostController) {
 		/** Provider initialize the router instance that will be used across the entire App */
 		@Composable
 		fun Provider() {
-			if (appRouter.isEmpty()) {
-				val navigator = rememberNavController()
-				appRouter.add(Router(navigator))
-			}
+			if (appRouter.isEmpty()) appRouter.add(Router(rememberNavController()))
 		}
 
 		/** Bottom NavBar UI element containing main root routes with their icons, allowing direct navigation to them */
