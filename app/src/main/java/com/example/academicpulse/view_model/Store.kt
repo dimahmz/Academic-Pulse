@@ -6,13 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.logcat
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class Store : ViewModel() {
-	private val auth = AuthViewModel()
+	private val auth = AuthViewModel(firebaseAuth)
 	private val home = HomeViewModel()
 	private val inbox = InboxViewModel()
 	private val profile = ProfileViewModel()
@@ -20,18 +21,17 @@ class Store : ViewModel() {
 
 	init {
 		viewModelScope.launch {
-			val user = Firebase.auth.currentUser
-			val isLoggedIn = user != null
+			val user = firebaseAuth.currentUser
 
 			// no user is logged in
-			if (!isLoggedIn) {
+			if (user == null) {
 				Router.navigate("auth/log-in", false)
 				isReady.value = true
 				return@launch
 			}
 
 			// fetch the user document
-			val userRef =  Firebase.firestore.collection("user").document(user!!.uid)
+			val userRef =  Firebase.firestore.collection("user").document(user.uid)
 			userRef.get().addOnCompleteListener { getUser ->
 				val data = getUser.result.data
 				// user without a document or unexpected error
@@ -55,8 +55,9 @@ class Store : ViewModel() {
 		// Note: An array type is used instead of Store to avoid null checks. We are certain that the app store will not be null as Provider method is one of the first functions called in the lifecycle.
 		private val appStore = mutableListOf<Store>()
 
-		// Firebase database cloud instance
+		// Firebase cloud database and authentication instances
 		val database by lazy { Firebase.firestore }
+		private val firebaseAuth: FirebaseAuth = Firebase.auth
 
 		/** Provider initialize the store instance that will be used across the entire App */
 		@Composable

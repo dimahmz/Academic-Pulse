@@ -10,10 +10,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.Firebase
 
-class AuthViewModel : ViewModel() {
-
-	// Firebase Authentication instance
-	private val auth: FirebaseAuth = Firebase.auth
+class AuthViewModel(private val auth: FirebaseAuth) : ViewModel() {
 
 	val loginInfo: LoginInfo = LoginInfo()
 	val signUpInfo: SignUpInfo = SignUpInfo()
