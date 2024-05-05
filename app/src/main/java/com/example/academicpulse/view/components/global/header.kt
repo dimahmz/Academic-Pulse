@@ -30,9 +30,9 @@ fun Header(title: Int, arrow: Boolean = true, paddingBottom: Dp = 0.dp) {
 				id = R.drawable.icon_left_arrow,
 				color = MaterialTheme.colorScheme.primary,
 				size = (h1TextSize.value * 20 / 23).dp,
-			) {
-				Router.back()
-			}
+				onClick = { Router.back() }
+			)
+
 		H1(
 			text = title,
 			modifier = Modifier.fillMaxWidth(),

@@ -14,7 +14,7 @@ import com.example.academicpulse.theme.navBavIconColor
 import com.example.academicpulse.view.components.basic.Icon
 import com.example.academicpulse.view.components.basic.Text
 
-// A helper class used below to render the NavBar
+/** A helper class used below to render the NavBar. */
 private data class NavbarItem(
 	val route: String,
 	val title: Int,
@@ -37,14 +37,10 @@ fun NavBar(route: String, navBarVisible: Boolean) {
 			val selected = route.startsWith(it.route)
 			val color = if (selected) MaterialTheme.colorScheme.primary else navBavIconColor
 			NavigationBarItem(
-				colors = NavigationBarItemDefaults.colors(
-					indicatorColor = Color.Transparent,
-				),
+				colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent),
 				selected = selected,
 				onClick = { Router.navigate(it.route, true) },
-				label = {
-					Text(text = it.title, color = color)
-				},
+				label = { Text(text = it.title, color = color) },
 				icon = {
 					BadgedBox(
 						badge = {
@@ -52,7 +48,7 @@ fun NavBar(route: String, navBarVisible: Boolean) {
 								Badge {
 									Text(text = if (it.count > 99) "+99" else it.count.toString())
 								}
-						}
+						},
 					) {
 						Icon(id = it.icon, color = color, size = 18.dp)
 					}

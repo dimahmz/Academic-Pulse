@@ -9,7 +9,7 @@
     <string name="skip">Skip</string>
     <string name="continued">Continue</string>
 
-    <string name="log_in">Log in</string>
+    <string name="sign_in">Log in</string>
     <string name="log_out">Log out</string>
     <string name="sign_up">Sign Up</string>
     <string name="welcome">Welcome!</string>
@@ -45,7 +45,7 @@
 
     <string name="verify_email">Waiting for Email Verification</string>
     <string name="verify_email_description">We have sent you and email that contains a verification link</string>
-    <string name="back_login">Back to Login</string>
+    <string name="back_sign_in">Back to Login</string>
 
     <string name="account_activation">Waiting for Account Activation</string>
     <string name="account_activation_description">We have received your information. You will be able to use the app until we activate your account.</string>

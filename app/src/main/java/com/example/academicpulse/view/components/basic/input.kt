@@ -279,6 +279,11 @@ fun Input(
 	 */
 	okIcon: ImeAction = ImeAction.Default,
 
+	/** If the [onOk] callback is not null, by default the keyboard will be hidden before executing it.
+	 * disable it if you need the keyboard to stay visible.
+	 */
+	hideKeyboardOnOk: Boolean = true,
+
 	/** The keyboard type, e.g. `KeyboardType.Text`, `KeyboardType.Email`, `KeyboardType.Decimal`
 	 * - Note: It has no effect if [password] is `true`, as `KeyboardType.Password` is applied automatically.
 	 */
@@ -303,6 +308,7 @@ fun Input(
 
 	/** Emits when pressing the keyboard Ok button.
 	 * - See also: [okIcon] to customize the icon of this button.
+	 * - See also: [hideKeyboardOnOk] to handle the keyboard closing before executing [onOk].
 	 * ```
 	 * Example usage:
 	 * Input(
@@ -315,19 +321,20 @@ fun Input(
 	onOk: (() -> Unit)? = null,
 ) {
 	Input(
-		value = field.value(),
+		value = field.value,
 		label = label,
 		placeholder = placeholder,
 		required = field.required,
-		valid = field.valid(),
+		valid = field.valid,
 		password = password,
 		icon = icon,
 		okIcon = okIcon,
+		hideKeyboardOnOk = hideKeyboardOnOk,
 		keyboardType = keyboardType,
 		focusRequester = field.focusRequester,
 		focusNext = focusNext,
-		onChange = { field.value(it) },
-		onChangeValidity = { field.valid(it) },
+		onChange = { field.value = it },
+		onChangeValidity = { field.valid = it },
 		onOk = onOk,
 	)
 }

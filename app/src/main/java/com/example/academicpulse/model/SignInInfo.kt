@@ -1,6 +1,6 @@
 package com.example.academicpulse.model
 
-class LoginInfo {
+class SignInInfo {
 	var email: String = ""
 	var password: String = ""
 }

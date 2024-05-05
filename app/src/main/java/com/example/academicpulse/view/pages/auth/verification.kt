@@ -40,15 +40,14 @@ fun VerificationPage() {
 		Description(text = R.string.verify_email_description, align = TextAlign.Center)
 
 		Button(
-			text = R.string.back_login,
-			modifier = Modifier.padding(top = 40.dp)
-		) {
-			Router.back(step = 3 /* to = auth/log-in */)
-		}
+			text = R.string.back_sign_in,
+			modifier = Modifier.padding(top = 40.dp),
+			onClick = { Router.back(step = 3 /* to = auth/sign-in */) }
+		)
 	}
 
 	BackHandler {
-		Router.back(step = 3 /* to = auth/log-in */)
+		Router.back(step = 3 /* to = auth/sign-in */)
 	}
 }
 

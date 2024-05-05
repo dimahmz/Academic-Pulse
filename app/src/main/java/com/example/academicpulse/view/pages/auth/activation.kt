@@ -17,7 +17,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
-import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view_model.Store
@@ -43,10 +42,9 @@ fun ActivationPage() {
 
 		Button(
 			text = R.string.log_out,
-			modifier = Modifier.padding(top = 40.dp)
-		) {
-			Store.auth().logOut()
-		}
+			modifier = Modifier.padding(top = 40.dp),
+			onClick = Store.auth::logOut
+		)
 	}
 
 	BackHandler {

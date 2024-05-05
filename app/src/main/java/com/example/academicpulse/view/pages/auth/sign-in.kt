@@ -21,7 +21,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
-import com.example.academicpulse.model.Form
+import com.example.academicpulse.model.Field
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
@@ -33,34 +33,34 @@ import com.example.academicpulse.view_model.Store
 import kotlin.system.exitProcess
 
 @Composable
-fun LogInPage() {
-	val auth = Store.auth()
+fun SignInPage() {
+	val auth = Store.auth
 	val form = useForm()
 	val email = useField(
 		form = form,
-		value = auth.loginInfo.email,
-		regex = Form.email,
+		value = auth.signInInfo.email,
+		regex = Field.email,
 		ifEmpty = R.string.email_required,
 		ifInvalid = R.string.email_invalid,
 	)
 	val password = useField(
 		form = form,
-		value = auth.loginInfo.password,
-		regex = Form.password,
+		value = auth.signInInfo.password,
+		regex = Field.password,
 		ifEmpty = R.string.password_required,
 		ifInvalid = R.string.password_invalid,
 	)
 
 	val (loading, setLoading) = useState(false)
 
-	fun logIn() {
+	fun signIn() {
 		if (loading) return
 		if (form.validate()) {
 			setLoading(true)
-			auth.saveLoginInfo(email.trim(), password.trim())
-			auth.logIn { message ->
+			auth.saveSignInInfo(email.trim(), password.trim())
+			auth.signIn { error ->
 				setLoading(false)
-				form.error(valid = false, error = message)
+				form.error = error
 			}
 		} else form.focusOnFirstInvalidField()
 	}
@@ -98,14 +98,15 @@ fun LogInPage() {
 					label = R.string.password,
 					placeholder = R.string.create_password,
 					password = true,
-					onOk = { logIn() }
+					onOk = ::signIn,
 				)
 				form.Error()
 				Button(
-					text = R.string.log_in,
-					modifier = Modifier.padding(top = (if (form.valid()) 14 else 3).dp),
+					text = R.string.sign_in,
+					modifier = Modifier.padding(top = (if (form.valid) 14 else 3).dp),
 					loading = loading,
-				) { logIn() }
+					onClick = ::signIn,
+				)
 			}
 
 			Row(
@@ -135,6 +136,6 @@ fun LogInPage() {
 
 @Preview(showSystemUi = true)
 @Composable
-fun PreviewLogInUserPage() {
-	LogInPage()
+fun PreviewSignInPage() {
+	SignInPage()
 }

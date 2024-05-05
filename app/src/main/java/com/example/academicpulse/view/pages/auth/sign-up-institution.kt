@@ -23,7 +23,7 @@ import com.example.academicpulse.view_model.Store
 
 @Composable
 fun SignUpInstitutionPage() {
-	val auth = Store.auth()
+	val auth = Store.auth
 	val form = useForm()
 	val institution = useField(
 		form = form,
@@ -75,7 +75,7 @@ fun SignUpInstitutionPage() {
 				field = position,
 				label = R.string.position,
 				okIcon = ImeAction.Next,
-				onOk = { navigate(validate = true) }
+				onOk = { navigate(validate = true) },
 			)
 			form.Error()
 		}
@@ -92,7 +92,7 @@ fun SignUpInstitutionPage() {
 
 	BackHandler {
 		auth.clearSignUp()
-		Router.back(/* to = auth/log-in */)
+		Router.back(/* to = auth/sign-in */)
 	}
 }
 

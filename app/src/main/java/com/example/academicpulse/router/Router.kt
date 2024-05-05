@@ -1,17 +1,12 @@
 package com.example.academicpulse.router
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.academicpulse.utils.useAtom
-import com.example.academicpulse.view_model.Store
 
-class Router(
-	private var navController: NavHostController,
-	private val startDestination: LiveData<String>,
-) {
+class Router private constructor(private var navController: NavHostController) {
 	private var route = MutableLiveData("auth")
 	private var navBarVisible = MutableLiveData(false)
 
@@ -24,7 +19,7 @@ class Router(
 		@Composable
 		fun Provider() {
 			if (appRouter.isEmpty())
-				appRouter.add(Router(rememberNavController(), Store.getStartDestination()))
+				appRouter.add(Router(rememberNavController()))
 		}
 
 		/** Bottom NavBar UI element containing main root routes with their icons, allowing direct navigation to them */
@@ -40,7 +35,7 @@ class Router(
 		 */
 		@Composable
 		fun NavGraph() {
-			val route = useAtom(appRouter[0].startDestination) ?: "auth"
+			val route = appRouter[0].route.value ?: "auth"
 			NavGraph(navController = appRouter[0].navController, startDestination = route)
 		}
 

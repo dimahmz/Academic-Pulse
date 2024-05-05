@@ -96,9 +96,13 @@ fun <T> useState(
 @Composable
 fun <T> useAtom(lifeData: LiveData<T>): T? {
 	// Create and remember a mutable state variable initialized with the current value of the LiveData
-	val state = remember { mutableStateOf(lifeData.value) }
-	// Observe the LiveData and update the state variable when it changes
-	lifeData.observe { state.value = it }
+	val state = remember {
+		val value = mutableStateOf(lifeData.value)
+		// Observe the LiveData and update the value when it changes
+		lifeData.observe { value.value = it }
+		// Return the value holder
+		value
+	}
 	// Return the current value of the state variable
 	return state.value
 }

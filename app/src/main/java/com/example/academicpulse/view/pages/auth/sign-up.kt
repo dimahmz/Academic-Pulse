@@ -12,7 +12,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
-import com.example.academicpulse.model.Form
+import com.example.academicpulse.model.Field
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
@@ -25,33 +25,33 @@ import com.example.academicpulse.view_model.Store
 
 @Composable
 fun SignUpPage() {
-	val auth = Store.auth()
+	val auth = Store.auth
 	val form = useForm()
 	val firstName = useField(
 		form = form,
 		value = auth.signUpInfo.firstName,
-		regex = Form.name,
+		regex = Field.name,
 		ifEmpty = R.string.first_name_required,
 		ifInvalid = R.string.first_name_invalid,
 	)
 	val lastName = useField(
 		form = form,
 		value = auth.signUpInfo.lastName,
-		regex = Form.name,
+		regex = Field.name,
 		ifEmpty = R.string.last_name_required,
 		ifInvalid = R.string.last_name_invalid,
 	)
 	val email = useField(
 		form = form,
 		value = auth.signUpInfo.email,
-		regex = Form.email,
+		regex = Field.email,
 		ifEmpty = R.string.email_required,
 		ifInvalid = R.string.email_invalid,
 	)
 	val password = useField(
 		form = form,
 		value = auth.signUpInfo.password,
-		regex = Form.password,
+		regex = Field.password,
 		ifEmpty = R.string.password_required,
 		ifInvalid = R.string.password_not_strong,
 	)
@@ -65,7 +65,7 @@ fun SignUpPage() {
 			auth.saveSignUpInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
 			auth.signUp { message ->
 				setLoading(false)
-				form.error(valid = false, error = message)
+				form.error = message
 			}
 		} else form.focusOnFirstInvalidField()
 	}
@@ -104,7 +104,7 @@ fun SignUpPage() {
 				label = R.string.password,
 				placeholder = R.string.create_password,
 				password = true,
-				onOk = { signUp() }
+				onOk = ::signUp,
 			)
 			form.Error()
 		}
@@ -114,7 +114,8 @@ fun SignUpPage() {
 			text = R.string.continued,
 			modifier = Modifier.padding(bottom = 60.dp),
 			loading = loading,
-		) { signUp() }
+			onClick = ::signUp,
+		)
 	}
 
 	BackHandler {
