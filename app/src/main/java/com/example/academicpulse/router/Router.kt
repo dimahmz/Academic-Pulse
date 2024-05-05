@@ -69,7 +69,6 @@ class Router private constructor(private var navController: NavHostController) {
 		/** Exit the app. */
 		fun exit() {
 			(context as Index).finish()
-			// exitProcess(0)
 		}
 	}
 }

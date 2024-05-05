@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.theme.inputHeight
 import com.example.academicpulse.theme.radius
@@ -26,6 +27,7 @@ fun Button(
 	icon: Int? = null,
 	loading: Boolean = false,
 	disabled: Boolean = loading,
+	height: Dp = inputHeight,
 	onClick: (() -> Unit)? = null
 ) {
 	val colors = MaterialTheme.colorScheme
@@ -34,13 +36,13 @@ fun Button(
 		onClick = { if (!disabled) onClick?.invoke() },
 		shape = RoundedCornerShape(radius),
 		modifier = modifier
-			.fillMaxWidth()
-			.height(inputHeight)
 			.border(
 				width = 1.dp,
 				color = if (disabled) colors.primary.copy(alpha = 0.4F) else colors.primary,
-				shape = RoundedCornerShape(radius)
-			),
+				shape = RoundedCornerShape(radius),
+			)
+			.fillMaxWidth()
+			.height(height),
 		enabled = !disabled,
 		colors = ButtonDefaults.buttonColors(
 			containerColor = if (ghost) Color.White else colors.primary,
@@ -49,7 +51,7 @@ fun Button(
 			disabledContentColor = Color(0xFFCCCCCC),
 		),
 	) {
-		if (icon != null && !loading) Icon(id = icon)
+		if (icon != null && !loading) Icon(id = icon, color = LocalContentColor.current)
 		else if (loading) Spinner(color = LocalContentColor.current)
 		if ((icon != null || loading) && text != null) Spacer(Modifier.width(8.dp))
 		if (text != null) Text(text = text, color = LocalContentColor.current)
@@ -64,6 +66,7 @@ fun Button(
 	icon: Int? = null,
 	loading: Boolean = false,
 	disabled: Boolean = loading,
+	height: Dp = inputHeight,
 	onClick: (() -> Unit)? = null
 ) {
 	Button(
@@ -73,6 +76,7 @@ fun Button(
 		icon = icon,
 		loading = loading,
 		disabled = disabled,
+		height = height,
 		onClick = onClick,
 	)
 }

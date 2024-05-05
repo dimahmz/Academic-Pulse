@@ -12,10 +12,10 @@ val navBavIconColor = Color(0xFF74757D)
 
 val brown = Color(0xFF655D53)
 val primaryBackground = Color(0xFFFFFFFF)
-val borderColor = Color(0xFFC5C6CC)
 
-val textColor = Color(0xFF2F3036)
-val titleColor = Color(0xFF131314)
+val borderColor = Color(0xFFC5C6CC)
+val textColor = Color(0xFF0B0B0B)
+val titleColor = Color(0xFF0B0B0B)
 val descriptionColor = Color(0xFF71727A)
 
 val inputGray = Color(0xFFCCCCCC)
@@ -26,6 +26,7 @@ val DarkColorScheme = darkColorScheme(
 	tertiary = white,
 	background = white,
 	error = error,
+	outline = borderColor,
 )
 
 val LightColorScheme = lightColorScheme(
@@ -34,4 +35,5 @@ val LightColorScheme = lightColorScheme(
 	tertiary = white,
 	background = white,
 	error = error,
+	outline = borderColor,
 )
