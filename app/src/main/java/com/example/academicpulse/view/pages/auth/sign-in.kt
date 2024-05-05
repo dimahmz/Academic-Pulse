@@ -30,7 +30,6 @@ import com.example.academicpulse.utils.useForm
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view_model.Store
-import kotlin.system.exitProcess
 
 @Composable
 fun SignInPage() {
@@ -130,7 +129,7 @@ fun SignInPage() {
 
 	BackHandler {
 		if (loading) return@BackHandler
-		exitProcess(0)
+		Router.exit()
 	}
 }
 

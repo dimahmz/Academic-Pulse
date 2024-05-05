@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.academicpulse.Index
+import com.example.academicpulse.utils.context
 import com.example.academicpulse.utils.useAtom
 
 class Router private constructor(private var navController: NavHostController) {
@@ -18,8 +20,10 @@ class Router private constructor(private var navController: NavHostController) {
 		/** Provider initialize the router instance that will be used across the entire App */
 		@Composable
 		fun Provider() {
+			val controller = rememberNavController()
 			if (appRouter.isEmpty())
-				appRouter.add(Router(rememberNavController()))
+				appRouter.add(Router(controller))
+			else appRouter[0].navController = controller
 		}
 
 		/** Bottom NavBar UI element containing main root routes with their icons, allowing direct navigation to them */
@@ -60,6 +64,12 @@ class Router private constructor(private var navController: NavHostController) {
 		/** Navigate to a previous page. */
 		fun back(step: Int = 1) {
 			repeat(step) { appRouter[0].navController.popBackStack() }
+		}
+
+		/** Exit the app. */
+		fun exit() {
+			(context as Index).finish()
+			// exitProcess(0)
 		}
 	}
 }

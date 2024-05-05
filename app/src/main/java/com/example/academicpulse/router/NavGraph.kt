@@ -14,7 +14,6 @@ import com.example.academicpulse.view.pages.auth.*
 import com.example.academicpulse.view.pages.home.*
 import com.example.academicpulse.view.pages.inbox.*
 import com.example.academicpulse.view.pages.profile.*
-import kotlin.system.exitProcess
 
 /** NavGraph is a schema that contains all the pages used in the App.
  * - Each page is declared with its instance, path key and back handler button behavior.
@@ -52,7 +51,7 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
 		navigation(route = "home", startDestination = "home/index") {
 			composable(route = "home/index") {
 				HomePage()
-				BackHandler { exitProcess(0) }
+				BackHandler { Router.exit() }
 			}
 		}
 		navigation(route = "inbox", startDestination = "inbox/index") {
