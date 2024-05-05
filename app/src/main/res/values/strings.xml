@@ -1,6 +1,52 @@
 <resources>
-    <string name="app_name">Academic Pulse</string>
-    <string name="title_home">Home</string>
-    <string name="title_inbox">Inbox</string>
-    <string name="title_profile">Profile</string>
+    <string name="app_name" translatable="false">Academic Pulse</string>
+    <string name="home">Home</string>
+    <string name="inbox">Inbox</string>
+    <string name="profile">Profile</string>
+
+    <string name="unknown_error">An error has occurred, please try again later!</string>
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="continued">Continue</string>
+
+    <string name="sign_in">Log in</string>
+    <string name="log_out">Log out</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="welcome">Welcome!</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="new_member">Not a member ?</string>
+    <string name="register_now">Register now</string>
+    <string name="institution_info">Show where you conduct research</string>
+    <string name="institution_info_description">Enter your institution details to quickly find your colleagues and keep up with their research.</string>
+    <string name="institution">Institution</string>
+    <string name="department">Department</string>
+    <string name="position">Position</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="institution_email">Your institution email</string>
+    <string name="create_password">Create a password</string>
+
+    <string name="email_required">The email is required.</string>
+    <string name="email_invalid">The email is invalid.</string>
+    <string name="password_required">The password is required.</string>
+    <string name="password_invalid">The password is invalid.</string>
+    <string name="password_not_strong">Register now</string>
+    <string name="institution_required">The institution is required.</string>
+    <string name="department_required">The department is required.</string>
+    <string name="position_required">The position is required.</string>
+    <string name="first_name_required">The first name is required.</string>
+    <string name="first_name_invalid">The first name is invalid.</string>
+    <string name="last_name_required">The last name is required.</string>
+    <string name="last_name_invalid">The last name is invalid.</string>
+    <string name="verify_email_first">Must verify email before Login!</string>
+    <string name="invalid_credentials">Email or Password is invalid</string>
+
+    <string name="verify_email">Waiting for Email Verification</string>
+    <string name="verify_email_description">We have sent you and email that contains a verification link</string>
+    <string name="back_sign_in">Back to Login</string>
+
+    <string name="account_activation">Waiting for Account Activation</string>
+    <string name="account_activation_description">We have received your information. You will be able to use the app until we activate your account.</string>
 </resources>

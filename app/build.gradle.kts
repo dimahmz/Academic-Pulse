@@ -48,7 +48,6 @@ android {
 }
 
 dependencies {
-
 	implementation("androidx.core:core-ktx:1.12.0")
 	implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
 	implementation("androidx.activity:activity-compose:1.8.2")
@@ -57,7 +56,10 @@ dependencies {
 	implementation("androidx.compose.ui:ui-graphics")
 	implementation("androidx.compose.ui:ui-tooling-preview")
 	implementation("androidx.compose.material3:material3")
+
+	// Navigation
 	implementation("androidx.navigation:navigation-compose:2.7.7")
+	implementation("androidx.core:core-splashscreen:1.0.1")
 
 	// Testing & Debugging
 	testImplementation("junit:junit:4.13.2")
@@ -71,4 +73,5 @@ dependencies {
 	// Firebase
 	implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
 	implementation("com.google.firebase:firebase-firestore")
+	implementation("com.google.firebase:firebase-auth")
 }

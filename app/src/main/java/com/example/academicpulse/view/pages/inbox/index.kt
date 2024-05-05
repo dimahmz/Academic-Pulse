@@ -1,10 +1,9 @@
 package com.example.academicpulse.view.pages.inbox
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import com.example.academicpulse.view_model.InboxViewModel
+import com.example.academicpulse.view.components.basic.Text
 
 @Composable
-fun InboxPage(viewModel: InboxViewModel) {
-	Text("Inbox Page")
+fun InboxPage() {
+	Text(text = "Inbox Page")
 }

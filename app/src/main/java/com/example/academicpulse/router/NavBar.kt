@@ -2,16 +2,19 @@ package com.example.academicpulse.router
 
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
-import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
-import com.example.academicpulse.utils.Res
-import com.example.academicpulse.utils.useAtom
+import com.example.academicpulse.theme.navBavIconColor
+import com.example.academicpulse.view.components.basic.Icon
+import com.example.academicpulse.view.components.basic.Text
 
-// A helper class used below to render th NavBar
+/** A helper class used below to render the NavBar. */
 private data class NavbarItem(
 	val route: String,
 	val title: Int,
@@ -20,39 +23,34 @@ private data class NavbarItem(
 )
 
 private val navbarItems = listOf(
-	NavbarItem("home", R.string.title_home, R.drawable.icon_home),
-	NavbarItem("inbox", R.string.title_inbox, R.drawable.icon_inbox),
-	NavbarItem("profile", R.string.title_profile, R.drawable.icon_profile),
+	NavbarItem("home", R.string.home, R.drawable.icon_home),
+	NavbarItem("inbox", R.string.inbox, R.drawable.icon_inbox),
+	NavbarItem("profile", R.string.profile, R.drawable.icon_profile),
 )
 
 /** Bottom NavBar UI element containing main root routes with their icons, allowing direct navigation to them */
 @Composable
-fun Navbar() {
-	val route = useAtom(Router.getRoute())
-	val navBarVisible = useAtom(Router.isNavBarVisible())
-
-	if (navBarVisible != true) return
-	NavigationBar {
+fun NavBar(route: String, navBarVisible: Boolean) {
+	if (!navBarVisible) return
+	NavigationBar(containerColor = MaterialTheme.colorScheme.secondary) {
 		navbarItems.forEach {
+			val selected = route.startsWith(it.route)
+			val color = if (selected) MaterialTheme.colorScheme.primary else navBavIconColor
 			NavigationBarItem(
-				selected = it.route.startsWith(route ?: "home"),
+				colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent),
+				selected = selected,
 				onClick = { Router.navigate(it.route, true) },
-				label = {
-					Text(Res.string(it.title))
-				},
+				label = { Text(text = it.title, color = color) },
 				icon = {
 					BadgedBox(
 						badge = {
 							if (it.count > 0)
 								Badge {
-									Text(if (it.count > 99) "+99" else it.count.toString())
+									Text(text = if (it.count > 99) "+99" else it.count.toString())
 								}
-						}
+						},
 					) {
-						Icon(
-							imageVector = Res.drawable(it.icon),
-							contentDescription = Res.string(it.title)
-						)
+						Icon(id = it.icon, color = color, size = 18.dp)
 					}
 				}
 			)

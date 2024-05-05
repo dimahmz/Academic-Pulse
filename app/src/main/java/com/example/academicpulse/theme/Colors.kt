@@ -4,31 +4,34 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
-
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
-
-val danger = Color(0xFFD70000)
-val surface_primary = Color(0xFFFFFFFF)
-val surface_secondary = Color(0xFFEAF2FF)
 val primary = Color(0xFF0B8AA0)
-val border_color = Color(0xFFC5C6CC)
-val fonts_color_header = Color(0xFF131314)
-val fonts_color_paragraph = Color(0xFF2F3036)
-val fonts_color_text = Color(0xFF71727A)
+val secondary = Color(0xFFEAF2FF)
+val error = Color(0xFFD70000)
+val white = Color(0xFFFFFFFF)
+val navBavIconColor = Color(0xFF74757D)
+
+val brown = Color(0xFF655D53)
+val primaryBackground = Color(0xFFFFFFFF)
+val borderColor = Color(0xFFC5C6CC)
+
+val textColor = Color(0xFF2F3036)
+val titleColor = Color(0xFF131314)
+val descriptionColor = Color(0xFF71727A)
+
+val inputGray = Color(0xFFCCCCCC)
 
 val DarkColorScheme = darkColorScheme(
-	primary = Purple80,
-	secondary = PurpleGrey80,
-	tertiary = Pink80
+	primary = primary,
+	secondary = secondary,
+	tertiary = white,
+	background = white,
+	error = error,
 )
 
 val LightColorScheme = lightColorScheme(
-	primary = Purple40,
-	secondary = PurpleGrey40,
-	tertiary = Pink40
+	primary = primary,
+	secondary = secondary,
+	tertiary = white,
+	background = white,
+	error = error,
 )
