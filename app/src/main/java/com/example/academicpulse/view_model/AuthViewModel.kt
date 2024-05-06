@@ -11,7 +11,7 @@ import com.google.firebase.ktx.Firebase
 
 class AuthViewModel : ViewModel() {
 	// Firebase authentication instance
-	private val auth = Firebase.auth
+	val auth = Firebase.auth
 
 	val signInInfo: SignInInfo = SignInInfo()
 	val signUpInfo: SignUpInfo = SignUpInfo()

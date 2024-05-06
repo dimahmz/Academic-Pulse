@@ -25,3 +25,10 @@ fun logcat(message: String? = null, exception: Exception? = null) {
 fun <T> LiveData<T>.observe(callback: (T) -> Unit) {
 	this.observe(context as LifecycleOwner) { callback(it) }
 }
+
+/** Creates a shallow copy of this ArrayList.
+ * @return A new ArrayList with the same elements as this ArrayList.
+ */
+fun <T> ArrayList<T>.copy(): ArrayList<T> {
+	return ArrayList(this.toMutableList())
+}
