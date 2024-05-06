@@ -39,7 +39,7 @@ fun SettingsPage() {
 			// Edit Profile
 		}
 		Element("About", R.drawable.icon_about) {
-			// navigate to About
+			Router.navigate("profile/about", false)
 		}
 		Element("Log out", R.drawable.icon_logout) {
 			Store.auth.logOut()
