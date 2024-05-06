@@ -1,5 +1,6 @@
 package com.example.academicpulse.router
 
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.MaterialTheme
@@ -7,9 +8,12 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
+import com.example.academicpulse.theme.bottomBarHeight
+import com.example.academicpulse.theme.descriptionTextSize
 import com.example.academicpulse.theme.navBavIconColor
 import com.example.academicpulse.view.components.basic.Icon
 import com.example.academicpulse.view.components.basic.Text
@@ -32,7 +36,10 @@ private val navbarItems = listOf(
 @Composable
 fun NavBar(route: String, navBarVisible: Boolean) {
 	if (!navBarVisible) return
-	NavigationBar(containerColor = MaterialTheme.colorScheme.secondary) {
+	NavigationBar(
+		modifier = Modifier.height(bottomBarHeight),
+		containerColor = MaterialTheme.colorScheme.secondary,
+	) {
 		navbarItems.forEach {
 			val selected = route.startsWith(it.route)
 			val color = if (selected) MaterialTheme.colorScheme.primary else navBavIconColor
@@ -40,7 +47,7 @@ fun NavBar(route: String, navBarVisible: Boolean) {
 				colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent),
 				selected = selected,
 				onClick = { Router.navigate(it.route, true) },
-				label = { Text(text = it.title, color = color) },
+				label = { Text(text = it.title, color = color, size = descriptionTextSize) },
 				icon = {
 					BadgedBox(
 						badge = {
@@ -50,7 +57,7 @@ fun NavBar(route: String, navBarVisible: Boolean) {
 								}
 						},
 					) {
-						Icon(id = it.icon, color = color, size = 18.dp)
+						Icon(id = it.icon, color = color, size = 20.dp)
 					}
 				}
 			)
