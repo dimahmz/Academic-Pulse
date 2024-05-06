@@ -28,7 +28,7 @@ fun ProfileCard(onAddResearch: () -> Unit) {
 		Row(modifier = Modifier.padding(top = pagePaddingX)) {
 			Spacer(Modifier.weight(1f))
 			Icon(id = R.drawable.icon_settings, size = 20.dp) {
-				Router.navigate("home", false)
+				Router.navigate("profile/settings", false)
 			}
 		}
 

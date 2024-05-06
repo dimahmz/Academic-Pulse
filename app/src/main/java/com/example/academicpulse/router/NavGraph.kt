@@ -64,6 +64,9 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
 			composable(route = "profile/index") {
 				ProfilePage(/* BackHandler, replaceWith = home */)
 			}
+			composable(route = "profile/settings") {
+				SettingsPage(/* BackHandler, to = profile/index */)
+			}
 		}
 		navigation(route = "auth", startDestination = "auth/sign-in") {
 			composable(route = "auth/sign-in") {
