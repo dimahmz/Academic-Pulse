@@ -8,7 +8,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.unit.dp
 import com.example.academicpulse.utils.useForm
 import com.example.academicpulse.utils.useField
 import com.example.academicpulse.view.components.basic.Input
@@ -163,13 +162,9 @@ class Form {
 	 * - Note: The form error can be the error of the first invalid field or you can set it manually using the **error** setter.
 	 */
 	@Composable
-	fun Error(paddingTop: Int = 0) {
+	fun Error() {
 		if (!valid && error != null) {
-			Text(
-				text = error!!,
-				color = MaterialTheme.colorScheme.error,
-				modifier = Modifier.padding(top = paddingTop.dp)
-			)
+			Text(text = error!!, color = MaterialTheme.colorScheme.error)
 		}
 	}
 }

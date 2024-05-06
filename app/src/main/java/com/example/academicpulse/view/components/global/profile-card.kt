@@ -23,7 +23,7 @@ fun ProfileCard(onAddResearch: () -> Unit) {
 		modifier = Modifier
 			.fillMaxWidth()
 			.padding(horizontal = pagePaddingX),
-		verticalArrangement = Arrangement.spacedBy(8.dp),
+		verticalArrangement = Arrangement.spacedBy(4.dp),
 	) {
 		Row(modifier = Modifier.padding(top = pagePaddingX)) {
 			Spacer(Modifier.weight(1f))
@@ -33,10 +33,10 @@ fun ProfileCard(onAddResearch: () -> Unit) {
 		}
 
 		Image(id = R.drawable.avatar_user, size = 80.dp)
-		Title(text = "User name")
+		H2(text = "User name")
 
 		Row(
-			modifier = Modifier.padding(top = 4.dp),
+			modifier = Modifier.padding(top = 3.dp),
 			horizontalArrangement = Arrangement.spacedBy(gap)
 		) {
 			Row(

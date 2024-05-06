@@ -16,6 +16,8 @@ import com.example.academicpulse.theme.titleColor
 import com.example.academicpulse.theme.descriptionColor
 import com.example.academicpulse.theme.descriptionTextSize
 import com.example.academicpulse.theme.h1TextSize
+import com.example.academicpulse.theme.h2TextSize
+import com.example.academicpulse.theme.h3TextSize
 import com.example.academicpulse.theme.textColor
 import com.example.academicpulse.theme.textSize
 
@@ -172,6 +174,82 @@ fun H1(
 	maxLines: Int = Int.MAX_VALUE,
 ) {
 	H1(
+		modifier = modifier,
+		text = stringResource(text),
+		color = color,
+		size = size,
+		align = align,
+		maxLines = maxLines,
+	)
+}
+
+@Composable
+fun H2(
+	modifier: Modifier = Modifier,
+	text: String,
+	color: Color = titleColor,
+	size: TextUnit = h2TextSize,
+	align: TextAlign = TextAlign.Start,
+	maxLines: Int = Int.MAX_VALUE,
+) {
+	Title(
+		modifier = modifier,
+		text = text,
+		color = color,
+		size = size,
+		align = align,
+		maxLines = maxLines,
+	)
+}
+
+@Composable
+fun H2(
+	modifier: Modifier = Modifier,
+	@StringRes text: Int,
+	color: Color = titleColor,
+	size: TextUnit = h2TextSize,
+	align: TextAlign = TextAlign.Start,
+	maxLines: Int = Int.MAX_VALUE,
+) {
+	H2(
+		modifier = modifier,
+		text = stringResource(text),
+		color = color,
+		size = size,
+		align = align,
+		maxLines = maxLines,
+	)
+}
+
+@Composable
+fun H3(
+	modifier: Modifier = Modifier,
+	text: String,
+	color: Color = titleColor,
+	size: TextUnit = h3TextSize,
+	align: TextAlign = TextAlign.Start,
+	maxLines: Int = Int.MAX_VALUE,
+) {
+	Title(
+		modifier = modifier,
+		text = text,
+		color = color,
+		size = size,
+		align = align,
+		maxLines = maxLines,
+	)
+}
+
+@Composable
+fun H3(
+	modifier: Modifier = Modifier,
+	@StringRes text: Int,
+	color: Color = titleColor,
+	size: TextUnit = h3TextSize,
+	align: TextAlign = TextAlign.Start,
+	maxLines: Int = Int.MAX_VALUE,
+) {
+	H3(
 		modifier = modifier,
 		text = stringResource(text),
 		color = color,
