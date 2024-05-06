@@ -2,15 +2,12 @@ package com.example.academicpulse.view.components.basic
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.DefaultAlpha
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -19,20 +16,40 @@ import com.example.academicpulse.theme.textColor
 @Composable
 fun Image(
 	modifier: Modifier = Modifier,
-	@DrawableRes id: Int,
+	image: ImageVector,
+	size: Dp? = null,
+	height: Dp? = size,
+	width: Dp? = height,
 	align: Alignment = Alignment.Center,
-	scale: ContentScale = ContentScale.Fit,
-	alpha: Float = DefaultAlpha,
-	colorFilter: ColorFilter? = null
 ) {
+	var modified = modifier
+	if (height != null) modified = modified.height(height)
+	if (width != null) modified = modified.height(width)
+
 	androidx.compose.foundation.Image(
-		modifier = modifier,
-		imageVector = ImageVector.vectorResource(id),
+		modifier = modified,
+		imageVector = image,
 		contentDescription = null,
 		alignment = align,
-		contentScale = scale,
-		alpha = alpha,
-		colorFilter = colorFilter,
+	)
+}
+
+@Composable
+fun Image(
+	modifier: Modifier = Modifier,
+	@DrawableRes id: Int,
+	size: Dp? = null,
+	height: Dp? = size,
+	width: Dp? = height,
+	align: Alignment = Alignment.Center,
+) {
+	Image(
+		modifier = modifier,
+		image = ImageVector.vectorResource(id),
+		size = size,
+		height = height,
+		width = width,
+		align = align,
 	)
 }
 
@@ -40,15 +57,19 @@ fun Image(
 fun Icon(
 	modifier: Modifier = Modifier,
 	@DrawableRes id: Int,
-	size: Dp = 14.dp,
 	color: Color = textColor,
+	size: Dp = 14.dp,
+	height: Dp? = size,
+	width: Dp? = height,
 	onClick: (() -> Unit)? = null
 ) {
-	var internalModifier = modifier.size(size)
-	if (onClick != null) internalModifier = internalModifier.clickable { onClick() }
+	var modified = modifier
+	if (height != null) modified = modified.height(height)
+	if (width != null) modified = modified.height(width)
+	if (onClick != null) modified = modified.clickable { onClick() }
 
 	androidx.compose.material3.Icon(
-		modifier = internalModifier,
+		modifier = modified,
 		imageVector = ImageVector.vectorResource(id),
 		contentDescription = null,
 		tint = color,

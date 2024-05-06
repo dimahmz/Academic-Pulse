@@ -32,7 +32,7 @@ fun ProfileCard(onAddResearch: () -> Unit) {
 			}
 		}
 
-		Image(id = R.drawable.avatar_user)
+		Image(id = R.drawable.avatar_user, size = 80.dp)
 		Title(text = "User name")
 
 		Row(
@@ -79,7 +79,7 @@ fun ProfileCard(onAddResearch: () -> Unit) {
 	}
 }
 
-@Preview(showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 fun PreviewProfileCard() {
 	ProfileCard { /* At click on add research. */ }
