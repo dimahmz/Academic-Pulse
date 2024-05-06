@@ -1,6 +1,7 @@
 package com.example.academicpulse.view.components.basic
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,9 +33,13 @@ fun Text(
 	weight: FontWeight? = null,
 	align: TextAlign = TextAlign.Start,
 	maxLines: Int = Int.MAX_VALUE,
+	onClick: (() -> Unit)? = null,
 ) {
+	var modified = modifier
+	if (onClick != null) modified = modified.clickable(onClick = onClick)
+
 	androidx.compose.material3.Text(
-		modifier = modifier,
+		modifier = modified,
 		text = text,
 		fontFamily = font,
 		color = color,
@@ -55,6 +60,7 @@ fun Text(
 	weight: FontWeight? = null,
 	align: TextAlign = TextAlign.Start,
 	maxLines: Int = Int.MAX_VALUE,
+	onClick: (() -> Unit)? = null,
 ) {
 	Text(
 		modifier = modifier,
@@ -64,6 +70,7 @@ fun Text(
 		align = align,
 		maxLines = maxLines,
 		weight = weight,
+		onClick = onClick,
 	)
 }
 
@@ -75,6 +82,7 @@ fun Title(
 	size: TextUnit = textSize,
 	align: TextAlign = TextAlign.Start,
 	maxLines: Int = Int.MAX_VALUE,
+	onClick: (() -> Unit)? = null,
 ) {
 	Text(
 		modifier = modifier,
@@ -84,6 +92,7 @@ fun Title(
 		align = align,
 		maxLines = maxLines,
 		weight = FontWeight.Bold,
+		onClick = onClick,
 	)
 }
 
@@ -95,6 +104,7 @@ fun Title(
 	size: TextUnit = textSize,
 	align: TextAlign = TextAlign.Start,
 	maxLines: Int = Int.MAX_VALUE,
+	onClick: (() -> Unit)? = null,
 ) {
 	Title(
 		modifier = modifier,
@@ -103,6 +113,7 @@ fun Title(
 		size = size,
 		align = align,
 		maxLines = maxLines,
+		onClick = onClick,
 	)
 }
 
@@ -114,6 +125,7 @@ fun Description(
 	size: TextUnit = descriptionTextSize,
 	align: TextAlign = TextAlign.Start,
 	maxLines: Int = Int.MAX_VALUE,
+	onClick: (() -> Unit)? = null,
 ) {
 	Text(
 		modifier = modifier,
@@ -123,6 +135,7 @@ fun Description(
 		align = align,
 		maxLines = maxLines,
 		weight = FontWeight.Light,
+		onClick = onClick,
 	)
 }
 
@@ -134,6 +147,7 @@ fun Description(
 	size: TextUnit = descriptionTextSize,
 	align: TextAlign = TextAlign.Start,
 	maxLines: Int = Int.MAX_VALUE,
+	onClick: (() -> Unit)? = null,
 ) {
 	Description(
 		modifier = modifier,
@@ -142,6 +156,7 @@ fun Description(
 		size = size,
 		align = align,
 		maxLines = maxLines,
+		onClick = onClick,
 	)
 }
 
@@ -153,6 +168,7 @@ fun H1(
 	size: TextUnit = h1TextSize,
 	align: TextAlign = TextAlign.Start,
 	maxLines: Int = Int.MAX_VALUE,
+	onClick: (() -> Unit)? = null,
 ) {
 	Title(
 		modifier = modifier,
@@ -161,6 +177,7 @@ fun H1(
 		size = size,
 		align = align,
 		maxLines = maxLines,
+		onClick = onClick,
 	)
 }
 
@@ -172,6 +189,7 @@ fun H1(
 	size: TextUnit = h1TextSize,
 	align: TextAlign = TextAlign.Start,
 	maxLines: Int = Int.MAX_VALUE,
+	onClick: (() -> Unit)? = null,
 ) {
 	H1(
 		modifier = modifier,
@@ -180,6 +198,7 @@ fun H1(
 		size = size,
 		align = align,
 		maxLines = maxLines,
+		onClick = onClick,
 	)
 }
 
@@ -191,6 +210,7 @@ fun H2(
 	size: TextUnit = h2TextSize,
 	align: TextAlign = TextAlign.Start,
 	maxLines: Int = Int.MAX_VALUE,
+	onClick: (() -> Unit)? = null,
 ) {
 	Title(
 		modifier = modifier,
@@ -199,6 +219,7 @@ fun H2(
 		size = size,
 		align = align,
 		maxLines = maxLines,
+		onClick = onClick,
 	)
 }
 
@@ -210,6 +231,7 @@ fun H2(
 	size: TextUnit = h2TextSize,
 	align: TextAlign = TextAlign.Start,
 	maxLines: Int = Int.MAX_VALUE,
+	onClick: (() -> Unit)? = null,
 ) {
 	H2(
 		modifier = modifier,
@@ -218,6 +240,7 @@ fun H2(
 		size = size,
 		align = align,
 		maxLines = maxLines,
+		onClick = onClick,
 	)
 }
 
@@ -229,6 +252,7 @@ fun H3(
 	size: TextUnit = h3TextSize,
 	align: TextAlign = TextAlign.Start,
 	maxLines: Int = Int.MAX_VALUE,
+	onClick: (() -> Unit)? = null,
 ) {
 	Title(
 		modifier = modifier,
@@ -237,6 +261,7 @@ fun H3(
 		size = size,
 		align = align,
 		maxLines = maxLines,
+		onClick = onClick,
 	)
 }
 
@@ -248,6 +273,7 @@ fun H3(
 	size: TextUnit = h3TextSize,
 	align: TextAlign = TextAlign.Start,
 	maxLines: Int = Int.MAX_VALUE,
+	onClick: (() -> Unit)? = null,
 ) {
 	H3(
 		modifier = modifier,
@@ -256,5 +282,6 @@ fun H3(
 		size = size,
 		align = align,
 		maxLines = maxLines,
+		onClick = onClick,
 	)
 }

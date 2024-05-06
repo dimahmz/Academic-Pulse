@@ -21,10 +21,12 @@ fun Image(
 	height: Dp? = size,
 	width: Dp? = height,
 	align: Alignment = Alignment.Center,
+	onClick: (() -> Unit)? = null,
 ) {
 	var modified = modifier
 	if (height != null) modified = modified.height(height)
 	if (width != null) modified = modified.height(width)
+	if (onClick != null) modified = modified.clickable(onClick = onClick)
 
 	androidx.compose.foundation.Image(
 		modifier = modified,
@@ -42,6 +44,7 @@ fun Image(
 	height: Dp? = size,
 	width: Dp? = height,
 	align: Alignment = Alignment.Center,
+	onClick: (() -> Unit)? = null,
 ) {
 	Image(
 		modifier = modifier,
@@ -50,6 +53,7 @@ fun Image(
 		height = height,
 		width = width,
 		align = align,
+		onClick = onClick,
 	)
 }
 
@@ -61,12 +65,12 @@ fun Icon(
 	size: Dp = 14.dp,
 	height: Dp? = size,
 	width: Dp? = height,
-	onClick: (() -> Unit)? = null
+	onClick: (() -> Unit)? = null,
 ) {
 	var modified = modifier
 	if (height != null) modified = modified.height(height)
 	if (width != null) modified = modified.height(width)
-	if (onClick != null) modified = modified.clickable { onClick() }
+	if (onClick != null) modified = modified.clickable(onClick = onClick)
 
 	androidx.compose.material3.Icon(
 		modifier = modified,

@@ -118,11 +118,10 @@ fun SignInPage() {
 				Text(
 					text = R.string.register_now,
 					color = MaterialTheme.colorScheme.primary,
-					weight = FontWeight.Bold,
-					modifier = Modifier.clickable {
-						Router.navigate("auth/sign-up-institution", false)
-					}
-				)
+					weight = FontWeight.Bold
+				) {
+					Router.navigate("auth/sign-up-institution", false)
+				}
 			}
 		}
 	}
