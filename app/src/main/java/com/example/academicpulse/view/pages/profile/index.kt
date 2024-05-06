@@ -2,7 +2,6 @@ package com.example.academicpulse.view.pages.profile
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -21,7 +20,7 @@ import com.example.academicpulse.utils.logcat
 import com.example.academicpulse.utils.useAtom
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.global.Line
-import com.example.academicpulse.view.components.global.ProfileCard
+import com.example.academicpulse.view.components.global.UserCard
 import com.example.academicpulse.view.components.global.PublicationArticle
 
 val publicationsLiveData = MutableLiveData(arrayListOf<Publication>())
@@ -53,7 +52,7 @@ fun ProfilePage() {
 
 	LazyColumn(modifier = Modifier.padding(bottom = bottomBarHeight)) {
 		item {
-			ProfileCard(onAddResearch = ::addPublication)
+			UserCard(onAddResearch = ::addPublication)
 			Line(height = 5.dp)
 		}
 		if (publications != null)

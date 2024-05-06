@@ -18,7 +18,7 @@ import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.view.components.basic.*
 
 @Composable
-fun ProfileCard(onAddResearch: () -> Unit) {
+fun UserCard(onAddResearch: () -> Unit) {
 	Column(
 		modifier = Modifier
 			.fillMaxWidth()
@@ -81,6 +81,6 @@ fun ProfileCard(onAddResearch: () -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewProfileCard() {
-	ProfileCard { /* At click on add research. */ }
+fun PreviewUserCard() {
+	UserCard { /* At click on add research. */ }
 }
