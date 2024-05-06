@@ -61,14 +61,14 @@ fun ProfileCard(onAddResearch: () -> Unit) {
 			horizontalArrangement = Arrangement.spacedBy(gap),
 		) {
 			Button(
-				text = "Add research",
+				text = R.string.add_research,
 				icon = R.drawable.icon_add,
 				modifier = Modifier.weight(1f),
 				height = 40.dp,
 				onClick = onAddResearch
 			)
 			Button(
-				text = "Edit profile",
+				text = R.string.edit_profile,
 				icon = R.drawable.icon_edit,
 				modifier = Modifier.weight(1f),
 				height = 40.dp,

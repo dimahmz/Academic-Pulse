@@ -8,6 +8,7 @@
     <string name="next">Next</string>
     <string name="skip">Skip</string>
     <string name="continued">Continue</string>
+    <string name="no_data">Nothing here yet</string>
 
     <string name="sign_in">Log in</string>
     <string name="log_out">Log out</string>
@@ -27,6 +28,11 @@
     <string name="last_name">Last name</string>
     <string name="institution_email">Your institution email</string>
     <string name="create_password">Create a password</string>
+    <string name="verify_email">Waiting for Email Verification</string>
+    <string name="verify_email_description">We have sent you and email that contains a verification link</string>
+    <string name="back_sign_in">Back to Login</string>
+    <string name="account_activation">Waiting for Account Activation</string>
+    <string name="account_activation_description">We have received your information. You will be able to use the app until we activate your account.</string>
 
     <string name="email_required">The email is required.</string>
     <string name="email_invalid">The email is invalid.</string>
@@ -43,10 +49,12 @@
     <string name="verify_email_first">Must verify email before Login!</string>
     <string name="invalid_credentials">Email or Password is invalid</string>
 
-    <string name="verify_email">Waiting for Email Verification</string>
-    <string name="verify_email_description">We have sent you and email that contains a verification link</string>
-    <string name="back_sign_in">Back to Login</string>
-
-    <string name="account_activation">Waiting for Account Activation</string>
-    <string name="account_activation_description">We have received your information. You will be able to use the app until we activate your account.</string>
+    <string name="add_research">Add research</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="settings">Settings</string>
+    <string name="about">About</string>
+    <string name="about_description_1">AcademicPulse is for you: the scientist, the clinician, the student, the  engineer, the public health worker, the lab technician, the computer  scientist.",</string>
+    <string name="about_description_2">The work you do is important. But too often, you are  overworked, underpaid, have low job security, and operate under high  pressure. Becoming a researcher in the first place was no easy task, and  access all too often relies on privilege. Our purpose is to make your  life easier.",</string>
+    <string name="about_description_3">We offer a home for you—a place to share your work  and connect with peers around the globe, traversing the borders and  silos of science. We want to empower you to do your best work, advance  your field, and make a better world for all.",</string>
+    <string name="about_description_4">For the  intellectually curious, the seekers of truth, the geeks, the makers: our  members offer you a treasure trove of knowledge in areas as diverse as  materials science, agriculture, human health, and quantum physics.",</string>
 </resources>

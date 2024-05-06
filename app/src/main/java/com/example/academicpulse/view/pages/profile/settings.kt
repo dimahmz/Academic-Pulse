@@ -2,6 +2,7 @@ package com.example.academicpulse.view.pages.profile
 
 import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,16 +33,16 @@ fun SettingsPage() {
 			.fillMaxHeight()
 			.padding(horizontal = pagePaddingX),
 	) {
-		Header(title = R.string.sign_up)
+		Header(title = R.string.settings)
 		Spacer(Modifier.height(14.dp))
 
-		Element("Edit profile", R.drawable.icon_edit) {
+		Element(R.string.edit_profile, R.drawable.icon_edit) {
 			// Edit Profile
 		}
-		Element("About", R.drawable.icon_about) {
+		Element(R.string.about, R.drawable.icon_about) {
 			Router.navigate("profile/about", false)
 		}
-		Element("Log out", R.drawable.icon_logout) {
+		Element(R.string.log_out, R.drawable.icon_logout) {
 			Store.auth.logOut()
 		}
 	}
@@ -49,14 +50,8 @@ fun SettingsPage() {
 	BackHandler { Router.back() }
 }
 
-@Preview(showSystemUi = true)
 @Composable
-fun PreviewSettingsPage() {
-	SettingsPage()
-}
-
-@Composable
-fun Element(text: String, @DrawableRes icon: Int, onClick: () -> Unit) {
+fun Element(@StringRes text: Int, @DrawableRes icon: Int, onClick: () -> Unit) {
 	Row(
 		modifier = Modifier
 			.fillMaxWidth()
@@ -70,4 +65,10 @@ fun Element(text: String, @DrawableRes icon: Int, onClick: () -> Unit) {
 		Icon(id = icon, size = 18.dp)
 	}
 	Line(height = 2.dp)
+}
+
+@Preview(showSystemUi = true)
+@Composable
+fun PreviewSettingsPage() {
+	SettingsPage()
 }
