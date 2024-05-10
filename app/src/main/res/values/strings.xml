@@ -5,6 +5,7 @@
     <string name="profile">Profile</string>
 
     <string name="unknown_error">An error has occurred, please try again later!</string>
+    <string name="success_fetch">Successfully fetched the data</string>
     <string name="next">Next</string>
     <string name="skip">Skip</string>
     <string name="continued">Continue</string>
@@ -40,6 +41,8 @@
     <string name="password_invalid">The password is invalid.</string>
     <string name="password_not_strong">Register now</string>
     <string name="institution_required">The institution is required.</string>
+    <string name="title_required">The Title is required.</string>
+    <string name="abstract_required">The Abstract is required.</string>
     <string name="department_required">The department is required.</string>
     <string name="position_required">The position is required.</string>
     <string name="first_name_required">The first name is required.</string>
@@ -59,5 +62,11 @@
 
     <string name="add_research">Add research</string>
     <string name="reads">Reads</string>
+    <string name="title">Title</string>
+    <string name="doi">DOI</string>
+
+    <string name="_abstract">Abstract</string>
     <string name="uploads">Uploads</string>
+
+
 </resources>
