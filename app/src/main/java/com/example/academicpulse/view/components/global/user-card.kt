@@ -67,14 +67,6 @@ fun UserCard(onAddResearch: () -> Unit) {
 				height = 40.dp,
 				onClick = onAddResearch
 			)
-			Button(
-				text = R.string.edit_profile,
-				icon = R.drawable.icon_edit,
-				modifier = Modifier.weight(1f),
-				height = 40.dp,
-				ghost = true,
-			) {
-			}
 		}
 	}
 }
