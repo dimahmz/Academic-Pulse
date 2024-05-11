@@ -21,22 +21,8 @@ import androidx.lifecycle.LiveData
  * @return A Pair containing the current state value and a function to update it
  */
 @Composable
-fun <T> useState(
-	value: T,
-	onChange: ((value: T, oldValue: T) -> Unit)? = null
-): Pair<T, (T) -> Unit> {
-	// Create and remember a mutable state variable initialized with the provided data
-	val state = remember { mutableStateOf(value) }
-	// Function to update the state
-	fun setData(value: T) {
-		val oldValue = state.value
-		if (value != oldValue) {
-			state.value = value
-			onChange?.invoke(value, oldValue)
-		}
-	}
-	// Return the current state value and the function to update it
-	return Pair(state.value, ::setData)
+fun <T> useState(value: T): Pair<T, (T) -> Unit> {
+	return useState { value }
 }
 
 /** A composable hook function used to create and manage state within another Composable function.
@@ -45,27 +31,19 @@ fun <T> useState(
  *
  * ```
  * Example usage:
- * val (form) = useState(value = {
- * 	return@useState Form(valid = true, errorMessage = "")
- * })
+ * val (form) = useState { Form(valid = true, errorMessage = "") }
  * ```
  * @param value The initial value of the state
  * @return A Pair containing the current state value and a function to update it
  */
 @Composable
-fun <T> useState(
-	value: @DisallowComposableCalls () -> T,
-	onChange: ((value: T, oldValue: T) -> Unit)? = null
-): Pair<T, (T) -> Unit> {
+fun <T> useState(value: @DisallowComposableCalls () -> T): Pair<T, (T) -> Unit> {
 	// Create and remember a mutable state variable initialized with the provided data
 	val state = remember { mutableStateOf(value()) }
 	// Function to update the state
 	fun setData(value: T) {
 		val oldValue = state.value
-		if (value != oldValue) {
-			state.value = value
-			onChange?.invoke(value, oldValue)
-		}
+		if (value != oldValue) state.value = value
 	}
 	// Return the current state value and the function to update it
 	return Pair(state.value, ::setData)
@@ -77,17 +55,17 @@ fun <T> useState(
  * ```
  * Example usage:
  * class NotificationsViewModel: ViewModel {
- * 	val unreadCount: MutableLiveData(10)
+ * 	val unreadCount = MutableLiveData(10)
  * 	fun clearAll() {
  * 		database.mutation("example to clear").addOnSuccessListener { unreadCount.value = 0 }
  * 	}
  * }
  *
- * val count = useAtom(Store.notifications().unreadCount)
+ * val count = useAtom(Store.notifications.unreadCount)
  *
  * Column {
  * 	Text("Unread notifications: $count")
- * 	Button("Read All") { Store.notifications().clearAll() }
+ * 	Button("Read All") { Store.notifications.clearAll() }
  * }
  * ```
  * @param lifeData The LiveData object to observe

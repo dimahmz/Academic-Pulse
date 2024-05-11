@@ -3,6 +3,19 @@ package com.example.academicpulse.utils
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
+import com.google.firebase.firestore.DocumentSnapshot
+
+fun <T> useCast(value: Any?, defaultValue: T): T {
+	return if (value != null) (value as T) else defaultValue
+}
+
+fun <T> useCast(map: DocumentSnapshot?, key: String, defaultValue: T): T {
+	return useCast(map?.get(key), defaultValue)
+}
+
+fun <T> useCast(map: Map<String, Any?>?, key: String, defaultValue: T): T {
+	return useCast(map?.get(key), defaultValue)
+}
 
 /** Log a message or an exception to the Logcat console. */
 fun logcat(message: String? = null, exception: Exception? = null) {
@@ -24,11 +37,4 @@ fun logcat(message: String? = null, exception: Exception? = null) {
  */
 fun <T> LiveData<T>.observe(callback: (T) -> Unit) {
 	this.observe(context as LifecycleOwner) { callback(it) }
-}
-
-/** Creates a shallow copy of this ArrayList.
- * @return A new ArrayList with the same elements as this ArrayList.
- */
-fun <T> ArrayList<T>.copy(): ArrayList<T> {
-	return ArrayList(this.toMutableList())
 }

@@ -9,7 +9,7 @@ import com.example.academicpulse.model.Form
 /** Instantiate and remember a form. */
 @Composable
 fun useForm(): Form {
-	return useState({ Form() }).first
+	return useState { Form() }.first
 }
 
 /** Instantiate and remember a field with primitive options.
@@ -31,13 +31,13 @@ fun useForm(): Form {
 @Composable
 fun useField(
 	form: Form,
-	value: String?,
+	value: String? =  "",
 	required: Boolean = true,
 	regex: String? = null,
 	@StringRes ifEmpty: Int? = null,
 	@StringRes ifInvalid: Int? = null,
 ): Field {
-	val validator = useState({
+	val validator = useState {
 		if (regex != null && ifEmpty != null && ifInvalid != null)
 			fun(field: Field): Boolean { return field.validator(regex, ifEmpty, ifInvalid) }
 		else if (regex != null && ifInvalid != null)
@@ -45,13 +45,13 @@ fun useField(
 		else if (ifEmpty != null)
 			fun(field: Field): Boolean { return field.validator(ifEmpty) }
 		else null
-	})
+	}.first
 
 	return useField(
 		form = form,
 		value = value,
 		required = required,
-		validator = validator.first,
+		validator = validator,
 	)
 }
 
@@ -70,9 +70,9 @@ fun useField(
  */
 @Composable
 fun useField(
-	form: Form, value: String?, required: Boolean = true, validator: ((Field) -> Boolean)? = null,
+	form: Form, value: String? = "", required: Boolean = true, validator: ((Field) -> Boolean)? = null,
 ): Field {
-	return useState({
+	return useState {
 		Field(
 			form = form,
 			value = value ?: "",
@@ -80,5 +80,5 @@ fun useField(
 			focusRequester = FocusRequester(),
 			validator = validator,
 		)
-	}).first
+	}.first
 }

@@ -45,7 +45,7 @@ fun SignUpInstitutionPage() {
 		if (!validate || form.validate()) {
 			auth.saveInstitutionInfo(institution.trim(), department.trim(), position.trim(), !validate)
 			Router.navigate("auth/sign-up", false)
-		} else form.focusOnFirstInvalidField()
+		}
 	}
 
 	Column(

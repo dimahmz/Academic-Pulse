@@ -14,8 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
-import com.example.academicpulse.model.DB.Author
-import com.example.academicpulse.model.DB.Publication
+import com.example.academicpulse.model.Publication
 import com.example.academicpulse.theme.descriptionTextSize
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
@@ -34,7 +33,7 @@ fun PublicationArticle(publication: Publication) {
 	) {
 		Column {
 			H3(text = publication.title) {
-				logcat("User click: Show publication by id {${publication.uid}}")
+				logcat("User click: Show publication by id {${publication.id}}")
 			}
 			Text(text = publication.date)
 		}
@@ -78,10 +77,9 @@ fun PublicationArticle(publication: Publication) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewPublicationArticle() {
-
 	PublicationArticle(
 		Publication(
-			uid = "92163248id",
+			id = "92163248id",
 			title = "Load Balancing in Cloud Environment: A State-of-the-Art Review",
 			date = "Jun 2024",
 			reads = 60,

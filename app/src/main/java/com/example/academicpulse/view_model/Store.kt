@@ -5,18 +5,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class Store private constructor(): ViewModel() {
+	// Firebase cloud database instance
+	private val _db = Firebase.firestore
+	private val _auth = Firebase.auth
+
+	// Is app ready
 	private val isReady = MutableStateFlow(false)
-	private val auth = AuthViewModel()
-	private val home = HomeViewModel()
-	private val inbox = InboxViewModel()
-	private val profile = ProfileViewModel()
-	private val publication = PublicationViewModel()
+
+	// Store modules
+	private val auth = AuthViewModel(_db, _auth)
+	private val publications = PublicationsViewModel(_db, _auth)
 
 	init {
 		// The splash screen will disappear only when the logo animation finish and the user account is verified.
@@ -41,9 +46,6 @@ class Store private constructor(): ViewModel() {
 		// Note: An array type is used instead of Store to avoid null checks. We are certain that the app store will not be null as Provider method is one of the first functions called in the lifecycle.
 		private val appStore = mutableListOf<Store>()
 
-		// Firebase cloud database instance
-		val database by lazy { Firebase.firestore }
-
 		/** Provider initialize the store instance that will be used across the entire App */
 		@Composable
 		fun Provider() {
@@ -55,13 +57,7 @@ class Store private constructor(): ViewModel() {
 			get() = if (appStore.isEmpty()) false else appStore[0].isReady.value
 		val auth: AuthViewModel
 			get() = appStore[0].auth
-		val home: HomeViewModel
-			get() = appStore[0].home
-		val inbox: InboxViewModel
-			get() = appStore[0].inbox
-		val profile: ProfileViewModel
-			get() = appStore[0].profile
-		val publication: PublicationViewModel
-			get() = appStore[0].publication
+		val publications: PublicationsViewModel
+			get() = appStore[0].publications
 	}
 }

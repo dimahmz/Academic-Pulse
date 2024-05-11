@@ -59,15 +59,13 @@ fun SignUpPage() {
 	val (loading, setLoading) = useState(false)
 
 	fun signUp() {
-		if (loading) return
-		if (form.validate()) {
-			setLoading(true)
-			auth.saveSignUpInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
-			auth.signUp { message ->
-				setLoading(false)
-				form.error = message
-			}
-		} else form.focusOnFirstInvalidField()
+		if (loading || !form.validate()) return
+		setLoading(true)
+		auth.saveSignUpInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
+		auth.signUp { message ->
+			setLoading(false)
+			form.error = message
+		}
 	}
 
 	Column(

@@ -1,12 +1,10 @@
 package com.example.academicpulse.model
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import com.example.academicpulse.utils.useForm
 import com.example.academicpulse.utils.useField
@@ -127,7 +125,7 @@ class Form {
 	}
 
 	/** Validate all the fields that exist in the form. */
-	fun validate(): Boolean {
+	fun validate(focusOnFirstInvalidField: Boolean = true): Boolean {
 		error = null
 		_valid.value = true
 		for (field in fields.reversed()) {
@@ -135,6 +133,7 @@ class Form {
 			if (field.valid != isValid) field.valid = isValid
 			if (valid && !isValid) _valid.value = false
 		}
+		if (focusOnFirstInvalidField && !valid) focusOnFirstInvalidField()
 		return valid
 	}
 

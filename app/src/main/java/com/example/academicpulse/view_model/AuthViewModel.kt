@@ -6,13 +6,11 @@ import com.example.academicpulse.model.SignInInfo
 import com.example.academicpulse.model.SignUpInfo
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.logcat
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
-class AuthViewModel : ViewModel() {
-	// Firebase authentication instance
-	val auth = Firebase.auth
-
+class AuthViewModel(private val db: FirebaseFirestore, private val auth: FirebaseAuth) :
+	ViewModel() {
 	val signInInfo: SignInInfo = SignInInfo()
 	val signUpInfo: SignUpInfo = SignUpInfo()
 
@@ -57,7 +55,7 @@ class AuthViewModel : ViewModel() {
 		val user = auth.currentUser
 		if (user == null) setIsReady()
 		else
-			Store.database.collection("user").document(user.uid).get().addOnCompleteListener { userDoc ->
+			db.collection("user").document(user.uid).get().addOnCompleteListener { userDoc ->
 				val data = userDoc.result.data
 				if (data != null && userDoc.isSuccessful) {
 					if (data["activated"] == true) Router.replace("home", true)
@@ -83,7 +81,7 @@ class AuthViewModel : ViewModel() {
 				return@addOnCompleteListener onError(R.string.verify_email_first)
 
 			// Check if the user account is activated
-			val userRef = Store.database.collection("user").document(user.uid)
+			val userRef = db.collection("user").document(user.uid)
 			userRef.get().addOnCompleteListener { userDoc ->
 				val data = userDoc.result.data
 				if (data == null || !userDoc.isSuccessful) {
@@ -109,7 +107,7 @@ class AuthViewModel : ViewModel() {
 				return@addOnCompleteListener onError(R.string.unknown_error)
 
 			// create a new user collection and fill its content
-			val userRef = Store.database.collection("user").document(user.uid)
+			val userRef = db.collection("user").document(user.uid)
 			userRef.set(signUpInfo.toMap(user.uid)).addOnCompleteListener { saving ->
 				if (!saving.isSuccessful) onError(R.string.unknown_error)
 				else {

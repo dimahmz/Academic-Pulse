@@ -78,12 +78,12 @@ fun Input(
 	/** The keyboard type, e.g. `KeyboardType.Text`, `KeyboardType.Email`, `KeyboardType.Decimal`
 	 * - Note: It has no effect if [password] is `true`, as `KeyboardType.Password` is applied automatically.
 	 */
-	keyboardType: KeyboardType = KeyboardType.Password,
+	keyboardType: KeyboardType = KeyboardType.Text,
 
 	/** Used if there is any external Element or script that can trigger focus on the input
 	 * ```
 	 * Example usage:
-	 * val (focusRequester) = useState({ FocusRequester() })
+	 * val (focusRequester) = useState { FocusRequester() }
 	 *
 	 * Column {
 	 * 	Button("Click") { focusRequester.requestFocus() }
@@ -99,7 +99,7 @@ fun Input(
 	 * Example usage:
 	 *
 	 * Column {
-	 * 	val (secondFieldFocus) = useState({ FocusRequester() })
+	 * 	val (secondFieldFocus) = useState { FocusRequester() }
 	 *
 	 * 	Input(focusNext = secondFieldFocus)
 	 * 	Input(focusRequester = secondFieldFocus)
@@ -160,7 +160,7 @@ fun Input(
 	onOk: (() -> Unit)? = null,
 ) {
 	val (passwordVisible, setPasswordVisibility) = useState(false)
-	val (focus) = useState({ focusRequester ?: FocusRequester() })
+	val (focus) = useState { focusRequester ?: FocusRequester() }
 	val keyboardController = LocalSoftwareKeyboardController.current
 
 	val onPressOk: (KeyboardActionScope.() -> Unit) = {
@@ -287,7 +287,7 @@ fun Input(
 	/** The keyboard type, e.g. `KeyboardType.Text`, `KeyboardType.Email`, `KeyboardType.Decimal`
 	 * - Note: It has no effect if [password] is `true`, as `KeyboardType.Password` is applied automatically.
 	 */
-	keyboardType: KeyboardType = KeyboardType.Password,
+	keyboardType: KeyboardType = KeyboardType.Text,
 
 	/** When you have multiple fields in a page that you expect from the user to fill the sequence.
 	 * Give them the option of focusing on the next field from the keyboard for better UX.

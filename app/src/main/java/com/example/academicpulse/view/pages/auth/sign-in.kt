@@ -2,7 +2,6 @@ package com.example.academicpulse.view.pages.auth
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,15 +52,13 @@ fun SignInPage() {
 	val (loading, setLoading) = useState(false)
 
 	fun signIn() {
-		if (loading) return
-		if (form.validate()) {
-			setLoading(true)
-			auth.saveSignInInfo(email.trim(), password.trim())
-			auth.signIn { error ->
-				setLoading(false)
-				form.error = error
-			}
-		} else form.focusOnFirstInvalidField()
+		if (loading || !form.validate()) return
+		setLoading(true)
+		auth.saveSignInInfo(email.trim(), password.trim())
+		auth.signIn { error ->
+			setLoading(false)
+			form.error = error
+		}
 	}
 
 	Column(modifier = Modifier.fillMaxHeight()) {
