@@ -24,11 +24,12 @@ import com.example.academicpulse.view_model.Store
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun PublicationArticle(publication: Publication) {
+fun PublicationArticle(publication: Publication, onClick: () -> Unit) {
 	Column(
 		modifier = Modifier
 			.fillMaxWidth()
-			.padding(vertical = pagePaddingX, horizontal = (pagePaddingX.value / 2).dp),
+			.padding(vertical = pagePaddingX, horizontal = (pagePaddingX.value / 2).dp)
+			.clickable(onClick = onClick),
 		verticalArrangement = Arrangement.spacedBy(8.dp),
 	) {
 		Column {
@@ -84,7 +85,9 @@ fun PreviewPublicationArticle() {
 			date = "Jun 2024",
 			reads = 60,
 			uploads = 60,
-			abstract="Example of collaborators"
+			abstract = "Example of collaborators"
 		)
-	)
+	) {
+
+	}
 }

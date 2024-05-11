@@ -1,5 +1,6 @@
 package com.example.academicpulse.view_model
 
+import android.util.Log
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +16,7 @@ import com.google.firebase.firestore.SetOptions
 class PublicationsViewModel(private val db: FirebaseFirestore, private val auth: FirebaseAuth) :
 	ViewModel() {
 	val userPublications = MutableLiveData(arrayListOf<Publication>())
+	val selectedPublication = MutableLiveData(Publication())
 
 	fun getUserPublications(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
 		val user = auth.currentUser ?: return onError(R.string.unknown_error)
@@ -33,8 +35,7 @@ class PublicationsViewModel(private val db: FirebaseFirestore, private val auth:
 					if (!pubDoc.isSuccessful) {
 						logcat("Error getting document", userDoc.exception)
 						onError(R.string.unknown_error)
-					} else
-						newUserPublicationsList.add(Publication.fromMap(pubDoc.result.data))
+					} else newUserPublicationsList.add(Publication.fromMap(pubDoc.result.data))
 					size.intValue--
 					if (size.intValue == 0) {
 						userPublications.value = newUserPublicationsList
@@ -57,8 +58,7 @@ class PublicationsViewModel(private val db: FirebaseFirestore, private val auth:
 			// add a new publications collection
 			db.collection("publication").add(publication.toMap()).addOnCompleteListener { pubDoc ->
 				if (pubDoc.isSuccessful) {
-					val userPublications =
-						useCast(userDoc.result, "publications", arrayListOf<String?>())
+					val userPublications = useCast(userDoc.result, "publications", arrayListOf<String?>())
 					userPublications.add(pubDoc.result.id)
 					val data = hashMapOf<String, Any>("publications" to userPublications)
 					userRef.set(data, SetOptions.merge()).addOnCompleteListener { saving ->
@@ -72,6 +72,20 @@ class PublicationsViewModel(private val db: FirebaseFirestore, private val auth:
 					logcat("Error adding document", pubDoc.exception)
 					onError(R.string.unknown_error)
 				}
+			}
+		}
+	}
+
+	fun getOnePublicationById(id: String, onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
+		val publicationRef = db.collection("publication").document(id)
+		publicationRef.get().addOnCompleteListener { pubDoc ->
+			if (!pubDoc.isSuccessful) {
+				logcat("Error getting document", pubDoc.exception)
+				onError(R.string.unknown_error)
+			} else {
+				selectedPublication.value = Publication.fromMap(pubDoc.result.data)
+				logcat(selectedPublication.value.toString())
+				onSuccess()
 			}
 		}
 	}

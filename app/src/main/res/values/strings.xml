@@ -64,6 +64,8 @@
     <string name="reads">Reads</string>
     <string name="title">Title</string>
     <string name="doi">DOI</string>
+    <string name="publication">publication</string>
+
 
     <string name="_abstract">Abstract</string>
     <string name="uploads">Uploads</string>
