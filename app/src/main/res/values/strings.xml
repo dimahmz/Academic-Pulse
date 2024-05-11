@@ -2,6 +2,7 @@
     <string name="app_name" translatable="false">Academic Pulse</string>
     <string name="home">Home</string>
     <string name="inbox">Inbox</string>
+    <string name="notification">Notification</string>
     <string name="profile">Profile</string>
 
     <string name="unknown_error">An error has occurred, please try again later!</string>
