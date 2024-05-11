@@ -14,7 +14,8 @@ import com.example.academicpulse.view.pages.auth.*
 import com.example.academicpulse.view.pages.home.*
 import com.example.academicpulse.view.pages.notifications.*
 import com.example.academicpulse.view.pages.profile.*
-import com.example.academicpulse.view.pages.publication.AddPublicationPage
+import com.example.academicpulse.view.pages.publication.*
+import com.example.academicpulse.view.pages.publication.PreviewOnePublicationPage
 
 /** NavGraph is a schema that contains all the pages used in the App.
  * - Each page is declared with its instance, path key and back handler button behavior.
@@ -26,26 +27,22 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
 		startDestination = startDestination,
 		enterTransition = {
 			fadeIn(animationSpec = tween(300)) + slideIntoContainer(
-				AnimatedContentTransitionScope.SlideDirection.Left,
-				tween(300)
+				AnimatedContentTransitionScope.SlideDirection.Left, tween(300)
 			)
 		},
 		exitTransition = {
 			fadeOut(animationSpec = tween(300)) + slideOutOfContainer(
-				AnimatedContentTransitionScope.SlideDirection.Left,
-				tween(300)
+				AnimatedContentTransitionScope.SlideDirection.Left, tween(300)
 			)
 		},
 		popEnterTransition = {
 			fadeIn(animationSpec = tween(300)) + slideIntoContainer(
-				AnimatedContentTransitionScope.SlideDirection.Right,
-				tween(300)
+				AnimatedContentTransitionScope.SlideDirection.Right, tween(300)
 			)
 		},
 		popExitTransition = {
 			fadeOut(animationSpec = tween(300)) + slideOutOfContainer(
-				AnimatedContentTransitionScope.SlideDirection.Right,
-				tween(300)
+				AnimatedContentTransitionScope.SlideDirection.Right, tween(300)
 			)
 		},
 	) {
@@ -71,9 +68,7 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
 			composable(route = "profile/about") {
 				AboutPage(/* BackHandler, to = profile/settings */)
 			}
-			composable(route = "profile/add-publication") {
-				AddPublicationPage(/* BackHandler, to = profile/index */)
-			}
+
 		}
 		navigation(route = "auth", startDestination = "auth/sign-in") {
 			composable(route = "auth/sign-in") {
@@ -90,6 +85,14 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
 			}
 			composable(route = "auth/verification") {
 				VerificationPage(/* BackHandler, to = auth/sign-in */)
+			}
+		}
+		navigation(route = "publications", startDestination = "home/index") {
+			composable(route = "publications/add-publication") {
+				AddPublicationPage(/* BackHandler, to = profile/index */)
+			}
+			composable(route = "publications/one-publication") {
+				OnePublicationPage(/* BackHandler, exit the app */)
 			}
 		}
 	}
