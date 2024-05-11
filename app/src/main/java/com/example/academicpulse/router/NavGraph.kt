@@ -12,7 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.academicpulse.view.pages.auth.*
 import com.example.academicpulse.view.pages.home.*
-import com.example.academicpulse.view.pages.inbox.*
+import com.example.academicpulse.view.pages.notifications.*
 import com.example.academicpulse.view.pages.profile.*
 import com.example.academicpulse.view.pages.publication.AddPublicationPage
 
@@ -55,9 +55,9 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
 				BackHandler { Router.exit() }
 			}
 		}
-		navigation(route = "inbox", startDestination = "inbox/index") {
-			composable(route = "inbox/index") {
-				InboxPage()
+		navigation(route = "notifications", startDestination = "notifications/index") {
+			composable(route = "notifications/index") {
+				NotificationPage()
 				BackHandler { Router.replace("home", true) }
 			}
 		}

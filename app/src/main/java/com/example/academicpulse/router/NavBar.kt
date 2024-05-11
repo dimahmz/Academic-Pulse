@@ -28,7 +28,7 @@ private data class NavbarItem(
 
 private val navbarItems = listOf(
 	NavbarItem("home", R.string.home, R.drawable.icon_home),
-	NavbarItem("inbox", R.string.inbox, R.drawable.icon_inbox),
+	NavbarItem("notifications", R.string.notification, R.drawable.icon_notifications),
 	NavbarItem("profile", R.string.profile, R.drawable.icon_profile),
 )
 
