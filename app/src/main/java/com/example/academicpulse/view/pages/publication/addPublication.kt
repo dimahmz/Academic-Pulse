@@ -31,7 +31,7 @@ fun AddPublicationPage() {
 	val abstract = useField(form = form, ifEmpty = R.string.abstract_required)
 	val doi = useField(form = form, ifEmpty = R.string.abstract_required)
 
-	val (loading, setLoading) = useState(false)
+	val (loading, setLoading) = useState { false }
 
 	fun addPublication() {
 		if (loading || !form.validate()) return

@@ -49,7 +49,7 @@ fun SignInPage() {
 		ifInvalid = R.string.password_invalid,
 	)
 
-	val (loading, setLoading) = useState(false)
+	val (loading, setLoading) = useState { false }
 
 	fun signIn() {
 		if (loading || !form.validate()) return

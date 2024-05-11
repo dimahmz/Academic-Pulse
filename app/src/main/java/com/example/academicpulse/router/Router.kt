@@ -29,8 +29,8 @@ class Router private constructor(private var navController: NavHostController) {
 		/** Bottom NavBar UI element containing main root routes with their icons, allowing direct navigation to them */
 		@Composable
 		fun NavBar() {
-			val route = useAtom(appRouter[0].route) ?: "auth"
-			val navBarVisible = useAtom(appRouter[0].navBarVisible) ?: false
+			val route = useAtom(appRouter[0].route, "auth")
+			val navBarVisible = useAtom(appRouter[0].navBarVisible, false)
 			return NavBar(route = route, navBarVisible = navBarVisible)
 		}
 

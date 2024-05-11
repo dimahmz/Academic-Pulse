@@ -114,11 +114,8 @@ class Form {
 			this._valid.value = value == null
 		}
 
-	/** Used to insert the field into the list
-	 *
-	 * Note:
-	 * - The fields order is important for errors visibility priorities.
-	 * - For safe usage, use [useField] instead.
+	/** Don't use this method, it is already implemented in the [Field] constructor)
+	 * - Note: The fields order is important for errors visibility priorities.
 	 */
 	fun addField(field: Field) {
 		if (!fields.contains(field)) fields.add(field)
@@ -133,32 +130,21 @@ class Form {
 			if (field.valid != isValid) field.valid = isValid
 			if (valid && !isValid) _valid.value = false
 		}
-		if (focusOnFirstInvalidField && !valid) focusOnFirstInvalidField()
+		if (focusOnFirstInvalidField && !valid)
+			for (field in fields) {
+				if (!field.valid) {
+					field.focusRequester.requestFocus()
+					break
+				}
+			}
 		return valid
 	}
 
-	/** After validating the form, you can focus on some fields to let the user start typing easily.
-	 * ```
-	 * Example usage:
-	 *
-	 * if (form.validate()) {
-	 * 	auth.signIn(email.trim(), password.trim()) { error ->
-	 * 		form.error = error
-	 * 	}
-	 * } else form.focusOnFirstInvalidField()
-	 * ```
-	 */
-	fun focusOnFirstInvalidField() {
-		for (field in fields) {
-			if (!field.valid) {
-				field.focusRequester.requestFocus()
-				break
-			}
-		}
-	}
-
 	/** A composable UI element that hold the form error if exist.
-	 * - Note: The form error can be the error of the first invalid field or you can set it manually using the **error** setter.
+	 *
+	 * Note:
+	 * - Use it directly without any if-else condition.
+	 * - The form error can be the error of the first invalid field or you can set it manually using the **error** setter.
 	 */
 	@Composable
 	fun Error() {

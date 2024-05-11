@@ -23,8 +23,8 @@ import com.example.academicpulse.view_model.Store
 
 @Composable
 fun ProfilePage() {
-	val (loading, setLoading) = useState(true)
-	val publications = useAtom(Store.publications.userPublications)
+	val (loading, setLoading) = useState { false }
+	val publications = useAtom(Store.publications.userPublications, arrayListOf())
 
 	LaunchedEffect(true) {
 		Store.publications.getUserPublications(
@@ -40,7 +40,7 @@ fun ProfilePage() {
 			if (loading) Spinner(size = 64.dp)
 		}
 
-		if (!loading && publications != null)
+		if (!loading)
 			items(publications) {
 				Column(modifier = Modifier.padding(horizontal = (pagePaddingX.value / 2).dp)) {
 					PublicationArticle(it)

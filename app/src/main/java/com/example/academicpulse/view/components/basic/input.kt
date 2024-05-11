@@ -159,7 +159,7 @@ fun Input(
 	 */
 	onOk: (() -> Unit)? = null,
 ) {
-	val (passwordVisible, setPasswordVisibility) = useState(false)
+	val (passwordVisible, setPasswordVisibility) = useState { false }
 	val (focus) = useState { focusRequester ?: FocusRequester() }
 	val keyboardController = LocalSoftwareKeyboardController.current
 

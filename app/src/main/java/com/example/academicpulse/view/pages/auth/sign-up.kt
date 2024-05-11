@@ -56,7 +56,7 @@ fun SignUpPage() {
 		ifInvalid = R.string.password_not_strong,
 	)
 
-	val (loading, setLoading) = useState(false)
+	val (loading, setLoading) = useState { false }
 
 	fun signUp() {
 		if (loading || !form.validate()) return

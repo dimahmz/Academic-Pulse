@@ -2,36 +2,22 @@ package com.example.academicpulse.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisallowComposableCalls
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.lifecycle.LiveData
 
 /** A composable hook function used to create and manage state within another Composable function.
  * It returns a Pair containing the current state value and a function to update the state.
+ * - Note: We use function type here to wrap the value to execute it one time. (To avoid generating useless instances ...etc if it is not a primitive value)
  * ```
  * Example usage:
- * val (counter, setCounter) = useState(0)
+ * val (counter, setCounter) = useState { 0 }
  *
  * Column {
- * 	Text("Counter: $counter")
- * 	Button("Increase") { setCounter(counter + 1) }
+ * 	Text(text = "Counter: $counter")
+ * 	Button(text = "Increase") { setCounter(counter + 1) }
  * }
- * ```
- * @param value The initial value of the state
- * @return A Pair containing the current state value and a function to update it
- */
-@Composable
-fun <T> useState(value: T): Pair<T, (T) -> Unit> {
-	return useState { value }
-}
-
-/** A composable hook function used to create and manage state within another Composable function.
- * It returns a Pair containing the current state value and a function to update the state.
- * - Note: We use function type here to wrap the value to execute it one time, if it is not a primitive value. (To avoid generating useless instances ...etc)
- *
- * ```
- * Example usage:
- * val (form) = useState { Form(valid = true, errorMessage = "") }
  * ```
  * @param value The initial value of the state
  * @return A Pair containing the current state value and a function to update it
@@ -61,26 +47,17 @@ fun <T> useState(value: @DisallowComposableCalls () -> T): Pair<T, (T) -> Unit> 
  * 	}
  * }
  *
- * val count = useAtom(Store.notifications.unreadCount)
+ * val count = useAtom(Store.notifications.unreadCount, 0)
  *
  * Column {
- * 	Text("Unread notifications: $count")
- * 	Button("Read All") { Store.notifications.clearAll() }
+ * 	Text(text = "Unread notifications: $count")
+ * 	Button(text = "Read All") { Store.notifications.clearAll() }
  * }
  * ```
  * @param lifeData The LiveData object to observe
  * @return The current value of the observed LiveData
  */
 @Composable
-fun <T> useAtom(lifeData: LiveData<T>): T? {
-	// Create and remember a mutable state variable initialized with the current value of the LiveData
-	val state = remember {
-		val value = mutableStateOf(lifeData.value)
-		// Observe the LiveData and update the value when it changes
-		lifeData.observe { value.value = it }
-		// Return the value holder
-		value
-	}
-	// Return the current value of the state variable
-	return state.value
+fun <T> useAtom(lifeData: LiveData<T>, defaultValue: T): T {
+	return lifeData.observeAsState(defaultValue).value
 }
