@@ -1,6 +1,5 @@
 package com.example.academicpulse.view_model
 
-import android.util.Log
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -76,7 +75,7 @@ class PublicationsViewModel(private val db: FirebaseFirestore, private val auth:
 		}
 	}
 
-	fun getOnePublicationById(id: String, onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
+	fun getOneById(id: String, onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
 		val publicationRef = db.collection("publication").document(id)
 		publicationRef.get().addOnCompleteListener { pubDoc ->
 			if (!pubDoc.isSuccessful) {

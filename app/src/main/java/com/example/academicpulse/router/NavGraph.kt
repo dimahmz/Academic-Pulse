@@ -15,7 +15,6 @@ import com.example.academicpulse.view.pages.home.*
 import com.example.academicpulse.view.pages.notifications.*
 import com.example.academicpulse.view.pages.profile.*
 import com.example.academicpulse.view.pages.publication.*
-import com.example.academicpulse.view.pages.publication.PreviewOnePublicationPage
 
 /** NavGraph is a schema that contains all the pages used in the App.
  * - Each page is declared with its instance, path key and back handler button behavior.
@@ -68,7 +67,6 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
 			composable(route = "profile/about") {
 				AboutPage(/* BackHandler, to = profile/settings */)
 			}
-
 		}
 		navigation(route = "auth", startDestination = "auth/sign-in") {
 			composable(route = "auth/sign-in") {

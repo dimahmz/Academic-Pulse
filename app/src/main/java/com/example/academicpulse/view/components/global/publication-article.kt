@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.modifier.modifierLocalProvider
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.model.Publication
+import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.descriptionTextSize
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
@@ -24,17 +26,17 @@ import com.example.academicpulse.view_model.Store
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun PublicationArticle(publication: Publication, onClick: () -> Unit) {
+fun PublicationArticle(publication: Publication) {
 	Column(
 		modifier = Modifier
 			.fillMaxWidth()
-			.padding(vertical = pagePaddingX, horizontal = (pagePaddingX.value / 2).dp)
-			.clickable(onClick = onClick),
+			.padding(vertical = pagePaddingX, horizontal = (pagePaddingX.value / 2).dp),
 		verticalArrangement = Arrangement.spacedBy(8.dp),
 	) {
 		Column {
-			H3(text = publication.title) {
+			H3(text = publication.title, modifier = Modifier.fillMaxWidth()) {
 				logcat("User click: Show publication by id {${publication.id}}")
+				Router.navigate("publications/one-publication", false)
 			}
 			Text(text = publication.date)
 		}
@@ -87,7 +89,5 @@ fun PreviewPublicationArticle() {
 			uploads = 60,
 			abstract = "Example of collaborators"
 		)
-	) {
-
-	}
+	)
 }

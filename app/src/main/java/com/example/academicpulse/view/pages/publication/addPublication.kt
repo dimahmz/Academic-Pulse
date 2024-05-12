@@ -72,6 +72,7 @@ fun AddPublicationPage() {
 				label = R.string.doi,
 			)
 		}
+
 		Spacer(Modifier.height(14.dp))
 		Button(
 			text = R.string.add_research,

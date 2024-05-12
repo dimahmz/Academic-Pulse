@@ -1,12 +1,9 @@
 package com.example.academicpulse.view.pages.profile
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -43,26 +40,24 @@ fun ProfilePage() {
 		item {
 			UserCard { Router.navigate("publications/add-publication", false) }
 			Line(height = 2.dp)
-			if (loading) {
+			if (loading)
 				Box(
-					modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+					modifier = Modifier
+						.fillMaxWidth()
+						.padding(top = 30.dp),
+					contentAlignment = Alignment.Center
 				) {
-					Spinner(size = 64.dp)
+					Spinner(size = 30.dp)
 				}
-
-			}
-
 		}
 
-
-		if (!loading && publications != null) items(publications) {
-			Column(modifier = Modifier.padding(horizontal = (pagePaddingX.value / 2).dp)) {
-				PublicationArticle(it) {
-					Router.navigate("publications/one-publication", false)
+		if (!loading)
+			items(publications) {
+				Column(modifier = Modifier.padding(horizontal = (pagePaddingX.value / 2).dp)) {
+					PublicationArticle(it)
+					Line(height = 1.dp)
 				}
-				Line(height = 1.dp)
 			}
-		}
 	}
 
 	BackHandler { Router.replace("home", true) }
