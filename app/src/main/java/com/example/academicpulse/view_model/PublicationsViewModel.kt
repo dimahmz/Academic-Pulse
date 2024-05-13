@@ -1,90 +1,60 @@
 package com.example.academicpulse.view_model
 
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.academicpulse.R
 import com.example.academicpulse.model.Publication
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.logcat
 import com.example.academicpulse.utils.useCast
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 
-class PublicationsViewModel(private val db: FirebaseFirestore, private val auth: FirebaseAuth) :
-	ViewModel() {
+class PublicationsViewModel : ViewModel() {
 	val userPublications = MutableLiveData(arrayListOf<Publication>())
 	val selectedPublication = MutableLiveData(Publication())
 
-	fun getUserPublications(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
-		val user = auth.currentUser ?: return onError(R.string.unknown_error)
-		db.collection("user").document(user.uid).get().addOnCompleteListener { userDoc ->
-			if (!userDoc.isSuccessful) {
-				logcat("Error getting document", userDoc.exception)
-				return@addOnCompleteListener onError(R.string.unknown_error)
+	fun fetchUserPublications(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
+		StoreDB.getCurrentUser(onError = onError) { userDoc ->
+			StoreDB.getManyByIds(
+				collection = "publication",
+				ids = useCast(userDoc.result, "publications", arrayListOf()),
+				onCast = { Publication.fromMap(it) },
+				onError = onError,
+			) { list, errors ->
+				if (errors > 0) logcat("Getting user publications list was executed with $errors errors")
+				userPublications.value = list
+				onSuccess()
 			}
-			val userPublicationsUIDs = useCast(userDoc.result, "publications", arrayListOf<String>())
-			val newUserPublicationsList = arrayListOf<Publication>()
-			val size = mutableIntStateOf(userPublicationsUIDs.size)
+		}
+	}
 
-			userPublicationsUIDs.forEach { publicationId ->
-				val publicationRef = db.collection("publication").document(publicationId)
-				publicationRef.get().addOnCompleteListener { pubDoc ->
-					if (!pubDoc.isSuccessful) {
-						logcat("Error getting document", userDoc.exception)
-						onError(R.string.unknown_error)
-					} else newUserPublicationsList.add(Publication.fromMap(pubDoc.result.data))
-					size.intValue--
-					if (size.intValue == 0) {
-						userPublications.value = newUserPublicationsList
-						onSuccess()
-					}
-				}
-			}
+	fun fetchOneById(id: String, onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
+		StoreDB.getOneById(
+			collection = "publication",
+			id = id,
+			onError = onError,
+		) { data ->
+			selectedPublication.value = Publication.fromMap(data)
+			logcat(selectedPublication.value.toString())
+			onSuccess()
 		}
 	}
 
 	fun insert(publication: Publication, onError: (error: Int) -> Unit) {
-		val user = auth.currentUser ?: return onError(R.string.unknown_error)
-		// fetch the user collection
-		val userRef = db.collection("user").document(user.uid)
-		userRef.get().addOnCompleteListener { userDoc ->
-			if (!userDoc.isSuccessful) {
-				logcat("Error getting document", userDoc.exception)
-				return@addOnCompleteListener onError(R.string.unknown_error)
-			}
-			// add a new publications collection
-			db.collection("publication").add(publication.toMap()).addOnCompleteListener { pubDoc ->
-				if (pubDoc.isSuccessful) {
-					val userPublications = useCast(userDoc.result, "publications", arrayListOf<String?>())
-					userPublications.add(pubDoc.result.id)
-					val data = hashMapOf<String, Any>("publications" to userPublications)
-					userRef.set(data, SetOptions.merge()).addOnCompleteListener { saving ->
-						if (!saving.isSuccessful) {
-							logcat("Error adding document", saving.exception)
-							onError(R.string.unknown_error)
-							// TODO : if this fails we should remove the publication
-						} else Router.back()
-					}
-				} else {
-					logcat("Error adding document", pubDoc.exception)
-					onError(R.string.unknown_error)
-				}
-			}
-		}
-	}
-
-	fun getOneById(id: String, onError: (error: Int) -> Unit, onSuccess: () -> Unit) {
-		val publicationRef = db.collection("publication").document(id)
-		publicationRef.get().addOnCompleteListener { pubDoc ->
-			if (!pubDoc.isSuccessful) {
-				logcat("Error getting document", pubDoc.exception)
-				onError(R.string.unknown_error)
-			} else {
-				selectedPublication.value = Publication.fromMap(pubDoc.result.data)
-				logcat(selectedPublication.value.toString())
-				onSuccess()
+		// Get the current user ref because we need to update its publications list
+		StoreDB.getCurrentUser(onError = onError) { userDoc, userRef ->
+			// Insert the publication and get its generated id
+			StoreDB.insert(
+				collection = "publication",
+				data = publication.toMap(),
+				onError = onError
+			) { id ->
+				// Insert the new publication id in the user publications then update it
+				val publications = useCast(userDoc.result, "publications", arrayListOf<String>())
+				publications.add(id)
+				StoreDB.updateOneByRef(
+					ref = userRef,
+					data = hashMapOf("publications" to publications),
+					onError = onError, // TODO : if this fails we should remove the publication
+				) { Router.back() }
 			}
 		}
 	}

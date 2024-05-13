@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -28,15 +27,16 @@ import com.example.academicpulse.view_model.Store
 
 @Composable
 fun OnePublicationPage() {
+	val (loading, setLoading) = useState { true }
 	val publication = useAtom(Store.publications.selectedPublication, Publication())
-	val (loading, setLoading) = useState { false }
 
 	LaunchedEffect(true) {
-		Store.publications.getOneById(
-			"IYLG2z7rqMsctxjgo9Jm",
-			onSuccess = { setLoading(false) },
-			onError = { setLoading(false) },
-		)
+		Store.publications.fetchOneById(
+			id = "IYLG2z7rqMsctxjgo9Jm",
+			onSuccess = { setLoading(false) }
+		) {
+			setLoading(false)
+		}
 	}
 
 	Column(

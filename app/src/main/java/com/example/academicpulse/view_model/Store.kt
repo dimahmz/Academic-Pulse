@@ -12,16 +12,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class Store private constructor(): ViewModel() {
-	// Firebase cloud database instance
-	private val _db = Firebase.firestore
-	private val _auth = Firebase.auth
-
 	// Is app ready
 	private val isReady = MutableStateFlow(false)
 
 	// Store modules
-	private val auth = AuthViewModel(_db, _auth)
-	private val publications = PublicationsViewModel(_db, _auth)
+	private val auth = AuthViewModel()
+	private val publications = PublicationsViewModel()
 
 	init {
 		// The splash screen will disappear only when the logo animation finish and the user account is verified.

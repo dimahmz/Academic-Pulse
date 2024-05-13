@@ -26,14 +26,13 @@ import com.example.academicpulse.view_model.Store
 
 @Composable
 fun ProfilePage() {
-	val (loading, setLoading) = useState { false }
+	val (loading, setLoading) = useState { true }
 	val publications = useAtom(Store.publications.userPublications, arrayListOf())
 
 	LaunchedEffect(true) {
-		Store.publications.getUserPublications(
-			onSuccess = { setLoading(false) },
-			onError = { setLoading(false) },
-		)
+		Store.publications.fetchUserPublications(onSuccess = { setLoading(false) }) {
+			setLoading(false)
+		}
 	}
 
 	LazyColumn(modifier = Modifier.padding(bottom = bottomBarHeight)) {

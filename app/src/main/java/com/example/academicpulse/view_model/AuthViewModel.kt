@@ -6,11 +6,15 @@ import com.example.academicpulse.model.SignInInfo
 import com.example.academicpulse.model.SignUpInfo
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.logcat
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
 
-class AuthViewModel(private val db: FirebaseFirestore, private val auth: FirebaseAuth) :
-	ViewModel() {
+class AuthViewModel : ViewModel() {
+	// Firebase cloud database instance
+	private val db = Firebase.firestore
+	private val auth = Firebase.auth
+
 	val signInInfo: SignInInfo = SignInInfo()
 	val signUpInfo: SignUpInfo = SignUpInfo()
 
