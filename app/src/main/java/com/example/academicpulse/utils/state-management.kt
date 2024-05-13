@@ -24,20 +24,11 @@ import androidx.lifecycle.LiveData
  */
 @Composable
 fun <T> useState(value: @DisallowComposableCalls () -> T): Pair<T, (T) -> Unit> {
-	// Create and remember a mutable state variable initialized with the provided data
-	val state = remember { mutableStateOf(value()) }
-	// Function to update the state
-	fun setData(value: T) {
-		val oldValue = state.value
-		if (value != oldValue) state.value = value
-	}
-	// Return the current state value and the function to update it
-	return Pair(state.value, ::setData)
+	val (state, setState) = remember { mutableStateOf(value()) }
+	return Pair(state, setState)
 }
 
-/** A composable hook function similar to useState, used to observe a LiveData object and update a state variable within another Composable function.
- * However, instead of returning a setter function within a Pair, it directly observes the LiveData object and updates the state variable when the LiveData changes.
- * It is mainly used for variables that already have a built-in setter that can be used across the app.
+/** A composable hook function similar to useState, used to observe a LiveData variable.
  * ```
  * Example usage:
  * class NotificationsViewModel: ViewModel {

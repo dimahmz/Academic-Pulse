@@ -36,7 +36,7 @@ fun ProfilePage() {
 	}
 
 	LazyColumn(modifier = Modifier.padding(bottom = bottomBarHeight)) {
-		item {
+		item(key = "Page header") {
 			UserCard { Router.navigate("publications/add-publication", false) }
 			Line(height = 2.dp)
 			if (loading)
@@ -51,7 +51,7 @@ fun ProfilePage() {
 		}
 
 		if (!loading)
-			items(publications) {
+			items(publications, key = { it.id }) {
 				Column(modifier = Modifier.padding(horizontal = (pagePaddingX.value / 2).dp)) {
 					PublicationArticle(it)
 					Line(height = 1.dp)
