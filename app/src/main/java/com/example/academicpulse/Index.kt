@@ -14,10 +14,15 @@ import com.example.academicpulse.theme.AppTheme
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.context
 import com.example.academicpulse.view_model.Store
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.firestoreSettings
 
 class Index : ComponentActivity() {
 	@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 	override fun onCreate(savedInstanceState: Bundle?) {
+		configureFirebaseServices()
 		super.onCreate(savedInstanceState)
 		context = this
 		installSplashScreen().setKeepOnScreenCondition { !Store.isReady }
@@ -31,6 +36,20 @@ class Index : ComponentActivity() {
 						bottomBar = { Router.NavBar() },
 					)
 				}
+			}
+		}
+	}
+
+	private fun configureFirebaseServices() {
+		if (DEV_ENV) {
+			val firestore = Firebase.firestore
+			val auth = Firebase.auth
+
+			firestore.useEmulator(LOCALHOST, FIRESTORE_PORT)
+			auth.useEmulator(LOCALHOST, AUTH_PORT)
+
+			firestore.firestoreSettings = firestoreSettings {
+				isPersistenceEnabled = false
 			}
 		}
 	}
