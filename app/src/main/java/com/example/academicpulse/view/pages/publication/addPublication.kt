@@ -53,7 +53,7 @@ fun AddPublicationPage() {
 			.fillMaxHeight()
 			.padding(horizontal = pagePaddingX),
 	) {
-		Header(title = R.string.add_research)
+		Header(title = R.string.add_research, true)
 		Spacer(Modifier.height(14.dp))
 
 		Column(verticalArrangement = Arrangement.spacedBy(gap)) {
@@ -82,7 +82,7 @@ fun AddPublicationPage() {
 		)
 	}
 
-	BackHandler { Router.back() }
+	BackHandler { Router.back(true /* to = profile/index */) }
 }
 
 @Preview(showSystemUi = true)

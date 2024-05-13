@@ -33,7 +33,7 @@ fun SettingsPage() {
 			.fillMaxHeight()
 			.padding(horizontal = pagePaddingX),
 	) {
-		Header(title = R.string.settings)
+		Header(title = R.string.settings, true)
 		Spacer(Modifier.height(14.dp))
 
 		Element(R.string.edit_profile, R.drawable.icon_edit) {
@@ -47,7 +47,7 @@ fun SettingsPage() {
 		}
 	}
 
-	BackHandler { Router.back() }
+	BackHandler { Router.back(true /* to = profile/index */) }
 }
 
 @Composable

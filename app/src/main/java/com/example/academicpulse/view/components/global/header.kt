@@ -16,20 +16,19 @@ import com.example.academicpulse.view.components.basic.H1
 import com.example.academicpulse.view.components.basic.Icon
 
 @Composable
-fun Header(title: Int, arrow: Boolean = true) {
+fun Header(title: Int, navBarVisibleAfterBack: Boolean = false) {
 	Box(
 		modifier = Modifier
 			.padding(vertical = 25.dp)
 			.fillMaxWidth(),
 		contentAlignment = Alignment.CenterStart
 	) {
-		if (arrow)
-			Icon(
-				id = R.drawable.icon_left_arrow,
-				color = MaterialTheme.colorScheme.primary,
-				size = (h1TextSize.value * 20 / 23).dp,
-				onClick = { Router.back() }
-			)
+		Icon(
+			id = R.drawable.icon_left_arrow,
+			color = MaterialTheme.colorScheme.primary,
+			size = (h1TextSize.value * 20 / 23).dp,
+			onClick = { Router.back(navBarVisibleAfterBack) }
+		)
 
 		H1(
 			text = title,

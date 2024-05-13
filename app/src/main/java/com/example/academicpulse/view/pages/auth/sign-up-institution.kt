@@ -92,7 +92,7 @@ fun SignUpInstitutionPage() {
 
 	BackHandler {
 		auth.clearSignUp()
-		Router.back(/* to = auth/sign-in */)
+		Router.back(false /* to = auth/sign-in */)
 	}
 }
 

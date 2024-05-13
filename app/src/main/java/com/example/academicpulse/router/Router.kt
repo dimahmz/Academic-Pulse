@@ -62,7 +62,9 @@ class Router private constructor(private var navController: NavHostController) {
 		}
 
 		/** Navigate to a previous page. */
-		fun back(step: Int = 1) {
+		fun back(navBarVisible: Boolean, step: Int = 1, target: String? = null) {
+			appRouter[0].navBarVisible.value = navBarVisible
+			if (target != null) appRouter[0].route.value = target
 			repeat(step) { appRouter[0].navController.popBackStack() }
 		}
 

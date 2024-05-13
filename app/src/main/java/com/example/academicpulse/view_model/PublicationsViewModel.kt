@@ -53,7 +53,7 @@ class PublicationsViewModel : ViewModel() {
 					ref = userRef,
 					data = hashMapOf("publications" to publications),
 					onError = onError, // TODO : if this fails we should remove the publication
-				) { Router.back() }
+				) { Router.back(true /* to = profile/index */) }
 			}
 		}
 	}

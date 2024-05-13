@@ -119,7 +119,7 @@ fun SignUpPage() {
 	BackHandler {
 		if (loading) return@BackHandler
 		auth.saveSignUpInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
-		Router.back(/* to = auth/sign-up-institution */)
+		Router.back(false /* to = auth/sign-up-institution */)
 	}
 }
 

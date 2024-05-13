@@ -37,7 +37,7 @@ fun AboutPage() {
 		}
 	}
 
-	BackHandler { Router.back() }
+	BackHandler { Router.back(false /* to = profile/settings */) }
 }
 
 @Preview(showSystemUi = true)

@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
-import com.example.academicpulse.model.Publication
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.utils.useAtom
@@ -44,7 +43,7 @@ fun OnePublicationPage() {
 			.fillMaxHeight()
 			.padding(horizontal = pagePaddingX),
 	) {
-		Header(title = R.string.publication)
+		Header(title = R.string.publication, true)
 		Spacer(Modifier.height(14.dp))
 
 		if (loading) {
@@ -60,7 +59,7 @@ fun OnePublicationPage() {
 			Text(text = "$publication")
 		}
 	}
-	BackHandler { Router.back() }
+	BackHandler { Router.back(true /* to = profile/index */) }
 }
 
 @Preview(showSystemUi = true)
