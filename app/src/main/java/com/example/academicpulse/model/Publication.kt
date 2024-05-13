@@ -8,8 +8,8 @@ data class Publication(
 	var abstract: String = "",
 	var doi: String = "",
 	var date: String = "",
-	var reads: Int = 0,
-	var uploads: Int = 0,
+	var reads: Long = 0,
+	var uploads: Long = 0,
 ) {
 	fun toMap(): HashMap<String, Any?> {
 		return hashMapOf(

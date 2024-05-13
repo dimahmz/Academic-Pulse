@@ -33,7 +33,6 @@ class PublicationsViewModel : ViewModel() {
 			onError = onError,
 		) { data ->
 			publication.value = Publication.fromMap(data)
-			logcat(publication.value.toString())
 			onSuccess()
 		}
 	}

@@ -56,42 +56,29 @@ class AuthViewModel : ViewModel() {
 
 	fun signInOnStart(setIsReady: () -> Unit) {
 		// If no user is logged in, keep the router in the sign up page, otherwise check for account activation.
-		val user = auth.currentUser
-		if (user == null) setIsReady()
-		else
-			db.collection("user").document(user.uid).get().addOnCompleteListener { userDoc ->
-				val data = userDoc.result.data
-				if (data != null && userDoc.isSuccessful) {
-					if (data["activated"] == true) Router.replace("home", true)
-					else if (data["activated"] == false) Router.replace("auth/activation", false)
-				}
-				setIsReady()
-			}
+		StoreDB.getCurrentUser(onError = { setIsReady() }) { user ->
+			if (user["activated"] == true) Router.replace("home", true)
+			else if (user["activated"] == false) Router.replace("auth/activation", false)
+			setIsReady()
+		}
 	}
 
 	fun signIn(onError: (Int) -> Unit) {
 		val email = signInInfo.email
 		val password = signInInfo.password
 		auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { signIn ->
-			val user = auth.currentUser
-
-			// Exit if the user is null or anything went wrong.
 			if (signIn.exception != null) logcat(exception = signIn.exception)
 			if (signIn.exception?.message?.contains("credential is incorrect") == true)
 				return@addOnCompleteListener onError(R.string.invalid_credentials)
-			if (user == null || !signIn.isSuccessful)
+			if (!signIn.isSuccessful)
 				return@addOnCompleteListener onError(R.string.unknown_error)
-			if (!user.isEmailVerified)
+			val currentUser = auth.currentUser
+			if (currentUser != null && !currentUser.isEmailVerified)
 				return@addOnCompleteListener onError(R.string.verify_email_first)
 
-			// Check if the user account is activated
-			val userRef = db.collection("user").document(user.uid)
-			userRef.get().addOnCompleteListener { userDoc ->
-				val data = userDoc.result.data
-				if (data == null || !userDoc.isSuccessful) {
-					onError(R.string.unknown_error)
-					logcat("Error read user document:", userDoc.exception)
-				} else if (data["activated"] == true) {
+			// Check the user account activation.
+			StoreDB.getCurrentUser(onError = onError) { user ->
+				if (user["activated"] == true) {
 					clearSignIn()
 					clearSignUp()
 					Router.replace("home", true)
