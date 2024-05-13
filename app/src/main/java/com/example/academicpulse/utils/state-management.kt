@@ -54,10 +54,15 @@ fun <T> useState(value: @DisallowComposableCalls () -> T): Pair<T, (T) -> Unit> 
  * 	Button(text = "Read All") { Store.notifications.clearAll() }
  * }
  * ```
- * @param lifeData The LiveData object to observe
+ * @param liveData The LiveData object to observe
  * @return The current value of the observed LiveData
  */
 @Composable
-fun <T> useAtom(lifeData: LiveData<T>, defaultValue: T): T {
-	return lifeData.observeAsState(defaultValue).value
+fun <T> useAtom(liveData: LiveData<T>, defaultValue: T): T {
+	return liveData.observeAsState(defaultValue).value
+}
+
+@Composable
+fun <T> useAtom(liveData: LiveData<T>): T? {
+	return liveData.observeAsState().value
 }

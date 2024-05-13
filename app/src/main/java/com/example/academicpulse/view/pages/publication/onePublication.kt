@@ -28,7 +28,7 @@ import com.example.academicpulse.view_model.Store
 @Composable
 fun OnePublicationPage() {
 	val (loading, setLoading) = useState { true }
-	val publication = useAtom(Store.publications.selectedPublication, Publication())
+	val publication = useAtom(Store.publications.publication)
 
 	LaunchedEffect(true) {
 		Store.publications.fetchOneById(
@@ -56,8 +56,8 @@ fun OnePublicationPage() {
 			) {
 				Spinner(size = 30.dp)
 			}
-		} else {
-			Text(text = "hello from publication")
+		} else if (publication != null) {
+			Text(text = "$publication")
 		}
 	}
 	BackHandler { Router.back() }

@@ -11,30 +11,25 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 
-class StoreDB {
+class StoreDB private constructor() {
 	companion object {
 		private val db by lazy { Firebase.firestore }
 		private val auth = Firebase.auth
 
 		fun getCurrentUser(
 			onError: (error: Int) -> Unit,
-			onSuccess: (doc: Task<DocumentSnapshot>) -> Unit
+			onSuccess: (data: Map<String, Any?>) -> Unit
 		) {
 			getCurrentUser(onError) { userDoc, _ -> onSuccess(userDoc) }
 		}
 
 		fun getCurrentUser(
 			onError: (error: Int) -> Unit,
-			onSuccess: (doc: Task<DocumentSnapshot>, ref: DocumentReference) -> Unit
+			onSuccess: (data: Map<String, Any?>, ref: DocumentReference) -> Unit
 		) {
 			val user = auth.currentUser ?: return onError(R.string.unknown_error)
-			val userRef = db.collection("user").document(user.uid)
-			userRef.get().addOnCompleteListener { userDocument ->
-				if (userDocument.isSuccessful) onSuccess(userDocument, userRef)
-				else {
-					logcat("Error getting user document", userDocument.exception)
-					onError(R.string.unknown_error)
-				}
+			getOneById(collection = "user", id = user.uid, onError = onError) { data, ref ->
+				onSuccess(data, ref)
 			}
 		}
 
@@ -44,9 +39,19 @@ class StoreDB {
 			onError: (error: Int) -> Unit,
 			onSuccess: (data: Map<String, Any?>) -> Unit,
 		) {
-			db.collection(collection).document(id).get().addOnCompleteListener { doc ->
+			getOneById(collection, id, onError) { data, _ -> onSuccess(data) }
+		}
+
+		fun getOneById(
+			collection: String,
+			id: String,
+			onError: (error: Int) -> Unit,
+			onSuccess: (data: Map<String, Any?>, ref: DocumentReference) -> Unit,
+		) {
+			val ref = db.collection(collection).document(id)
+			ref.get().addOnCompleteListener { doc ->
 				val data = doc.result.data
-				if (doc.isSuccessful && data != null) onSuccess(data)
+				if (doc.isSuccessful && data != null) onSuccess(data, ref)
 				else if (data == null) {
 					logcat("Warning: Document with id {$id} is not found in the collection {$collection}")
 					onError(R.string.unknown_error)

@@ -8,14 +8,14 @@ import com.example.academicpulse.utils.logcat
 import com.example.academicpulse.utils.useCast
 
 class PublicationsViewModel : ViewModel() {
-	val userPublications = MutableLiveData(arrayListOf<Publication>())
-	val selectedPublication = MutableLiveData(Publication())
+	val userPublications = MutableLiveData<ArrayList<Publication>>()
+	val publication = MutableLiveData<Publication>()
 
 	fun fetchUserPublications(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
-		StoreDB.getCurrentUser(onError = onError) { userDoc ->
+		StoreDB.getCurrentUser(onError = onError) { user ->
 			StoreDB.getManyByIds(
 				collection = "publication",
-				ids = useCast(userDoc.result, "publications", arrayListOf()),
+				ids = useCast(user, "publications", arrayListOf()),
 				onCast = { Publication.fromMap(it) },
 				onError = onError,
 			) { list, errors ->
@@ -32,15 +32,15 @@ class PublicationsViewModel : ViewModel() {
 			id = id,
 			onError = onError,
 		) { data ->
-			selectedPublication.value = Publication.fromMap(data)
-			logcat(selectedPublication.value.toString())
+			publication.value = Publication.fromMap(data)
+			logcat(publication.value.toString())
 			onSuccess()
 		}
 	}
 
 	fun insert(publication: Publication, onError: (error: Int) -> Unit) {
 		// Get the current user ref because we need to update its publications list
-		StoreDB.getCurrentUser(onError = onError) { userDoc, userRef ->
+		StoreDB.getCurrentUser(onError = onError) { user, userRef ->
 			// Insert the publication and get its generated id
 			StoreDB.insert(
 				collection = "publication",
@@ -48,7 +48,7 @@ class PublicationsViewModel : ViewModel() {
 				onError = onError
 			) { id ->
 				// Insert the new publication id in the user publications then update it
-				val publications = useCast(userDoc.result, "publications", arrayListOf<String>())
+				val publications = useCast(user, "publications", arrayListOf<String>())
 				publications.add(id)
 				StoreDB.updateOneByRef(
 					ref = userRef,
