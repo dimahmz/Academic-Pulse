@@ -28,17 +28,14 @@ import com.example.academicpulse.view_model.Store
 fun OnePublicationPage() {
 	val (loading, setLoading) = useState { true }
 	val publication = useAtom(Store.publications.publication)
-	val id = useAtom(Store.publications.clickedPublicationID)
+	val id = Store.publications.clickedPublicationID
 
 	LaunchedEffect(true) {
-		if (id != null) {
-			Store.publications.fetchOneById(
-				id = id,
-				onSuccess = { setLoading(false) }
-			) {
-				setLoading(false)
-			}
+
+		Store.publications.fetchOneById(id = id, onSuccess = { setLoading(false) }) {
+			setLoading(false)
 		}
+
 	}
 
 	Column(
@@ -53,8 +50,7 @@ fun OnePublicationPage() {
 			Box(
 				modifier = Modifier
 					.fillMaxWidth()
-					.padding(top = 30.dp),
-				contentAlignment = Alignment.Center
+					.padding(top = 30.dp), contentAlignment = Alignment.Center
 			) {
 				Spinner(size = 30.dp)
 			}

@@ -32,16 +32,13 @@ fun PublicationArticle(publication: Publication) {
 			.fillMaxWidth()
 			.padding(vertical = pagePaddingX, horizontal = (pagePaddingX.value / 2).dp)
 			.clickable {
-				logcat("clicked publication $publication.id")
-				Store.publications.clickedPublicationID.value = publication.id
+				Store.publications.clickedPublicationID = publication.id
 				Router.navigate("publications/one-publication", false)
 			},
 		verticalArrangement = Arrangement.spacedBy(8.dp),
 	) {
 		Column {
-			H3(text = publication.title, modifier = Modifier.fillMaxWidth()) {
-				logcat("User click: Show publication by id {${publication.id}}");
-			}
+			H3(text = publication.title, modifier = Modifier.fillMaxWidth())
 			Text(text = publication.date)
 		}
 

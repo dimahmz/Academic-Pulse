@@ -10,7 +10,7 @@ import com.example.academicpulse.utils.useCast
 class PublicationsViewModel : ViewModel() {
 	val userPublications = MutableLiveData<ArrayList<Publication>>()
 	val publication = MutableLiveData<Publication>()
-	val clickedPublicationID = MutableLiveData<String>()
+	var clickedPublicationID =""
 
 	fun fetchUserPublications(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
 		StoreDB.getCurrentUser(onError = onError) { user, _ ->
