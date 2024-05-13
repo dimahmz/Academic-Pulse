@@ -111,20 +111,20 @@ class AuthViewModel : ViewModel() {
 				return@addOnCompleteListener onError(R.string.unknown_error)
 
 			// create a new user collection and fill its content
-			val userRef = db.collection("user").document(user.uid)
-			userRef.set(signUpInfo.toMap(user.uid)).addOnCompleteListener { saving ->
-				if (!saving.isSuccessful) onError(R.string.unknown_error)
-				else {
-					// Send a verification email to the user
-					user.sendEmailVerification().addOnCompleteListener { sending ->
-						if (sending.isSuccessful) {
-							clearSignUp()
-							saveSignInInfo(email, password)
-							Router.navigate("auth/verification", false)
-						} else onError(R.string.unknown_error)
+			db.collection("user").document(user.uid).set(signUpInfo.toMap())
+				.addOnCompleteListener { saving ->
+					if (!saving.isSuccessful) onError(R.string.unknown_error)
+					else {
+						// Send a verification email to the user
+						user.sendEmailVerification().addOnCompleteListener { sending ->
+							if (sending.isSuccessful) {
+								clearSignUp()
+								saveSignInInfo(email, password)
+								Router.navigate("auth/verification", false)
+							} else onError(R.string.unknown_error)
+						}
 					}
 				}
-			}
 		}
 	}
 

@@ -15,9 +15,8 @@ class SignUpInfo {
 	var password: String = ""
 	var institutionSkipped: Boolean = false
 
-	fun toMap(uid: String): HashMap<String, Any?> {
+	fun toMap(): HashMap<String, Any?> {
 		return hashMapOf(
-			"uid" to uid,
 			"email" to email,
 			"firstName" to firstName,
 			"lastName" to lastName,
