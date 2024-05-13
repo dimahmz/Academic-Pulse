@@ -16,28 +16,12 @@ class StoreDB private constructor() {
 
 		fun getCurrentUser(
 			onError: (error: Int) -> Unit,
-			onSuccess: (data: Map<String, Any?>) -> Unit
-		) {
-			getCurrentUser(onError) { userDoc, _ -> onSuccess(userDoc) }
-		}
-
-		fun getCurrentUser(
-			onError: (error: Int) -> Unit,
 			onSuccess: (data: Map<String, Any?>, ref: DocumentReference) -> Unit
 		) {
 			val user = auth.currentUser ?: return onError(R.string.unknown_error)
 			getOneById(collection = "user", id = user.uid, onError = onError) { data, ref ->
 				onSuccess(data, ref)
 			}
-		}
-
-		fun getOneById(
-			collection: String,
-			id: String,
-			onError: (error: Int) -> Unit,
-			onSuccess: (data: Map<String, Any?>) -> Unit,
-		) {
-			getOneById(collection, id, onError) { data, _ -> onSuccess(data) }
 		}
 
 		fun getOneById(

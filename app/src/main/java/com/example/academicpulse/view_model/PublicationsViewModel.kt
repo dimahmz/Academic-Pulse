@@ -12,7 +12,7 @@ class PublicationsViewModel : ViewModel() {
 	val publication = MutableLiveData<Publication>()
 
 	fun fetchUserPublications(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
-		StoreDB.getCurrentUser(onError = onError) { user ->
+		StoreDB.getCurrentUser(onError = onError) { user, _ ->
 			StoreDB.getManyByIds(
 				collection = "publication",
 				ids = useCast(user, "publications", arrayListOf()),
@@ -31,7 +31,7 @@ class PublicationsViewModel : ViewModel() {
 			collection = "publication",
 			id = id,
 			onError = onError,
-		) { data ->
+		) { data, _ ->
 			publication.value = Publication.fromMap(id, data)
 			onSuccess()
 		}
