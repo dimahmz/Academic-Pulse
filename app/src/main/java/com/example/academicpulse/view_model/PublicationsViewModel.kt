@@ -16,7 +16,7 @@ class PublicationsViewModel : ViewModel() {
 			StoreDB.getManyByIds(
 				collection = "publication",
 				ids = useCast(user, "publications", arrayListOf()),
-				onCast = { Publication.fromMap(it) },
+				onCast = { id, data -> Publication.fromMap(id, data) },
 				onError = onError,
 			) { list, errors ->
 				if (errors > 0) logcat("Getting user publications list was executed with $errors errors")
@@ -32,7 +32,7 @@ class PublicationsViewModel : ViewModel() {
 			id = id,
 			onError = onError,
 		) { data ->
-			publication.value = Publication.fromMap(data)
+			publication.value = Publication.fromMap(id, data)
 			onSuccess()
 		}
 	}

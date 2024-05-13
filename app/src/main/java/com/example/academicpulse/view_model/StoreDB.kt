@@ -3,11 +3,9 @@ package com.example.academicpulse.view_model
 import androidx.compose.runtime.mutableIntStateOf
 import com.example.academicpulse.R
 import com.example.academicpulse.utils.logcat
-import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 
@@ -66,7 +64,7 @@ class StoreDB private constructor() {
 		fun <T> getManyByIds(
 			collection: String,
 			ids: ArrayList<String>,
-			onCast: (map: Map<String, Any?>) -> T,
+			onCast: (id: String, map: Map<String, Any?>) -> T,
 			onError: (error: Int) -> Unit,
 			onSuccess: (list: ArrayList<T>, errors: Int) -> Unit
 		) {
@@ -77,7 +75,7 @@ class StoreDB private constructor() {
 			ids.forEach { id ->
 				db.collection(collection).document(id).get().addOnCompleteListener { doc ->
 					val data = doc.result.data
-					if (doc.isSuccessful && data != null) list.add((onCast(data)))
+					if (doc.isSuccessful && data != null) list.add(onCast(id, data))
 					else if (data == null) {
 						logcat("Warning: Document with id {$id} is not found in the collection {$collection}")
 					} else {

@@ -23,9 +23,9 @@ data class Publication(
 	}
 
 	companion object {
-		fun fromMap(map: Map<String, Any?>?): Publication {
+		fun fromMap(id: String, map: Map<String, Any?>?): Publication {
 			return Publication(
-				id = useCast(map, "id", ""),
+				id = id,
 				title = useCast(map, "title", ""),
 				abstract = useCast(map, "abstract", ""),
 				doi = useCast(map, "doi", ""),
