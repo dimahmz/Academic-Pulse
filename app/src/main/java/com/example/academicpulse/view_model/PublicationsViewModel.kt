@@ -10,7 +10,7 @@ import com.example.academicpulse.utils.useCast
 class PublicationsViewModel : ViewModel() {
 	val userPublications = MutableLiveData<ArrayList<Publication>>()
 	val publication = MutableLiveData<Publication>()
-	var clickedPublicationID =""
+	var selectedPublicationId = ""
 
 	fun fetchUserPublications(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
 		StoreDB.getCurrentUser(onError = onError) { user, _ ->
@@ -27,12 +27,9 @@ class PublicationsViewModel : ViewModel() {
 		}
 	}
 
-	fun fetchOneById(id: String, onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
-		StoreDB.getOneById(
-			collection = "publication",
-			id = id,
-			onError = onError,
-		) { data, _ ->
+	fun fetchSelected(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
+		val id = selectedPublicationId
+		StoreDB.getOneById(collection = "publication", id = id, onError = onError) { data, _ ->
 			publication.value = Publication.fromMap(id, data)
 			onSuccess()
 		}
@@ -54,7 +51,10 @@ class PublicationsViewModel : ViewModel() {
 					ref = userRef,
 					data = hashMapOf("publications" to publications),
 					onError = onError, // TODO : if this fails we should remove the publication
-				) { Router.back(true /* to = profile/index */) }
+				) {
+					selectedPublicationId = id
+					Router.navigate("publications/one-publication", false)
+				}
 			}
 		}
 	}

@@ -32,7 +32,7 @@ fun PublicationArticle(publication: Publication) {
 			.fillMaxWidth()
 			.padding(vertical = pagePaddingX, horizontal = (pagePaddingX.value / 2).dp)
 			.clickable {
-				Store.publications.clickedPublicationID = publication.id
+				Store.publications.selectedPublicationId = publication.id
 				Router.navigate("publications/one-publication", false)
 			},
 		verticalArrangement = Arrangement.spacedBy(8.dp),

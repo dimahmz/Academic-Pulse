@@ -28,14 +28,11 @@ import com.example.academicpulse.view_model.Store
 fun OnePublicationPage() {
 	val (loading, setLoading) = useState { true }
 	val publication = useAtom(Store.publications.publication)
-	val id = Store.publications.clickedPublicationID
 
 	LaunchedEffect(true) {
-
-		Store.publications.fetchOneById(id = id, onSuccess = { setLoading(false) }) {
+		Store.publications.fetchSelected(onSuccess = { setLoading(false) }) {
 			setLoading(false)
 		}
-
 	}
 
 	Column(
