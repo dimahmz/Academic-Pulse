@@ -64,8 +64,9 @@
     <string name="reads">Reads</string>
     <string name="title">Title</string>
     <string name="doi">DOI</string>
+    <string name="date">Date</string>
+    <string name="date_placeholder">dd/mm/yyyy</string>
     <string name="publication">publication</string>
-
 
     <string name="_abstract">Abstract</string>
     <string name="uploads">Uploads</string>

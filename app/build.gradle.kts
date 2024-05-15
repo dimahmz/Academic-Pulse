@@ -10,7 +10,7 @@ android {
 
 	defaultConfig {
 		applicationId = "com.example.academicpulse"
-		minSdk = 21
+		minSdk = 26
 		targetSdk = 34
 		versionCode = 1
 		versionName = "1.0"
@@ -57,6 +57,7 @@ dependencies {
 	implementation("androidx.compose.ui:ui-tooling-preview")
 	implementation("androidx.compose.material3:material3")
 	implementation("androidx.compose.runtime:runtime-livedata:1.0.0-beta01")
+	implementation("com.maxkeppeler.sheets-compose-dialogs:calendar:1.0.2")
 
 	// Navigation
 	implementation("androidx.navigation:navigation-compose:2.7.7")
