@@ -23,6 +23,9 @@ import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.utils.logcat
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view_model.Store
+import com.google.firebase.Timestamp
+import java.text.SimpleDateFormat
+import java.util.*
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -39,7 +42,10 @@ fun PublicationArticle(publication: Publication) {
 	) {
 		Column {
 			H3(text = publication.title, modifier = Modifier.fillMaxWidth())
-			Text(text = publication.date)
+			val date = Date(publication.date.seconds * 1000L + publication.date.nanoseconds / 1000000L)
+			val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+			val formattedDate = sdf.format(date)
+			Text(text = formattedDate)
 		}
 
 		// Note: Use FlowRow instead of Row for the (overflow: break) option
@@ -85,7 +91,7 @@ fun PreviewPublicationArticle() {
 		Publication(
 			id = "92163248id",
 			title = "Load Balancing in Cloud Environment: A State-of-the-Art Review",
-			date = "Jun 2024",
+			date = Timestamp(1800000000, 0),
 			reads = 60,
 			uploads = 60,
 			abstract = "Example of collaborators"

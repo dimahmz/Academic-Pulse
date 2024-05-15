@@ -1,13 +1,15 @@
 package com.example.academicpulse.model
 
 import com.example.academicpulse.utils.useCast
+import com.google.firebase.Timestamp
+import java.util.Date
 
 data class Publication(
 	val id: String = "",
 	var title: String = "",
 	var abstract: String = "",
 	var doi: String = "",
-	var date: String = "",
+	var date: Timestamp,
 	var reads: Long = 0,
 	var uploads: Long = 0,
 ) {
@@ -29,7 +31,7 @@ data class Publication(
 				title = useCast(map, "title", ""),
 				abstract = useCast(map, "abstract", ""),
 				doi = useCast(map, "doi", ""),
-				date = useCast(map, "date", ""),
+				date = useCast(map, "date", Timestamp(Date())),
 				reads = useCast(map, "reads",  0),
 				uploads = useCast(map, "uploads",  0),
 			)

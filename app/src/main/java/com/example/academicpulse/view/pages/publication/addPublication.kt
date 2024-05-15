@@ -20,9 +20,12 @@ import com.example.academicpulse.utils.useField
 import com.example.academicpulse.utils.useForm
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.Button
+import com.example.academicpulse.view.components.basic.DatePicker
 import com.example.academicpulse.view.components.basic.Input
 import com.example.academicpulse.view.components.global.Header
 import com.example.academicpulse.view_model.Store
+import com.google.firebase.Timestamp
+import java.util.Date
 
 @Composable
 fun AddPublicationPage() {
@@ -30,6 +33,7 @@ fun AddPublicationPage() {
 	val title = useField(form = form, ifEmpty = R.string.email_required)
 	val abstract = useField(form = form, ifEmpty = R.string.abstract_required)
 	val doi = useField(form = form, ifEmpty = R.string.abstract_required)
+	val date = useField(form = form)
 
 	val (loading, setLoading) = useState { false }
 
@@ -40,7 +44,8 @@ fun AddPublicationPage() {
 			Publication(
 				title = title.trim(),
 				abstract = abstract.trim(),
-				doi = doi.trim()
+				doi = doi.trim(),
+				date = Timestamp(Date(date.value))
 			)
 		) { error ->
 			form.error = error
@@ -71,6 +76,7 @@ fun AddPublicationPage() {
 				field = doi,
 				label = R.string.doi,
 			)
+			DatePicker(field =date, label=R.string.date)
 		}
 
 		Spacer(Modifier.height(14.dp))
