@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -37,15 +38,15 @@ import com.example.academicpulse.utils.useState
 fun Input(
 	value: String,
 
-	/** A supporting text placed above the field.
+	/** [label] is a supporting text placed above the field.
 	 * - Note: It can automatically request a focus on the field when it's clicked. */
 	@StringRes label: Int? = null,
 
-	/** A supporting text placed inside the field.
+	/** [placeholder] is a supporting text placed inside the field.
 	 * - Note: If it's null, it takes the label value if present. */
 	@StringRes placeholder: Int? = null,
 
-	/** Pass `true` to add a red symbol (`*`) next to the [label] to indicate that the field is required.
+	/** [required] indicates if the field should not be empty. If `true`, a red symbol (`*`) added next to the [label].
 	 * - Note: It has no effect if [label] is `null`.
 	 * - See also [valid] and [onChangeValidity] to automatically handle the field clearing.
 	 */
@@ -54,10 +55,13 @@ fun Input(
 	/** Control the component theme to switch between the main them and error them. */
 	valid: Boolean = true,
 
-	/** Pass `true` to apply the custom hide/show icons with their logic */
+	/** [readOnly] indicates if the field should accept any changes by the user interaction. */
+	readOnly: Boolean = false,
+
+	/** [password] indicates if the field is a password or not. If `true`, a custom hide/show icons with their logic are applied. */
 	password: Boolean = false,
 
-	/** The prefix icon resource ID.
+	/** [icon] is the resource ID of the prefix icon.
 	 * ```
 	 * Example usage:
 	 * Input(placeholder = "Search", icon = R.drawable.icon_search)
@@ -65,22 +69,22 @@ fun Input(
 	 */
 	icon: Int? = null,
 
-	/** The icon type of the keyboard OK button, e.g. `ImeAction.Done`, `ImeAction.Next`, `ImeAction.Send`
+	/** [okIcon] is the icon type of the keyboard OK button, e.g. `ImeAction.Done`, `ImeAction.Next`, `ImeAction.Send`
 	 * - See also [onOk] to set a custom behavior when clicking on this button
 	 */
 	okIcon: ImeAction = ImeAction.Default,
 
-	/** If the [onOk] callback is not null, by default the keyboard will be hidden before executing it.
-	 * disable it if you need the keyboard to stay visible.
+	/** If the [onOk] callback is present, by default the keyboard will be hidden before executing it.
+	 * [hideKeyboardOnOk] is to control the keyboard to stay visible or not.
 	 */
 	hideKeyboardOnOk: Boolean = true,
 
-	/** The keyboard type, e.g. `KeyboardType.Text`, `KeyboardType.Email`, `KeyboardType.Decimal`
+	/** [keyboardType] is the keyboard type, e.g. `KeyboardType.Text`, `KeyboardType.Email`, `KeyboardType.Decimal`
 	 * - Note: It has no effect if [password] is `true`, as `KeyboardType.Password` is applied automatically.
 	 */
 	keyboardType: KeyboardType = KeyboardType.Text,
 
-	/** Used if there is any external Element or script that can trigger focus on the input
+	/** [focusRequester] should be used if there is any external Element or script that can trigger focus on the field.
 	 * ```
 	 * Example usage:
 	 * val (focusRequester) = useState { FocusRequester() }
@@ -110,7 +114,7 @@ fun Input(
 
 	// Events
 
-	/** Emits when the user change the input value. (Used to update the passed value)
+	/** [onChange] is invoked when the user change the field value. (Used to update the passed value)
 	 * ```
 	 * Example usage:
 	 * val (message, setMessage) = useState("")
@@ -123,9 +127,8 @@ fun Input(
 	 */
 	onChange: ((String) -> Unit),
 
-	/** The short way to change the field validity depending on the field value if it is an empty string.
-	 *
-	 * Note: It has no effect if [required] is `false`.
+	/** [onChangeValidity] is the short way to change the field validity depending on the field value if it is an empty string.
+	 * - Note: It has no effect if [required] is `false`.
 	 * ```
 	 * Example usage:
 	 * val (message, setMessage) = useState("")
@@ -144,7 +147,7 @@ fun Input(
 	 */
 	onChangeValidity: ((Boolean) -> Unit)? = null,
 
-	/** Emits when pressing the keyboard Ok button.
+	/** [onOk] is invoked when pressing the keyboard Ok button.
 	 * - See also: [okIcon] to customize the icon of this button.
 	 * - See also: [hideKeyboardOnOk] to handle the keyboard closing before executing [onOk].
 	 * ```
@@ -158,10 +161,20 @@ fun Input(
 	 * ```
 	 */
 	onOk: (() -> Unit)? = null,
+
+	/** [onFocusChange] is invoked when the focus state changes. */
+	onFocusChange: ((Boolean) -> Unit)? = null,
 ) {
 	val (passwordVisible, setPasswordVisibility) = useState { false }
 	val (focus) = useState { focusRequester ?: FocusRequester() }
 	val keyboardController = LocalSoftwareKeyboardController.current
+
+	var modifier = Modifier
+		.focusRequester(focus)
+		.fillMaxWidth()
+		.height(inputHeight)
+	if (onFocusChange != null)
+		modifier = modifier.onFocusChanged { onFocusChange(it.isFocused) }
 
 	val onPressOk: (KeyboardActionScope.() -> Unit) = {
 		focusNext?.requestFocus()
@@ -198,10 +211,7 @@ fun Input(
 			},
 
 			// Styling
-			modifier = Modifier
-				.focusRequester(focus)
-				.fillMaxWidth()
-				.height(inputHeight),
+			modifier = modifier,
 			shape = RoundedCornerShape(radius),
 			colors = OutlinedTextFieldDefaults.colors(
 				unfocusedTextColor = textColor,
@@ -215,6 +225,7 @@ fun Input(
 
 			// Statue & Lines
 			enabled = true,
+			readOnly = readOnly,
 			singleLine = true,
 			minLines = 1,
 			maxLines = 1,
@@ -255,18 +266,21 @@ fun Input(
 fun Input(
 	field: Field,
 
-	/** A supporting text placed above the field.
+	/** [label] is a supporting text placed above the field.
 	 * - Note: It can automatically request a focus on the field when it's clicked. */
 	@StringRes label: Int? = null,
 
-	/** A supporting text placed inside the field.
+	/** [placeholder] is a supporting text placed inside the field.
 	 * - Note: If it's null, it takes the label value if present. */
 	@StringRes placeholder: Int? = null,
 
-	/** Pass `true` to apply the custom hide/show icons with their logic */
+	/** [readOnly] indicates if the field should accept any changes by the user interaction. */
+	readOnly: Boolean = false,
+
+	/** [password] indicates if the field is a password or not. If `true`, a custom hide/show icons with their logic are applied. */
 	password: Boolean = false,
 
-	/** The prefix icon resource ID.
+	/** [icon] is the resource ID of the prefix icon.
 	 * ```
 	 * Example usage:
 	 * Input(placeholder = "Search", icon = R.drawable.icon_search)
@@ -274,17 +288,17 @@ fun Input(
 	 */
 	icon: Int? = null,
 
-	/** The icon type of the keyboard OK button, e.g. `ImeAction.Done`, `ImeAction.Next`, `ImeAction.Send`
+	/** [okIcon] is the icon type of the keyboard OK button, e.g. `ImeAction.Done`, `ImeAction.Next`, `ImeAction.Send`
 	 * - See also [onOk] to set a custom behavior when clicking on this button
 	 */
 	okIcon: ImeAction = ImeAction.Default,
 
-	/** If the [onOk] callback is not null, by default the keyboard will be hidden before executing it.
-	 * disable it if you need the keyboard to stay visible.
+	/** If the [onOk] callback is present, by default the keyboard will be hidden before executing it.
+	 * [hideKeyboardOnOk] is to control the keyboard to stay visible or not.
 	 */
 	hideKeyboardOnOk: Boolean = true,
 
-	/** The keyboard type, e.g. `KeyboardType.Text`, `KeyboardType.Email`, `KeyboardType.Decimal`
+	/** [keyboardType] is the keyboard type, e.g. `KeyboardType.Text`, `KeyboardType.Email`, `KeyboardType.Decimal`
 	 * - Note: It has no effect if [password] is `true`, as `KeyboardType.Password` is applied automatically.
 	 */
 	keyboardType: KeyboardType = KeyboardType.Text,
@@ -295,10 +309,10 @@ fun Input(
 	 * Example usage:
 	 *
 	 * Column {
-	 * 	val secondFieldFocus = useField(value = "")
+	 * 	val (secondFieldFocus) = useState { FocusRequester() }
 	 *
-	 * 	Input(focusNext = secondField.focusRequester)
-	 * 	Input(field = secondField)
+	 * 	Input(focusNext = secondFieldFocus)
+	 * 	Input(focusRequester = secondFieldFocus)
 	 * }
 	 * ```
 	 */
@@ -306,19 +320,23 @@ fun Input(
 
 	// Events
 
-	/** Emits when pressing the keyboard Ok button.
+	/** [onOk] is invoked when pressing the keyboard Ok button.
 	 * - See also: [okIcon] to customize the icon of this button.
 	 * - See also: [hideKeyboardOnOk] to handle the keyboard closing before executing [onOk].
 	 * ```
 	 * Example usage:
 	 * Input(
-	 * 	field = message,
+	 * 	value = message,
+	 * 	onChange = setMessage,
 	 * 	okIcon = ImeAction.Send,
-	 * 	onOk = { sendMessage(message.value) }
+	 * 	onOk = { sendMessage(message) }
 	 * )
 	 * ```
 	 */
 	onOk: (() -> Unit)? = null,
+
+	/** [onFocusChange] is invoked when the focus state changes. */
+	onFocusChange: ((Boolean) -> Unit)? = null,
 ) {
 	Input(
 		value = field.value,
@@ -326,6 +344,7 @@ fun Input(
 		placeholder = placeholder,
 		required = field.required,
 		valid = field.valid,
+		readOnly = readOnly,
 		password = password,
 		icon = icon,
 		okIcon = okIcon,
@@ -336,5 +355,6 @@ fun Input(
 		onChange = { field.value = it },
 		onChangeValidity = { field.valid = it },
 		onOk = onOk,
+		onFocusChange = onFocusChange,
 	)
 }
