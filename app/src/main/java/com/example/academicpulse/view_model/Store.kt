@@ -18,6 +18,8 @@ class Store private constructor(): ViewModel() {
 	// Store modules
 	private val auth = AuthViewModel()
 	private val publications = PublicationsViewModel()
+	private val user = UserViewModel()
+
 
 	init {
 		// The splash screen will disappear only when the logo animation finish and the user account is verified.
@@ -55,5 +57,7 @@ class Store private constructor(): ViewModel() {
 			get() = appStore[0].auth
 		val publications: PublicationsViewModel
 			get() = appStore[0].publications
+		val user: UserViewModel
+			get() = appStore[0].user
 	}
 }
