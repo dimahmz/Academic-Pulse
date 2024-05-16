@@ -35,10 +35,7 @@ fun SettingsPage() {
 	) {
 		Header(title = R.string.settings, true)
 		Spacer(Modifier.height(14.dp))
-
-		Element(R.string.edit_profile, R.drawable.icon_edit) {
-			// Edit Profile
-		}
+		
 		Element(R.string.about, R.drawable.icon_about) {
 			Router.navigate("profile/about", false)
 		}

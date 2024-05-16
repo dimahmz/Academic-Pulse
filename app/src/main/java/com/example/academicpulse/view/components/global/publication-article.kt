@@ -71,16 +71,16 @@ fun PublicationArticle(publication: Publication) {
 		}
 		*/
 
-		Row(horizontalArrangement = Arrangement.spacedBy(gap)) {
-			Row(horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp)) {
-				Title(text = "${publication.reads}", size = descriptionTextSize)
-				Text(text = R.string.reads, size = descriptionTextSize)
-			}
-			Row(horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp)) {
-				Title(text = publication.uploads.toString(), size = descriptionTextSize)
-				Text(text = R.string.uploads, size = descriptionTextSize)
-			}
-		}
+		/*	Row(horizontalArrangement = Arrangement.spacedBy(gap)) {
+				Row(horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp)) {
+					Title(text = "${publication.reads}", size = descriptionTextSize)
+					Text(text = R.string.reads, size = descriptionTextSize)
+				}
+				Row(horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp)) {
+					Title(text = publication.uploads.toString(), size = descriptionTextSize)
+					Text(text = R.string.uploads, size = descriptionTextSize)
+				}
+			}*/
 	}
 }
 
