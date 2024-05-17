@@ -5,6 +5,7 @@ import com.example.academicpulse.R
 import com.example.academicpulse.utils.logcat
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 
@@ -62,6 +63,23 @@ class StoreDB private constructor() {
 						else onError(R.string.unknown_error)
 					}
 				}
+			}
+		}
+
+		fun getAll(
+			collection: String, onError: (error: Int) -> Unit, onSuccess: (result: QuerySnapshot) -> Unit
+		) {
+			db.collection(collection).get().addOnCompleteListener { task ->
+				if (task.isSuccessful) {
+					task.result?.let {
+						onSuccess(it)
+					} ?: onError(R.string.unknown_error)
+				} else {
+					onError(R.string.unknown_error)
+				}
+			}.addOnFailureListener { exception ->
+				logcat("Error getting documents  ${exception.toString()}")
+				onError(R.string.unknown_error)
 			}
 		}
 

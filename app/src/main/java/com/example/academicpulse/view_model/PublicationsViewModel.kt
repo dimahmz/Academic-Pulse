@@ -3,6 +3,7 @@ package com.example.academicpulse.view_model
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.academicpulse.model.Publication
+import com.example.academicpulse.model.PublicationType
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.logcat
 import com.example.academicpulse.utils.useCast
@@ -11,6 +12,8 @@ class PublicationsViewModel : ViewModel() {
 	val userPublications = MutableLiveData<ArrayList<Publication>>()
 	val publication = MutableLiveData<Publication>()
 	var selectedPublicationId = ""
+	var publicationTypes = MutableLiveData<ArrayList<PublicationType>>(arrayListOf())
+
 
 	fun fetchUserPublications(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
 		Store.user.getCurrentUser(onError = onError) { user, _ ->
@@ -22,8 +25,18 @@ class PublicationsViewModel : ViewModel() {
 			) { list, errors ->
 				if (errors > 0) logcat("Getting user publications list was executed with $errors errors")
 				userPublications.value = list
-				onSuccess()
 			}
+		}
+	}
+
+	fun fetchPublicationTypes(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
+		StoreDB.getAll("publicationType", onError = onError) { result ->
+			val _publicationTypes = ArrayList<PublicationType>(arrayListOf())
+			for (document in result) {
+				_publicationTypes.add(PublicationType.fromMap(document.id, document.data))
+			}
+			publicationTypes.value = _publicationTypes
+			onSuccess()
 		}
 	}
 
@@ -40,9 +53,7 @@ class PublicationsViewModel : ViewModel() {
 		Store.user.getCurrentUser(onError = onError) { user, userRef ->
 			// Insert the publication and get its generated id
 			StoreDB.insert(
-				collection = "publication",
-				data = publication.toMap(),
-				onError = onError
+				collection = "publication", data = publication.toMap(), onError = onError
 			) { id ->
 				// Insert the new publication id in the user publications then update it
 				val publications = useCast(user, "publications", arrayListOf<String>())
