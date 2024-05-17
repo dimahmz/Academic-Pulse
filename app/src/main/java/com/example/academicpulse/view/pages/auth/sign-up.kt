@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.model.Field
+import com.example.academicpulse.model.SignInInfo
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
@@ -50,7 +51,6 @@ fun SignUpPage() {
 	)
 	val password = useField(
 		form = form,
-		value = auth.signUpInfo.password,
 		regex = Field.password,
 		ifEmpty = R.string.password_required,
 		ifInvalid = R.string.password_not_strong,
@@ -61,8 +61,8 @@ fun SignUpPage() {
 	fun signUp() {
 		if (loading || !form.validate()) return
 		setLoading(true)
-		auth.saveSignUpInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
-		auth.signUp { message ->
+		auth.saveSignUpInfo(firstName.trim(), lastName.trim(), email.trim())
+		auth.signUp(SignInInfo(email.trim(), password.trim())) { message ->
 			setLoading(false)
 			form.error = message
 		}
@@ -118,7 +118,7 @@ fun SignUpPage() {
 
 	BackHandler {
 		if (loading) return@BackHandler
-		auth.saveSignUpInfo(firstName.trim(), lastName.trim(), email.trim(), password.trim())
+		auth.saveSignUpInfo(firstName.trim(), lastName.trim(), email.trim())
 		Router.back(false /* to = auth/sign-up-institution */)
 	}
 }

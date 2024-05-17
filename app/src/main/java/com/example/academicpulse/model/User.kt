@@ -1,46 +1,43 @@
 package com.example.academicpulse.model
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
-import com.example.academicpulse.R
 import com.example.academicpulse.utils.useCast
-import com.google.firebase.Timestamp
-import java.util.Date
 
 data class User(
 	val id: String = "",
-	val firstName: String = "",
-	val lastName: String = "",
-	val department: String = "",
-	val position: String = "",
-	val institution: String = "",
-	val email: String = "",
+	var firstName: String = "",
+	var lastName: String = "",
+	var department: String = "",
+	var position: String = "",
+	var institution: String = "",
+	var email: String = "",
+	var activated: Boolean = false,
+	var institutionSkipped: Boolean = false
 ) {
-
-
 	fun toMap(): HashMap<String, Any?> {
 		return hashMapOf(
-			"id" to id,
 			"firstName" to firstName,
 			"lastName" to lastName,
-			"department" to department,
-			"position" to position,
-			"institution" to institution,
+			"institution" to (if (institutionSkipped) null else institution),
+			"department" to (if (institutionSkipped) null else department),
+			"position" to (if (institutionSkipped) null else position),
 			"email" to email,
+			"activated" to activated,
 		)
 	}
 
 	companion object {
 		fun fromMap(id: String, map: Map<String, Any?>?): User {
+			val institution = useCast(map, "institution", "")
 			return User(
 				id = id,
-				firstName = useCast(map, "firstName", "firstName"),
-				lastName = useCast(map, "lastName", "lastName"),
-				department = useCast(map, "department", "department"),
-				position = useCast(map, "position", "position"),
-				institution = useCast(map, "institution", "institution"),
-				email = useCast(map, "email", "")
+				firstName = useCast(map, "firstName", ""),
+				lastName = useCast(map, "lastName", ""),
+				department = useCast(map, "department", ""),
+				position = useCast(map, "position", ""),
+				institution = institution,
+				email = useCast(map, "email", ""),
+				activated = useCast(map, "activated", false),
+				institutionSkipped = institution == "",
 			)
 		}
 	}

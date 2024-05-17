@@ -3,7 +3,7 @@ package com.example.academicpulse.view_model
 import androidx.lifecycle.ViewModel
 import com.example.academicpulse.R
 import com.example.academicpulse.model.SignInInfo
-import com.example.academicpulse.model.SignUpInfo
+import com.example.academicpulse.model.User
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.logcat
 import com.google.firebase.Firebase
@@ -15,13 +15,8 @@ class AuthViewModel : ViewModel() {
 	private val db = Firebase.firestore
 	private val auth = Firebase.auth
 
-	val signInInfo: SignInInfo = SignInInfo()
-	val signUpInfo: SignUpInfo = SignUpInfo()
-
-	fun saveSignInInfo(email: String, password: String) {
-		signInInfo.email = email
-		signInInfo.password = password
-	}
+	var signInInfo: SignInInfo = SignInInfo("", "")
+	val signUpInfo: User = User()
 
 	fun saveInstitutionInfo(
 		institution: String, department: String, position: String, skipped: Boolean
@@ -32,16 +27,10 @@ class AuthViewModel : ViewModel() {
 		signUpInfo.institutionSkipped = skipped
 	}
 
-	fun saveSignUpInfo(firstName: String, lastName: String, email: String, password: String) {
+	fun saveSignUpInfo(firstName: String, lastName: String, email: String) {
 		signUpInfo.firstName = firstName
 		signUpInfo.lastName = lastName
 		signUpInfo.email = email
-		signUpInfo.password = password
-	}
-
-	private fun clearSignIn() {
-		signInInfo.email = ""
-		signInInfo.password = ""
 	}
 
 	fun clearSignUp() {
@@ -51,22 +40,20 @@ class AuthViewModel : ViewModel() {
 		signUpInfo.firstName = ""
 		signUpInfo.lastName = ""
 		signUpInfo.email = ""
-		signUpInfo.password = ""
 	}
 
-	fun signInOnStart(setIsReady: () -> Unit) {
+	fun signInOnStart(vm: UserViewModel, setIsReady: () -> Unit) {
 		// If no user is logged in, keep the router in the sign up page, otherwise check for account activation.
-		StoreDB.getCurrentUser(onError = { setIsReady() }) { user, _ ->
+		vm.getCurrentUser(onError = { setIsReady() }) { user, _ ->
 			if (user["activated"] == true) Router.replace("home", true)
 			else if (user["activated"] == false) Router.replace("auth/activation", false)
 			setIsReady()
 		}
 	}
 
-	fun signIn(onError: (Int) -> Unit) {
-		val email = signInInfo.email
-		val password = signInInfo.password
-		auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { signIn ->
+	fun signIn(info: SignInInfo, onError: (Int) -> Unit) {
+		signInInfo = info
+		auth.signInWithEmailAndPassword(info.email, info.password).addOnCompleteListener { signIn ->
 			if (signIn.exception != null) logcat(exception = signIn.exception)
 			if (signIn.exception?.message?.contains("credential is incorrect") == true)
 				return@addOnCompleteListener onError(R.string.invalid_credentials)
@@ -77,9 +64,9 @@ class AuthViewModel : ViewModel() {
 				return@addOnCompleteListener onError(R.string.verify_email_first)
 
 			// Check the user account activation.
-			StoreDB.getCurrentUser(onError = onError) { user, _ ->
+			Store.user.getCurrentUser(onError = onError) { user, _ ->
 				if (user["activated"] == true) {
-					clearSignIn()
+					signInInfo = SignInInfo("", "")
 					clearSignUp()
 					Router.replace("home", true)
 				} else Router.navigate("auth/activation", false)
@@ -87,32 +74,30 @@ class AuthViewModel : ViewModel() {
 		}
 	}
 
-	fun signUp(onError: (Int) -> Unit) {
-		val email = signUpInfo.email
-		val password = signUpInfo.password
+	fun signUp(info: SignInInfo, onError: (Int) -> Unit) {
+		auth.createUserWithEmailAndPassword(info.email, info.password)
+			.addOnCompleteListener { creating ->
+				val user = auth.currentUser
+				// Exit if the user is null or anything went wrong
+				if (user == null || !creating.isSuccessful)
+					return@addOnCompleteListener onError(R.string.unknown_error)
 
-		auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { creating ->
-			val user = auth.currentUser
-			// Exit if the user is null or anything went wrong
-			if (user == null || !creating.isSuccessful)
-				return@addOnCompleteListener onError(R.string.unknown_error)
-
-			// create a new user collection and fill its content
-			db.collection("user").document(user.uid).set(signUpInfo.toMap())
-				.addOnCompleteListener { saving ->
-					if (!saving.isSuccessful) onError(R.string.unknown_error)
-					else {
-						// Send a verification email to the user
-						user.sendEmailVerification().addOnCompleteListener { sending ->
-							if (sending.isSuccessful) {
-								clearSignUp()
-								saveSignInInfo(email, password)
-								Router.navigate("auth/verification", false)
-							} else onError(R.string.unknown_error)
+				// create a new user collection and fill its content
+				db.collection("user").document(user.uid).set(signUpInfo.toMap())
+					.addOnCompleteListener { saving ->
+						if (!saving.isSuccessful) onError(R.string.unknown_error)
+						else {
+							// Send a verification email to the user
+							user.sendEmailVerification().addOnCompleteListener { sending ->
+								if (sending.isSuccessful) {
+									clearSignUp()
+									signInInfo = info
+									Router.navigate("auth/verification", false)
+								} else onError(R.string.unknown_error)
+							}
 						}
 					}
-				}
-		}
+			}
 	}
 
 	fun logOut() {

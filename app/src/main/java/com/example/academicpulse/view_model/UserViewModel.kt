@@ -10,7 +10,7 @@ import com.google.firebase.firestore.DocumentReference
 
 class UserViewModel : ViewModel() {
 	private val auth = Firebase.auth
-	val currentUser = MutableLiveData(User());
+	val currentUser = MutableLiveData(User())
 
 	fun getCurrentUser(
 		onError: (error: Int) -> Unit,

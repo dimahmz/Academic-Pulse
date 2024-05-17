@@ -4,7 +4,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import com.example.academicpulse.R
 import com.example.academicpulse.utils.logcat
 import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
@@ -12,17 +11,6 @@ import com.google.firebase.firestore.firestore
 class StoreDB private constructor() {
 	companion object {
 		private val db by lazy { Firebase.firestore }
-		private val auth = Firebase.auth
-
-		fun getCurrentUser(
-			onError: (error: Int) -> Unit,
-			onSuccess: (data: Map<String, Any?>, ref: DocumentReference) -> Unit
-		) {
-			val user = auth.currentUser ?: return onError(R.string.unknown_error)
-			getOneById(collection = "user", id = user.uid, onError = onError) { data, ref ->
-				onSuccess(data, ref)
-			}
-		}
 
 		fun getOneById(
 			collection: String,

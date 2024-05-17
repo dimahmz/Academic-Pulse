@@ -4,9 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
-import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -36,7 +33,7 @@ class Store private constructor(): ViewModel() {
 			delay(1000)
 			setIsReady()
 		}
-		auth.signInOnStart(::setIsReady)
+		auth.signInOnStart(this.user, ::setIsReady)
 	}
 
 	// Note: Static variables and methods are used just to hold the global Store instance and be accessible in anywhere.

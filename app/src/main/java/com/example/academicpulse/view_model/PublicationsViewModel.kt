@@ -13,7 +13,7 @@ class PublicationsViewModel : ViewModel() {
 	var selectedPublicationId = ""
 
 	fun fetchUserPublications(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
-		StoreDB.getCurrentUser(onError = onError) { user, _ ->
+		Store.user.getCurrentUser(onError = onError) { user, _ ->
 			StoreDB.getManyByIds(
 				collection = "publication",
 				ids = useCast(user, "publications", arrayListOf()),
@@ -37,7 +37,7 @@ class PublicationsViewModel : ViewModel() {
 
 	fun insert(publication: Publication, onError: (error: Int) -> Unit) {
 		// Get the current user ref because we need to update its publications list
-		StoreDB.getCurrentUser(onError = onError) { user, userRef ->
+		Store.user.getCurrentUser(onError = onError) { user, userRef ->
 			// Insert the publication and get its generated id
 			StoreDB.insert(
 				collection = "publication",

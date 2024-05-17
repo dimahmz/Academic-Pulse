@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.model.Field
+import com.example.academicpulse.model.SignInInfo
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
@@ -54,8 +55,7 @@ fun SignInPage() {
 	fun signIn() {
 		if (loading || !form.validate()) return
 		setLoading(true)
-		auth.saveSignInInfo(email.trim(), password.trim())
-		auth.signIn { error ->
+		auth.signIn(SignInInfo(email.trim(), password.trim())) { error ->
 			setLoading(false)
 			form.error = error
 		}
