@@ -85,7 +85,7 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
 				VerificationPage(/* BackHandler, to = auth/sign-in */)
 			}
 		}
-		navigation(route = "publications", startDestination = "home/index") {
+		navigation(route = "publications", startDestination = "publications/add-publication") {
 			composable(route = "publications/add-publication") {
 				AddPublicationPage(/* BackHandler, to = profile/index */)
 			}

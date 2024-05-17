@@ -32,11 +32,11 @@ import java.util.Date
 @Composable
 fun AddPublicationPage() {
 	val form = useForm()
-	val type = useField(form = form, value = PublicationType.list[0].id)
-	val title = useField(form = form, ifEmpty = R.string.email_required)
+	val type = useField(form = form, ifEmpty = R.string.type_required)
+	val title = useField(form = form, ifEmpty = R.string.title_required)
 	val abstract = useField(form = form, ifEmpty = R.string.abstract_required)
-	val doi = useField(form = form, ifEmpty = R.string.abstract_required)
-	val date = useField(form = form)
+	val doi = useField(form = form, required = false)
+	val date = useField(form = form, ifEmpty = R.string.date_required)
 
 	val (loading, setLoading) = useState { false }
 
@@ -68,7 +68,7 @@ fun AddPublicationPage() {
 		Column(verticalArrangement = Arrangement.spacedBy(gap)) {
 			Select(
 				field = type,
-				label = R.string.title,
+				label = R.string.type,
 				items = PublicationType.list,
 				getValue = { it.id },
 				getLabel = { it.name },
@@ -93,6 +93,8 @@ fun AddPublicationPage() {
 		}
 
 		Spacer(Modifier.height((8 + gap.value).dp))
+		form.Error()
+		Spacer(Modifier.height(8.dp))
 		Button(
 			text = R.string.add_research,
 			loading = loading,

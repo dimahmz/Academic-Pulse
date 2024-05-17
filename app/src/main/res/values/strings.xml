@@ -41,8 +41,6 @@
     <string name="password_invalid">The password is invalid.</string>
     <string name="password_not_strong">Register now</string>
     <string name="institution_required">The institution is required.</string>
-    <string name="title_required">The Title is required.</string>
-    <string name="abstract_required">The Abstract is required.</string>
     <string name="department_required">The department is required.</string>
     <string name="position_required">The position is required.</string>
     <string name="first_name_required">The first name is required.</string>
@@ -61,15 +59,17 @@
     <string name="about_description_4">For the  intellectually curious, the seekers of truth, the geeks, the makers: our  members offer you a treasure trove of knowledge in areas as diverse as  materials science, agriculture, human health, and quantum physics.",</string>
 
     <string name="add_research">Add research</string>
-    <string name="reads">Reads</string>
+    <string name="publication">Publication</string>
+    <string name="type">Type</string>
     <string name="title">Title</string>
+    <string name="_abstract">Abstract</string>
     <string name="doi">DOI</string>
     <string name="date">Date</string>
     <string name="date_placeholder">dd/mm/yyyy</string>
-    <string name="publication">publication</string>
-
-    <string name="_abstract">Abstract</string>
     <string name="uploads">Uploads</string>
-
-
+    <string name="reads">Reads</string>
+    <string name="type_required">The type is required.</string>
+    <string name="title_required">The title is required.</string>
+    <string name="abstract_required">The abstract is required.</string>
+    <string name="date_required">The date is required.</string>
 </resources>
