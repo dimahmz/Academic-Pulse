@@ -1,24 +1,38 @@
 package com.example.academicpulse.view.components.global
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
+import com.example.academicpulse.model.User
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
+import com.example.academicpulse.utils.logcat
+import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.*
+import com.example.academicpulse.view_model.Store
 
 @Composable
 fun UserCard(onAddResearch: () -> Unit) {
+	val (loading, setLoading) = useState { false }
+	LaunchedEffect(true) {
+		setLoading(true)
+		Store.user.getCurrentUser(onSuccess = { data, ref ->
+			logcat("currentUser : ${Store.user.currentUser.value}\n data : ${data}")
+		}, onError = { error -> logcat("Error : $error") })
+		setLoading(false)
+	}
 	Column(
 		modifier = Modifier
 			.fillMaxWidth()
@@ -31,31 +45,36 @@ fun UserCard(onAddResearch: () -> Unit) {
 				Router.navigate("profile/settings", false)
 			}
 		}
-
-		Image(id = R.drawable.avatar_user, size = 80.dp)
-		H2(text = "User name")
-
-		Row(
-			modifier = Modifier.padding(top = 3.dp),
-			horizontalArrangement = Arrangement.spacedBy(gap)
+		if (loading) Box(
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(top = 30.dp), contentAlignment = Alignment.Center
 		) {
-			Row(
-				horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp),
-				verticalAlignment = Alignment.CenterVertically,
-			) {
-				Text(text = "Degree")
-				Icon(id = R.drawable.icon_dot, size = 7.dp)
-			}
-			Row(
-				horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp),
-				verticalAlignment = Alignment.CenterVertically,
-			) {
-				Text(text = "Position")
-				Icon(id = R.drawable.icon_dot, size = 7.dp)
-			}
-			Text(text = "Degree")
+			Spinner(size = 30.dp)
 		}
-
+		else {
+			Image(id = R.drawable.avatar_user, size = 80.dp)
+			H2(text = "${Store.user.currentUser.value!!.firstName} ${Store.user.currentUser.value!!.lastName}")
+			Row(
+				modifier = Modifier.padding(top = 3.dp), horizontalArrangement = Arrangement.spacedBy(gap)
+			) {
+				Row(
+					horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp),
+					verticalAlignment = Alignment.CenterVertically,
+				) {
+					Text(text = Store.user.currentUser.value!!.institution)
+					Icon(id = R.drawable.icon_dot, size = 7.dp)
+				}
+				Row(
+					horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp),
+					verticalAlignment = Alignment.CenterVertically,
+				) {
+					Text(text = Store.user.currentUser.value!!.department)
+					Icon(id = R.drawable.icon_dot, size = 7.dp)
+				}
+				Text(text = Store.user.currentUser.value!!.position)
+			}
+		}
 		Row(
 			modifier = Modifier.padding(top = 26.dp, bottom = 14.dp),
 			horizontalArrangement = Arrangement.spacedBy(gap),
