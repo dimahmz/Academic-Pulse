@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.model.Publication
+import com.example.academicpulse.model.PublicationType
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.descriptionTextSize
 import com.example.academicpulse.theme.gap
@@ -90,11 +91,13 @@ fun PreviewPublicationArticle() {
 	PublicationArticle(
 		Publication(
 			id = "92163248id",
+			typeId = PublicationType.list[0].id,
 			title = "Load Balancing in Cloud Environment: A State-of-the-Art Review",
+			abstract = "Example of abstract",
+			doi = "Example of doi",
 			date = Timestamp(1800000000, 0),
 			reads = 60,
 			uploads = 60,
-			abstract = "Example of collaborators"
 		)
 	)
 }

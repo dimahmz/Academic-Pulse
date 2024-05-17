@@ -6,15 +6,17 @@ import java.util.Date
 
 data class Publication(
 	val id: String = "",
-	var title: String = "",
-	var abstract: String = "",
-	var doi: String = "",
-	var date: Timestamp,
-	var reads: Long = 0,
-	var uploads: Long = 0,
+	val typeId: String,
+	val title: String,
+	val abstract: String,
+	val doi: String,
+	val date: Timestamp,
+	val reads: Long = 0,
+	val uploads: Long = 0,
 ) {
 	fun toMap(): HashMap<String, Any?> {
 		return hashMapOf(
+			"typeId" to typeId,
 			"title" to title,
 			"abstract" to abstract,
 			"doi" to doi,
@@ -28,6 +30,7 @@ data class Publication(
 		fun fromMap(id: String, map: Map<String, Any?>?): Publication {
 			return Publication(
 				id = id,
+				typeId = useCast(map, "typeId", ""),
 				title = useCast(map, "title", ""),
 				abstract = useCast(map, "abstract", ""),
 				doi = useCast(map, "doi", ""),

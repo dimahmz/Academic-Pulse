@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.model.Publication
+import com.example.academicpulse.model.PublicationType
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
@@ -22,6 +23,7 @@ import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.Button
 import com.example.academicpulse.view.components.basic.DatePicker
 import com.example.academicpulse.view.components.basic.Input
+import com.example.academicpulse.view.components.basic.Select
 import com.example.academicpulse.view.components.global.Header
 import com.example.academicpulse.view_model.Store
 import com.google.firebase.Timestamp
@@ -30,6 +32,7 @@ import java.util.Date
 @Composable
 fun AddPublicationPage() {
 	val form = useForm()
+	val type = useField(form = form, value = PublicationType.list[0].id)
 	val title = useField(form = form, ifEmpty = R.string.email_required)
 	val abstract = useField(form = form, ifEmpty = R.string.abstract_required)
 	val doi = useField(form = form, ifEmpty = R.string.abstract_required)
@@ -42,6 +45,7 @@ fun AddPublicationPage() {
 		setLoading(true)
 		Store.publications.insert(
 			Publication(
+				typeId = type.value,
 				title = title.trim(),
 				abstract = abstract.trim(),
 				doi = doi.trim(),
@@ -62,6 +66,14 @@ fun AddPublicationPage() {
 		Spacer(Modifier.height(14.dp))
 
 		Column(verticalArrangement = Arrangement.spacedBy(gap)) {
+			Select(
+				field = type,
+				label = R.string.title,
+				items = PublicationType.list,
+				getValue = { it.id },
+				getLabel = { it.name },
+				focusNext = title.focusRequester,
+			)
 			Input(
 				field = title,
 				label = R.string.title,
@@ -75,14 +87,14 @@ fun AddPublicationPage() {
 			Input(
 				field = doi,
 				label = R.string.doi,
+				focusNext = date.focusRequester,
 			)
-			DatePicker(field =date, label=R.string.date)
+			DatePicker(field = date, label = R.string.date)
 		}
 
-		Spacer(Modifier.height(14.dp))
+		Spacer(Modifier.height((8 + gap.value).dp))
 		Button(
 			text = R.string.add_research,
-			height = 40.dp,
 			loading = loading,
 			onClick = ::addPublication
 		)
