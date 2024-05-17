@@ -20,6 +20,42 @@ import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+@Composable
+fun DatePicker(
+	field: Field,
+
+	/** [label] is a supporting text placed above the field.
+	 * - Note: It can automatically request a focus on the field when it's clicked. */
+	@StringRes label: Int? = null,
+
+	/** [placeholder] is a supporting text placed inside the field.
+	 * - Note: If it's `null`, it takes the label value if present. */
+	@StringRes placeholder: Int? = R.string.date_placeholder,
+
+	/** [readOnly] indicates if the field should accept any changes by the user interaction. */
+	readOnly: Boolean = false,
+
+	/** [icon] is the resource ID of the prefix icon.
+	 * ```
+	 * Example usage:
+	 * DatePicker(icon = R.drawable.calendar)
+	 * ```
+	 */
+	icon: Int? = null,
+) {
+	DatePicker(
+		value = field.value,
+		label = label,
+		placeholder = placeholder,
+		required = field.required,
+		valid = field.valid,
+		readOnly = readOnly,
+		icon = icon,
+		focusRequester = field.focusRequester,
+		onChange = { field.value = it },
+	)
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePicker(
@@ -35,7 +71,7 @@ fun DatePicker(
 
 	/** [required] indicates if the field should not be empty. If `true`, a red symbol (`*`) added next to the [label].
 	 * - Note: It has no effect if [label] is `null`.
-	 * - See also [valid] and [onChangeValidity] to automatically handle the field clearing.
+	 * - See also [valid] to apply error style on the field borders.
 	 */
 	required: Boolean = true,
 
@@ -71,7 +107,7 @@ fun DatePicker(
 	/** [onChange] is invoked when the user change the field value. (Used to update the passed value)
 	 * ```
 	 * Example usage:
-	 * val (date, setDate) = useState("")
+	 * val (date, setDate) = useState { "" }
 	 *
 	 * Column {
 	 * 	Text("Current value is: $date")
@@ -80,31 +116,11 @@ fun DatePicker(
 	 * ```
 	 */
 	onChange: ((String) -> Unit),
-
-	/** [onChangeValidity] is the short way to change the field validity depending on the field value if it is an empty date.
-	 * - Note: It has no effect if [required] is `false`.
-	 * ```
-	 * Example usage:
-	 * val (date, setDate) = useState("")
-	 * val (dateValid, setDateValidity) = useState(true)
-	 *
-	 * Column {
-	 * 	DatePicker(
-	 * 		value = date,
-	 * 		onChange = setDate,
-	 * 		required = true,
-	 * 		valid = dateValid,
-	 * 		onChangeValidity = setDateValidity
-	 * 	)
-	 * }
-	 * ```
-	 */
-	onChangeValidity: ((Boolean) -> Unit)? = null,
 ) {
-	val (isTempDisabled, setTempDisabled) = useState { false }
+	val (isOpen, setIsOpen) = useState { false }
 	val focusManager = LocalFocusManager.current
 	fun onCloseDialog() {
-		setTempDisabled(false)
+		setIsOpen(false)
 		focusManager.clearFocus()
 	}
 
@@ -113,6 +129,12 @@ fun DatePicker(
 		onDismissRequest = { onCloseDialog() },
 		onFinishedRequest = { onCloseDialog() },
 	)
+
+	fun showDialog(state: Boolean) {
+		setIsOpen(state)
+		if (state) calendarDialogState.show()
+		else calendarDialogState.hide()
+	}
 
 	CalendarDialog(state = calendarDialogState, selection = CalendarSelection.Date { date ->
 		onChange(date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
@@ -124,57 +146,11 @@ fun DatePicker(
 		placeholder = placeholder,
 		required = required,
 		valid = valid,
-		readOnly = readOnly || isTempDisabled,
+		readOnly = readOnly || isOpen,
 		icon = icon,
 		focusRequester = focusRequester,
-		onChange = {},
-		onChangeValidity = onChangeValidity,
-		onFocusChange = { focused ->
-			if (focused) {
-				setTempDisabled(true)
-				calendarDialogState.show()
-			} else {
-				setTempDisabled(false)
-				calendarDialogState.hide()
-			}
-		}
-	)
-}
-
-@Composable
-fun DatePicker(
-	field: Field,
-
-	/** [label] is a supporting text placed above the field.
-	 * - Note: It can automatically request a focus on the field when it's clicked. */
-	@StringRes label: Int? = null,
-
-	/** [placeholder] is a supporting text placed inside the field.
-	 * - Note: If it's `null`, it takes the label value if present. */
-	@StringRes placeholder: Int? = R.string.date_placeholder,
-
-	/** [readOnly] indicates if the field should accept any changes by the user interaction. */
-	readOnly: Boolean = false,
-
-	/** [icon] is the resource ID of the prefix icon.
-	 * ```
-	 * Example usage:
-	 * DatePicker(icon = R.drawable.calendar)
-	 * ```
-	 */
-	icon: Int? = null,
-) {
-	DatePicker(
-		value = field.value,
-		label = label,
-		placeholder = placeholder,
-		required = field.required,
-		valid = field.valid,
-		readOnly = readOnly,
-		icon = icon,
-		focusRequester = field.focusRequester,
-		onChange = { field.value = it },
-		onChangeValidity = { field.valid = it },
+		onChange = { /* DO NOTHING */ },
+		onFocusChange = ::showDialog,
 	)
 }
 

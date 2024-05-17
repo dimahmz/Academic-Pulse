@@ -69,6 +69,8 @@ fun Input(
 	 */
 	icon: Int? = null,
 
+	trailingIcon: @Composable() (() -> Unit)? = null,
+
 	/** [okIcon] is the icon type of the keyboard OK button, e.g. `ImeAction.Done`, `ImeAction.Next`, `ImeAction.Send`
 	 * - See also [onOk] to set a custom behavior when clicking on this button
 	 */
@@ -117,7 +119,7 @@ fun Input(
 	/** [onChange] is invoked when the user change the field value. (Used to update the passed value)
 	 * ```
 	 * Example usage:
-	 * val (message, setMessage) = useState("")
+	 * val (message, setMessage) = useState { "" }
 	 *
 	 * Column {
 	 * 	Text("Current value is: $message")
@@ -125,14 +127,14 @@ fun Input(
 	 * }
 	 * ```
 	 */
-	onChange: ((String) -> Unit),
+	onChange: (String) -> Unit,
 
 	/** [onChangeValidity] is the short way to change the field validity depending on the field value if it is an empty string.
 	 * - Note: It has no effect if [required] is `false`.
 	 * ```
 	 * Example usage:
-	 * val (message, setMessage) = useState("")
-	 * val (messageValid, setMessageValidity) = useState(true)
+	 * val (message, setMessage) = useState { "" }
+	 * val (messageValid, setMessageValidity) = useState { true }
 	 *
 	 * Column {
 	 * 	Input(
@@ -232,7 +234,7 @@ fun Input(
 
 			// Icons & Password Visibility
 			leadingIcon = if (icon != null) ({ Icon(id = icon) }) else null,
-			trailingIcon = if (!password) null else ({
+			trailingIcon = if (!password) trailingIcon else ({
 				Icon(
 					id = if (passwordVisible) R.drawable.icon_line_confirm else R.drawable.icon_close
 				) {
@@ -287,6 +289,8 @@ fun Input(
 	 * ```
 	 */
 	icon: Int? = null,
+
+	trailingIcon: @Composable() (() -> Unit)? = null,
 
 	/** [okIcon] is the icon type of the keyboard OK button, e.g. `ImeAction.Done`, `ImeAction.Next`, `ImeAction.Send`
 	 * - See also [onOk] to set a custom behavior when clicking on this button
@@ -347,6 +351,7 @@ fun Input(
 		readOnly = readOnly,
 		password = password,
 		icon = icon,
+		trailingIcon = trailingIcon,
 		okIcon = okIcon,
 		hideKeyboardOnOk = hideKeyboardOnOk,
 		keyboardType = keyboardType,

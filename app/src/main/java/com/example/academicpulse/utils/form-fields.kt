@@ -31,7 +31,7 @@ fun useForm(): Form {
 @Composable
 fun useField(
 	form: Form,
-	value: String? =  "",
+	value: String? = "",
 	required: Boolean = true,
 	regex: String? = null,
 	@StringRes ifEmpty: Int? = null,
@@ -70,7 +70,10 @@ fun useField(
  */
 @Composable
 fun useField(
-	form: Form, value: String? = "", required: Boolean = true, validator: ((Field) -> Boolean)? = null,
+	form: Form,
+	value: String? = "",
+	required: Boolean = true,
+	validator: ((Field) -> Boolean)? = null,
 ): Field {
 	return useState {
 		Field(

@@ -27,6 +27,7 @@ val DarkColorScheme = darkColorScheme(
 	background = white,
 	error = error,
 	outline = borderColor,
+	surface = white,
 )
 
 val LightColorScheme = lightColorScheme(
@@ -36,4 +37,5 @@ val LightColorScheme = lightColorScheme(
 	background = white,
 	error = error,
 	outline = borderColor,
+	surface = white,
 )
