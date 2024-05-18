@@ -13,6 +13,7 @@ data class Publication(
 	val date: Timestamp,
 	val reads: Long = 0,
 	val uploads: Long = 0,
+	var type: String = ""
 ) {
 	fun toMap(): HashMap<String, Any?> {
 		return hashMapOf(
@@ -35,8 +36,8 @@ data class Publication(
 				abstract = useCast(map, "abstract", ""),
 				doi = useCast(map, "doi", ""),
 				date = useCast(map, "date", Timestamp(Date())),
-				reads = useCast(map, "reads",  0),
-				uploads = useCast(map, "uploads",  0),
+				reads = useCast(map, "reads", 0),
+				uploads = useCast(map, "uploads", 0),
 			)
 		}
 	}
