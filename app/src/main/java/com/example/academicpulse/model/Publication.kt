@@ -2,7 +2,9 @@ package com.example.academicpulse.model
 
 import com.example.academicpulse.utils.useCast
 import com.google.firebase.Timestamp
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 data class Publication(
 	val id: String = "",
@@ -26,7 +28,6 @@ data class Publication(
 			"uploads" to uploads,
 		)
 	}
-
 	companion object {
 		fun fromMap(id: String, map: Map<String, Any?>?): Publication {
 			return Publication(
@@ -39,6 +40,11 @@ data class Publication(
 				reads = useCast(map, "reads", 0),
 				uploads = useCast(map, "uploads", 0),
 			)
+		}
+		fun formatDate(date: Timestamp): String {
+			val date = Date(date.seconds * 1000L + date.nanoseconds / 1000000L)
+			val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+			return sdf.format(date)
 		}
 	}
 }
