@@ -1,5 +1,7 @@
 package com.example.academicpulse.view.pages.publication
 
+import android.content.Intent
+import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +29,6 @@ import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.utils.useAtom
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.H2
-import com.example.academicpulse.view.components.basic.H3
 import com.example.academicpulse.view.components.basic.Spinner
 import com.example.academicpulse.view.components.basic.Text
 import com.example.academicpulse.view.components.global.Header
@@ -36,12 +37,12 @@ import com.example.academicpulse.model.Publication
 import com.example.academicpulse.theme.descriptionTextSize
 import com.example.academicpulse.view.components.basic.Title
 import com.example.academicpulse.view.components.global.Line
+import com.example.academicpulse.utils.context
 
 @Composable
 fun OnePublicationPage() {
 	val (loading, setLoading) = useState { true }
 	val publication = useAtom(Store.publications.publication)
-
 	LaunchedEffect(true) {
 		Store.publications.fetchSelected(onSuccess = { setLoading(false) }) {
 			setLoading(false)
@@ -82,7 +83,11 @@ fun OnePublicationPage() {
 			Spacer(Modifier.height(10.dp))
 			Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
 				Title(text = "DOI")
-				Text(text = publication.doi, size = descriptionTextSize)
+				Text(text = publication.doi, size = descriptionTextSize) {
+					val url = "https://www.doi.org/${publication.doi}"
+					val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+					context.startActivity(intent)
+				}
 			}
 			Spacer(Modifier.height(15.dp))
 			Line(height = 2.dp)
