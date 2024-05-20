@@ -4,7 +4,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 val pagePaddingX = 18.dp
+val pagePaddingBottom = 15.dp
 val bottomBarHeight = 67.dp
+val pageWithBarPaddingBottom = bottomBarHeight + 25.dp
 val gap = 12.dp
 val radius = 12.dp
 val inputHeight = 55.dp

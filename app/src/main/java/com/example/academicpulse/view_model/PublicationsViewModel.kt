@@ -1,16 +1,17 @@
 package com.example.academicpulse.view_model
 
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.academicpulse.model.Publication
 import com.example.academicpulse.model.PublicationType
 import com.example.academicpulse.router.Router
+import com.example.academicpulse.utils.logcat
 import com.example.academicpulse.utils.useCast
 import java.util.concurrent.CountDownLatch
 
 class PublicationsViewModel : ViewModel() {
 	val userPublications = MutableLiveData<ArrayList<Publication>>(arrayListOf())
+	val homePublications = MutableLiveData<ArrayList<Publication>>(arrayListOf())
 	val publication = MutableLiveData<Publication>()
 	var selectedPublicationId = ""
 	var publicationTypes = MutableLiveData<ArrayList<PublicationType>>(arrayListOf())
@@ -33,7 +34,8 @@ class PublicationsViewModel : ViewModel() {
 					if (data != null) {
 						var oneUserPublication = Publication.fromMap(it, data)
 						// fetch the type of this publication
-						StoreDB.getOneById(collection = "publicationType",
+						StoreDB.getOneById(
+							collection = "publicationType",
 							id = oneUserPublication.typeId,
 							onError = {
 								countDownLatch.countDown()
@@ -62,6 +64,42 @@ class PublicationsViewModel : ViewModel() {
 					}
 				}
 			}
+		}
+	}
+
+	fun fetchHomePublication(onSuccess: () -> Unit, onError: () -> Unit) {
+		homePublications.value?.clear()
+		StoreDB.getDB().collection("publication").get().addOnSuccessListener { task ->
+			if (task.isEmpty) {
+				onSuccess()
+				return@addOnSuccessListener
+			}
+			val documents = task.documents
+			val countDownLatch = CountDownLatch(documents.size)
+			for (document in documents) {
+				if (document != null) {
+					val publication = Publication.fromMap(document.id, document.data)
+					StoreDB.getOneById("publicationType", publication.typeId, onError = {
+						countDownLatch.countDown()
+					}) { data, _ ->
+						if (data != null) {
+							val publicationType = PublicationType.fromMap(publication.typeId, data)
+							publication.type = publicationType.label
+							homePublications.value?.add(publication)
+							countDownLatch.countDown()
+						} else countDownLatch.countDown()
+						if (countDownLatch.count == 0L) {
+							onSuccess()
+						}
+					}
+				} else countDownLatch.countDown()
+			}
+			if (countDownLatch.count == 0L) {
+				onSuccess()
+			}
+		}.addOnFailureListener { exception ->
+			onError()
+			logcat("Error getting documents: $exception")
 		}
 	}
 
