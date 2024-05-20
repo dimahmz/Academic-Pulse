@@ -1,5 +1,4 @@
 package com.example.academicpulse.view.components.global
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,8 +24,6 @@ import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view_model.Store
 import com.google.firebase.Timestamp
-import java.text.SimpleDateFormat
-import java.util.*
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable

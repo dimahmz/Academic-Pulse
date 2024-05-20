@@ -22,28 +22,7 @@ import com.example.academicpulse.view.pages.publication.*
 @Composable
 fun NavGraph(navController: NavHostController, startDestination: String) {
 	NavHost(
-		navController = navController,
-		startDestination = startDestination,
-		enterTransition = {
-			fadeIn(animationSpec = tween(300)) + slideIntoContainer(
-				AnimatedContentTransitionScope.SlideDirection.Left, tween(300)
-			)
-		},
-		exitTransition = {
-			fadeOut(animationSpec = tween(300)) + slideOutOfContainer(
-				AnimatedContentTransitionScope.SlideDirection.Left, tween(300)
-			)
-		},
-		popEnterTransition = {
-			fadeIn(animationSpec = tween(300)) + slideIntoContainer(
-				AnimatedContentTransitionScope.SlideDirection.Right, tween(300)
-			)
-		},
-		popExitTransition = {
-			fadeOut(animationSpec = tween(300)) + slideOutOfContainer(
-				AnimatedContentTransitionScope.SlideDirection.Right, tween(300)
-			)
-		},
+		navController = navController, startDestination = startDestination
 	) {
 		navigation(route = "home", startDestination = "home/index") {
 			composable(route = "home/index") {

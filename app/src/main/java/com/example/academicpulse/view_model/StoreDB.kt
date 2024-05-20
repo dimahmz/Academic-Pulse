@@ -5,6 +5,7 @@ import com.example.academicpulse.R
 import com.example.academicpulse.utils.logcat
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
@@ -12,6 +13,9 @@ import com.google.firebase.firestore.firestore
 class StoreDB private constructor() {
 	companion object {
 		private val db by lazy { Firebase.firestore }
+		fun getDB(): FirebaseFirestore {
+			return db;
+		}
 
 		fun getOneById(
 			collection: String,
