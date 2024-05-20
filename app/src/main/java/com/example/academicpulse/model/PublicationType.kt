@@ -1,14 +1,14 @@
 package com.example.academicpulse.model
 
-data class PublicationType(val id: String, val name: String) {
+import com.example.academicpulse.utils.useCast
+
+data class PublicationType(val id: String, val label: String) {
 	companion object {
-		// TODO: fill the list with real data!
-		val list = arrayListOf(
-			PublicationType("ar", "Arabic"),
-			PublicationType("en", "English"),
-			PublicationType("de", "Dutch"),
-			PublicationType("es", "Spanish"),
-			PublicationType("fr", "French"),
-		)
+		fun fromMap(id: String, map: Map<String, Any?>?): PublicationType {
+			return PublicationType(
+				id = id,
+				label = useCast(map, "label", ""),
+			)
+		}
 	}
 }
