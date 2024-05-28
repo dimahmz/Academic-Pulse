@@ -3,6 +3,8 @@ package com.example.academicpulse.view.components.basic
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.focus.FocusRequester
@@ -11,6 +13,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.academicpulse.R
 import com.example.academicpulse.model.Field
+import com.example.academicpulse.theme.*
 import com.example.academicpulse.utils.useField
 import com.example.academicpulse.utils.useForm
 import com.example.academicpulse.utils.useState
@@ -136,9 +139,19 @@ fun DatePicker(
 		else calendarDialogState.hide()
 	}
 
-	CalendarDialog(state = calendarDialogState, selection = CalendarSelection.Date { date ->
-		onChange(date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
-	})
+	MaterialTheme(
+		colorScheme = lightColorScheme(
+			surface = white, // Background color
+			onSurface = textColor, // Color of texts
+			primary = primary, // Color of "cancel" and today date texts, Background color of selected date
+			onPrimary = white, // Color of arrows, background color of selected date text
+			secondaryContainer = primary, // Background color of arrows
+		),
+	) {
+		CalendarDialog(state = calendarDialogState, selection = CalendarSelection.Date { date ->
+			onChange(date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+		})
+	}
 
 	Input(
 		value = value,
