@@ -1,6 +1,7 @@
 package com.example.academicpulse.view.components.basic
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,9 +18,11 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -69,7 +72,7 @@ fun Input(
 	 */
 	icon: Int? = null,
 
-	trailingIcon: @Composable() (() -> Unit)? = null,
+	trailingIcon: @Composable (() -> Unit)? = null,
 
 	/** [okIcon] is the icon type of the keyboard OK button, e.g. `ImeAction.Done`, `ImeAction.Next`, `ImeAction.Send`
 	 * - See also [onOk] to set a custom behavior when clicking on this button
@@ -175,6 +178,9 @@ fun Input(
 		.focusRequester(focus)
 		.fillMaxWidth()
 		.height(inputHeight)
+		.background(Color.Transparent)
+		.clip(RoundedCornerShape(radius))
+		.background(Color.White)
 	if (onFocusChange != null)
 		modifier = modifier.onFocusChanged { onFocusChange(it.isFocused) }
 
@@ -290,7 +296,7 @@ fun Input(
 	 */
 	icon: Int? = null,
 
-	trailingIcon: @Composable() (() -> Unit)? = null,
+	trailingIcon: @Composable (() -> Unit)? = null,
 
 	/** [okIcon] is the icon type of the keyboard OK button, e.g. `ImeAction.Done`, `ImeAction.Next`, `ImeAction.Send`
 	 * - See also [onOk] to set a custom behavior when clicking on this button

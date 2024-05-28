@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
@@ -21,17 +20,9 @@ fun HomeHeader() {
 	Box(
 		modifier = Modifier
 			.fillMaxWidth()
-			.background(MaterialTheme.colorScheme.primary),
-		contentAlignment = Alignment.CenterStart
+			.background(MaterialTheme.colorScheme.primary)
+			.padding(vertical = 25.dp, horizontal = 15.dp),
 	) {
-		Box(
-			modifier = Modifier
-				.padding(vertical = 25.dp, horizontal = 10.dp)
-				.background(MaterialTheme.colorScheme.background),
-		) {
-			Input(
-				field = search, icon = R.drawable.icon_search,
-			)
-		}
+		Input(field = search, icon = R.drawable.icon_search)
 	}
 }
