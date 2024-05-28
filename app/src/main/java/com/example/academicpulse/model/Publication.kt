@@ -42,9 +42,9 @@ data class Publication(
 			)
 		}
 		fun formatDate(date: Timestamp): String {
-			val date = Date(date.seconds * 1000L + date.nanoseconds / 1000000L)
+			val date2 = Date(date.seconds * 1000L + date.nanoseconds / 1000000L)
 			val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-			return sdf.format(date)
+			return sdf.format(date2)
 		}
 	}
 }
