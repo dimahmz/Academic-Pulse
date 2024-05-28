@@ -98,6 +98,7 @@ fun OnePublicationPage() {
 			Spacer(Modifier.height(5.dp))
 		}
 	}
+
 	BackHandler { Router.back(true /* to = profile/index */) }
 }
 

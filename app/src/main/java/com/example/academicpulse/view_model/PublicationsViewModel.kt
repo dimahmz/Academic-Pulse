@@ -138,7 +138,7 @@ class PublicationsViewModel : ViewModel() {
 					onError = onError, // TODO : if this fails we should remove the publication
 				) {
 					selectedPublicationId = id
-					Router.navigate("publications/one-publication", false)
+					Router.replace("publications/one-publication", false)
 				}
 			}
 		}
