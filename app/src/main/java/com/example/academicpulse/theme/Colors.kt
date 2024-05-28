@@ -10,9 +10,6 @@ val error = Color(0xFFD70000)
 val white = Color(0xFFFFFFFF)
 val navBavIconColor = Color(0xFF74757D)
 
-val brown = Color(0xFF655D53)
-val primaryBackground = Color(0xFFFFFFFF)
-
 val borderColor = Color(0xFFC5C6CC)
 val textColor = Color(0xFF0B0B0B)
 val titleColor = Color(0xFF0B0B0B)
