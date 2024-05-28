@@ -17,7 +17,6 @@ class Store private constructor(): ViewModel() {
 	private val publications = PublicationsViewModel()
 	private val user = UserViewModel()
 
-
 	init {
 		// The splash screen will disappear only when the logo animation finish and the user account is verified.
 		val tasksCounter = MutableLiveData(2)

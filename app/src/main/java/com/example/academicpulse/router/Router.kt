@@ -50,17 +50,6 @@ class Router private constructor(private var navController: NavHostController) {
 			appRouter[0].navController.navigate(target)
 		}
 
-		/** Navigate to the next page without adding the current page to backstack. */
-		fun replace(target: String, navBarVisible: Boolean) {
-			appRouter[0].navBarVisible.value = navBarVisible
-			appRouter[0].route.value = target
-			appRouter[0].navController.navigate(target) {
-				popUpTo(target) {
-					inclusive = true
-				}
-			}
-		}
-
 		/** Navigate to a previous page. */
 		fun back(navBarVisible: Boolean, step: Int = 1, target: String? = null) {
 			appRouter[0].navBarVisible.value = navBarVisible

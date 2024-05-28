@@ -1,10 +1,6 @@
 package com.example.academicpulse.router
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -33,7 +29,7 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
 		navigation(route = "notifications", startDestination = "notifications/index") {
 			composable(route = "notifications/index") {
 				NotificationPage()
-				BackHandler { Router.replace("home", true) }
+				BackHandler { Router.navigate("home", true) }
 			}
 		}
 		navigation(route = "profile", startDestination = "profile/index") {

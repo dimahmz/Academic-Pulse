@@ -59,7 +59,7 @@ fun ProfilePage() {
 			}
 	}
 
-	BackHandler { Router.replace("home", true) }
+	BackHandler { Router.navigate("home", true) }
 }
 
 @Preview(showSystemUi = true)

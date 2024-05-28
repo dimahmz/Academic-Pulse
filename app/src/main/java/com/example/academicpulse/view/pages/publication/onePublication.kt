@@ -54,7 +54,16 @@ fun OnePublicationPage() {
 			.fillMaxHeight()
 			.padding(horizontal = pagePaddingX),
 	) {
-		Header(title = R.string.publication, true)
+		Header(
+			title = R.string.publication,
+		) {
+			val redirectedFromForm = Store.publications.redirectedFromForm
+			Store.publications.redirectedFromForm = false
+			Router.back(
+				navBarVisible = true,
+				step = if (redirectedFromForm) 2 else 1
+			)
+		}
 		Spacer(Modifier.height(14.dp))
 
 		if (loading) {
@@ -99,7 +108,15 @@ fun OnePublicationPage() {
 		}
 	}
 
-	BackHandler { Router.back(true /* to = profile/index */) }
+	BackHandler {
+		val redirectedFromForm = Store.publications.redirectedFromForm
+		Store.publications.redirectedFromForm = false
+		/* to = profile/index or home/index */
+		Router.back(
+			navBarVisible = true,
+			step = if (redirectedFromForm) 2 else 1
+		)
+	}
 }
 
 @Preview(showSystemUi = true)

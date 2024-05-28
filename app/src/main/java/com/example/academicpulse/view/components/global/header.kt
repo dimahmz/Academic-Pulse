@@ -17,6 +17,11 @@ import com.example.academicpulse.view.components.basic.Icon
 
 @Composable
 fun Header(title: Int, navBarVisibleAfterBack: Boolean = false) {
+	Header(title) { Router.back(navBarVisibleAfterBack) }
+}
+
+@Composable
+fun Header(title: Int, onClick: () -> Unit) {
 	Box(
 		modifier = Modifier
 			.padding(vertical = 25.dp)
@@ -27,7 +32,7 @@ fun Header(title: Int, navBarVisibleAfterBack: Boolean = false) {
 			id = R.drawable.icon_left_arrow,
 			color = MaterialTheme.colorScheme.primary,
 			size = (h1TextSize.value * 20 / 23).dp,
-			onClick = { Router.back(navBarVisibleAfterBack) }
+			onClick = onClick
 		)
 
 		H1(

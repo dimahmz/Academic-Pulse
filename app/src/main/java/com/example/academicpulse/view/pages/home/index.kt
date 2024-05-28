@@ -62,7 +62,7 @@ fun HomePage() {
 		} else {
 			items(publications, key = { it.id }) {
 				Spacer(Modifier.height(15.dp))
-				Column() {
+				Column {
 					PublicationArticle(it)
 					Spacer(Modifier.height(10.dp))
 					Line(height = 2.dp)

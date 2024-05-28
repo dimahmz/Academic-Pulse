@@ -15,6 +15,7 @@ class PublicationsViewModel : ViewModel() {
 	val publication = MutableLiveData<Publication>()
 	var selectedPublicationId = ""
 	var publicationTypes = MutableLiveData<ArrayList<PublicationType>>(arrayListOf())
+	var redirectedFromForm = false
 
 	fun fetchUserPublications(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
 		Store.user.getCurrentUser(onError = onError) { user, _ ->
@@ -138,7 +139,8 @@ class PublicationsViewModel : ViewModel() {
 					onError = onError, // TODO : if this fails we should remove the publication
 				) {
 					selectedPublicationId = id
-					Router.replace("publications/one-publication", false)
+					redirectedFromForm = true
+					Router.navigate("publications/one-publication", false)
 				}
 			}
 		}
