@@ -83,7 +83,7 @@ fun OnePublicationPage() {
 			Spacer(Modifier.height(10.dp))
 			Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
 				Title(text = "DOI")
-				Text(text = publication.doi, size = descriptionTextSize) {
+				Text(text = publication.doi, size = descriptionTextSize, underlined = true) {
 					val url = "https://www.doi.org/${publication.doi}"
 					val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
 					context.startActivity(intent)

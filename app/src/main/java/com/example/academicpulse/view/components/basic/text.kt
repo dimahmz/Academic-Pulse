@@ -10,6 +10,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import com.example.academicpulse.R
@@ -32,6 +33,7 @@ fun Text(
 	size: TextUnit = textSize,
 	weight: FontWeight? = null,
 	align: TextAlign = TextAlign.Start,
+	underlined: Boolean = false,
 	maxLines: Int = Int.MAX_VALUE,
 	onClick: (() -> Unit)? = null,
 ) {
@@ -46,6 +48,7 @@ fun Text(
 		fontSize = size,
 		textAlign = align,
 		maxLines = maxLines,
+		textDecoration = if (underlined) TextDecoration.Underline else null,
 		lineHeight = (size.value * 10 / 7).sp,
 		fontWeight = weight,
 	)
@@ -59,6 +62,7 @@ fun Text(
 	size: TextUnit = textSize,
 	weight: FontWeight? = null,
 	align: TextAlign = TextAlign.Start,
+	underlined: Boolean = false,
 	maxLines: Int = Int.MAX_VALUE,
 	onClick: (() -> Unit)? = null,
 ) {
@@ -68,6 +72,7 @@ fun Text(
 		color = color,
 		size = size,
 		align = align,
+		underlined = underlined,
 		maxLines = maxLines,
 		weight = weight,
 		onClick = onClick,
@@ -81,6 +86,7 @@ fun Title(
 	color: Color = titleColor,
 	size: TextUnit = textSize,
 	align: TextAlign = TextAlign.Start,
+	underlined: Boolean = false,
 	maxLines: Int = Int.MAX_VALUE,
 	onClick: (() -> Unit)? = null,
 ) {
@@ -90,6 +96,7 @@ fun Title(
 		color = color,
 		size = size,
 		align = align,
+		underlined = underlined,
 		maxLines = maxLines,
 		weight = FontWeight.Bold,
 		onClick = onClick,
@@ -103,6 +110,7 @@ fun Title(
 	color: Color = titleColor,
 	size: TextUnit = textSize,
 	align: TextAlign = TextAlign.Start,
+	underlined: Boolean = false,
 	maxLines: Int = Int.MAX_VALUE,
 	onClick: (() -> Unit)? = null,
 ) {
@@ -112,6 +120,7 @@ fun Title(
 		color = color,
 		size = size,
 		align = align,
+		underlined = underlined,
 		maxLines = maxLines,
 		onClick = onClick,
 	)
@@ -124,6 +133,7 @@ fun Description(
 	color: Color = descriptionColor,
 	size: TextUnit = descriptionTextSize,
 	align: TextAlign = TextAlign.Start,
+	underlined: Boolean = false,
 	maxLines: Int = Int.MAX_VALUE,
 	onClick: (() -> Unit)? = null,
 ) {
@@ -133,6 +143,7 @@ fun Description(
 		color = color,
 		size = size,
 		align = align,
+		underlined = underlined,
 		maxLines = maxLines,
 		weight = FontWeight.Light,
 		onClick = onClick,
@@ -146,6 +157,7 @@ fun Description(
 	color: Color = descriptionColor,
 	size: TextUnit = descriptionTextSize,
 	align: TextAlign = TextAlign.Start,
+	underlined: Boolean = false,
 	maxLines: Int = Int.MAX_VALUE,
 	onClick: (() -> Unit)? = null,
 ) {
@@ -155,6 +167,7 @@ fun Description(
 		color = color,
 		size = size,
 		align = align,
+		underlined = underlined,
 		maxLines = maxLines,
 		onClick = onClick,
 	)
@@ -167,6 +180,7 @@ fun H1(
 	color: Color = titleColor,
 	size: TextUnit = h1TextSize,
 	align: TextAlign = TextAlign.Start,
+	underlined: Boolean = false,
 	maxLines: Int = Int.MAX_VALUE,
 	onClick: (() -> Unit)? = null,
 ) {
@@ -176,6 +190,7 @@ fun H1(
 		color = color,
 		size = size,
 		align = align,
+		underlined = underlined,
 		maxLines = maxLines,
 		onClick = onClick,
 	)
@@ -188,6 +203,7 @@ fun H1(
 	color: Color = titleColor,
 	size: TextUnit = h1TextSize,
 	align: TextAlign = TextAlign.Start,
+	underlined: Boolean = false,
 	maxLines: Int = Int.MAX_VALUE,
 	onClick: (() -> Unit)? = null,
 ) {
@@ -197,6 +213,7 @@ fun H1(
 		color = color,
 		size = size,
 		align = align,
+		underlined = underlined,
 		maxLines = maxLines,
 		onClick = onClick,
 	)
@@ -209,6 +226,7 @@ fun H2(
 	color: Color = titleColor,
 	size: TextUnit = h2TextSize,
 	align: TextAlign = TextAlign.Start,
+	underlined: Boolean = false,
 	maxLines: Int = Int.MAX_VALUE,
 	onClick: (() -> Unit)? = null,
 ) {
@@ -218,6 +236,7 @@ fun H2(
 		color = color,
 		size = size,
 		align = align,
+		underlined = underlined,
 		maxLines = maxLines,
 		onClick = onClick,
 	)
@@ -230,6 +249,7 @@ fun H2(
 	color: Color = titleColor,
 	size: TextUnit = h2TextSize,
 	align: TextAlign = TextAlign.Start,
+	underlined: Boolean = false,
 	maxLines: Int = Int.MAX_VALUE,
 	onClick: (() -> Unit)? = null,
 ) {
@@ -239,6 +259,7 @@ fun H2(
 		color = color,
 		size = size,
 		align = align,
+		underlined = underlined,
 		maxLines = maxLines,
 		onClick = onClick,
 	)
@@ -251,6 +272,7 @@ fun H3(
 	color: Color = titleColor,
 	size: TextUnit = h3TextSize,
 	align: TextAlign = TextAlign.Start,
+	underlined: Boolean = false,
 	maxLines: Int = Int.MAX_VALUE,
 	onClick: (() -> Unit)? = null,
 ) {
@@ -260,6 +282,7 @@ fun H3(
 		color = color,
 		size = size,
 		align = align,
+		underlined = underlined,
 		maxLines = maxLines,
 		onClick = onClick,
 	)
@@ -272,6 +295,7 @@ fun H3(
 	color: Color = titleColor,
 	size: TextUnit = h3TextSize,
 	align: TextAlign = TextAlign.Start,
+	underlined: Boolean = false,
 	maxLines: Int = Int.MAX_VALUE,
 	onClick: (() -> Unit)? = null,
 ) {
@@ -281,6 +305,7 @@ fun H3(
 		color = color,
 		size = size,
 		align = align,
+		underlined = underlined,
 		maxLines = maxLines,
 		onClick = onClick,
 	)
