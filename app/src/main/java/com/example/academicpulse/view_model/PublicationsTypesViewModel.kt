@@ -12,10 +12,11 @@ class PublicationsTypesViewModel : ViewModel() {
 
 	val list: LiveData<ArrayList<PublicationType>> = _publicationTypes
 
-	fun getAll(onSuccess: (ArrayList<PublicationType>) -> Unit, onError: (error: Int) -> Unit) {
+	fun getAll(onError: (error: Int) -> Unit, onSuccess: (ArrayList<PublicationType>) -> Unit) {
 		if (alreadyFetched) return onSuccess(_publicationTypes.value!!)
 		StoreDB.getAll(
-			collection, onError,
+			collection,
+			onError = onError,
 			onCast = { id, data -> PublicationType.fromMap(id, data) },
 			onSuccess = { list ->
 				_publicationTypes.value = list

@@ -8,16 +8,16 @@ import com.example.academicpulse.utils.useCast
 
 class PublicationsViewModel : ViewModel() {
 	private val collection = "publication"
-	val userPublications = MutableLiveData<ArrayList<Publication>>(null)
-	val homePublications = MutableLiveData<ArrayList<Publication>>(null)
+	val userPublications = MutableLiveData<ArrayList<Publication>>()
+	val homePublications = MutableLiveData<ArrayList<Publication>>()
 	val publication = MutableLiveData<Publication>()
 	var selectedPublicationId = ""
 	var redirectedFromForm = false
 
 	fun fetchUserPublications(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
 		userPublications.value?.clear()
-		Store.publicationsTypes.getAll(onError = onError, onSuccess = {
-			Store.user.getCurrentUser(onError = onError) { user, _ ->
+		Store.publicationsTypes.getAll(onError) {
+			Store.user.getCurrentUser(onError) { user, _ ->
 				StoreDB.getManyByIds(
 					collection,
 					ids = useCast(user, "publications", arrayListOf()),
@@ -29,31 +29,32 @@ class PublicationsViewModel : ViewModel() {
 					}
 				)
 			}
-		})
+		}
 	}
 
 	fun fetchHomePublication(onSuccess: () -> Unit, onError: (Int) -> Unit) {
 		homePublications.value?.clear()
-		Store.publicationsTypes.getAll(onError = onError, onSuccess = {
+		Store.publicationsTypes.getAll(onError) {
 			StoreDB.getAll(
-				collection, onError,
+				collection,
+				onError = onError,
 				onCast = { id, data -> Publication.fromMap(id, data) },
 				onSuccess = { list ->
 					homePublications.value = list
 					onSuccess()
 				}
 			)
-		})
+		}
 	}
 
 	fun fetchSelected(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
-		Store.publicationsTypes.getAll(onError = onError, onSuccess = {
+		Store.publicationsTypes.getAll(onError) {
 			val id = selectedPublicationId
 			StoreDB.getOneById(collection, id, onError) { data, _ ->
 				publication.value = Publication.fromMap(id, data)
 				onSuccess()
 			}
-		})
+		}
 	}
 
 	fun insert(publication: Publication, onError: (error: Int) -> Unit) {

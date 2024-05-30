@@ -22,9 +22,9 @@ import com.google.firebase.firestore.firestoreSettings
 class Index : ComponentActivity() {
 	@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 	override fun onCreate(savedInstanceState: Bundle?) {
-		configureFirebaseServices()
 		super.onCreate(savedInstanceState)
 		context = this
+		configureFirebaseServices()
 		installSplashScreen().setKeepOnScreenCondition { !Store.isReady }
 		setContent {
 			Router.Provider()
@@ -42,13 +42,9 @@ class Index : ComponentActivity() {
 
 	private fun configureFirebaseServices() {
 		if (DEV_ENV) {
-			val firestore = Firebase.firestore
-			val auth = Firebase.auth
-
-			firestore.useEmulator(LOCALHOST, FIRESTORE_PORT)
-			auth.useEmulator(LOCALHOST, AUTH_PORT)
-
-			firestore.firestoreSettings = firestoreSettings {
+			Firebase.auth.useEmulator(LOCALHOST, AUTH_PORT)
+			Firebase.firestore.useEmulator(LOCALHOST, FIRESTORE_PORT)
+			Firebase.firestore.firestoreSettings = firestoreSettings {
 				isPersistenceEnabled = false
 			}
 		}
