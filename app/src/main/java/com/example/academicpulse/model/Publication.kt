@@ -1,6 +1,7 @@
 package com.example.academicpulse.model
 
 import com.example.academicpulse.utils.useCast
+import com.example.academicpulse.view_model.Store
 import com.google.firebase.Timestamp
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -15,8 +16,18 @@ data class Publication(
 	val date: Timestamp,
 	val reads: Long = 0,
 	val uploads: Long = 0,
-	var type: String = ""
 ) {
+	private var typeLabel: String? = null
+
+	val type: String
+		get() {
+			if (typeLabel == null) {
+				val type = Store.publicationsTypes.list.value?.find { it.id == typeId }
+				if (type != null) typeLabel = type.label
+			}
+			return typeLabel ?: "Article"
+		}
+
 	fun toMap(): HashMap<String, Any?> {
 		return hashMapOf(
 			"typeId" to typeId,
@@ -28,6 +39,7 @@ data class Publication(
 			"uploads" to uploads,
 		)
 	}
+
 	companion object {
 		fun fromMap(id: String, map: Map<String, Any?>?): Publication {
 			return Publication(
@@ -41,6 +53,7 @@ data class Publication(
 				uploads = useCast(map, "uploads", 0),
 			)
 		}
+
 		fun formatDate(date: Timestamp): String {
 			val date2 = Date(date.seconds * 1000L + date.nanoseconds / 1000000L)
 			val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())

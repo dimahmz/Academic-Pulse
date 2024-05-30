@@ -42,13 +42,13 @@ fun AddPublicationPage() {
 	val abstract = useField(form = form, ifEmpty = R.string.abstract_required)
 	val doi = useField(form = form, required = false)
 	val date = useField(form = form, ifEmpty = R.string.date_required)
-	val typeOptions = useAtom(Store.publications.publicationTypes)
+	val typeOptions = useAtom(Store.publicationsTypes.list)
 	val (typesFetched, setTypesFetched) = useState { false }
 	val (loading, setLoading) = useState { false }
 
 	// Fetch the available types
 	LaunchedEffect(true) {
-		Store.publications.fetchPublicationTypes(onSuccess = { setTypesFetched(true) }) {
+		Store.publicationsTypes.getAll(onSuccess = { setTypesFetched(true) }) {
 			Router.back(navBarVisible = true)
 		}
 	}

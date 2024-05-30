@@ -30,14 +30,12 @@ fun HomePage() {
 	val publications = useAtom(Store.publications.homePublications, arrayListOf())
 
 	LaunchedEffect(true) {
-		Store.publications.fetchHomePublication(onSuccess = {
-			setLoading(false)
-			logcat("publications : $publications")
-		}) {
+		Store.publications.fetchHomePublication(onSuccess = { setLoading(false) }) {
 			setShowError(true)
 			setLoading(false)
 		}
 	}
+
 	LazyColumn(Modifier.padding(bottom = pageWithBarPaddingBottom)) {
 		item(key = "Page header") {
 			HomeHeader()

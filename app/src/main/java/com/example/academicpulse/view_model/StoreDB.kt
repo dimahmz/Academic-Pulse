@@ -5,17 +5,12 @@ import com.example.academicpulse.R
 import com.example.academicpulse.utils.logcat
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 
 class StoreDB private constructor() {
 	companion object {
 		private val db by lazy { Firebase.firestore }
-		fun getDB(): FirebaseFirestore {
-			return db;
-		}
 
 		fun getOneById(
 			collection: String,
@@ -41,8 +36,8 @@ class StoreDB private constructor() {
 		fun <T> getManyByIds(
 			collection: String,
 			ids: ArrayList<String>,
-			onCast: (id: String, map: Map<String, Any?>) -> T,
 			onError: (error: Int) -> Unit,
+			onCast: (id: String, map: Map<String, Any?>) -> T,
 			onSuccess: (list: ArrayList<T>, errors: Int) -> Unit
 		) {
 			if (ids.size == 0) return onSuccess(arrayListOf(), 0)
@@ -70,20 +65,19 @@ class StoreDB private constructor() {
 			}
 		}
 
-		fun getAll(
-			collection: String, onError: (error: Int) -> Unit, onSuccess: (result: QuerySnapshot) -> Unit
+		fun <T> getAll(
+			collection: String,
+			onError: (error: Int) -> Unit,
+			onCast: (id: String, map: Map<String, Any?>) -> T,
+			onSuccess: (list: ArrayList<T>) -> Unit
 		) {
-			db.collection(collection).get().addOnCompleteListener { task ->
-				if (task.isSuccessful) {
-					task.result?.let {
-						onSuccess(it)
-					} ?: onError(R.string.unknown_error)
-				} else {
-					onError(R.string.unknown_error)
-				}
-			}.addOnFailureListener { exception ->
-				logcat("Error getting documents  ${exception.toString()}")
-				onError(R.string.unknown_error)
+			db.collection(collection).get().addOnCompleteListener { docs ->
+				val result = docs.result
+				if (result != null && docs.isSuccessful) {
+					val list = arrayListOf<T>()
+					result.forEach { list.add(onCast(it.id, it.data)) }
+					onSuccess(list)
+				} else onError(R.string.unknown_error)
 			}
 		}
 
