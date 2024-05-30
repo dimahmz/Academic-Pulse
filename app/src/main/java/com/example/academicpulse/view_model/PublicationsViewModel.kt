@@ -7,7 +7,7 @@ import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.useCast
 
 class PublicationsViewModel : ViewModel() {
-	private val collection = "publications"
+	private val collection = "publication"
 	val userPublications = MutableLiveData<ArrayList<Publication>>(null)
 	val homePublications = MutableLiveData<ArrayList<Publication>>(null)
 	val publication = MutableLiveData<Publication>()
