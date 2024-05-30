@@ -17,7 +17,7 @@ import com.example.academicpulse.R
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
-import com.example.academicpulse.utils.logcat
+import com.example.academicpulse.utils.useAtom
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view_model.Store
@@ -25,13 +25,13 @@ import com.example.academicpulse.view_model.Store
 @Composable
 fun UserCard(onAddResearch: () -> Unit) {
 	val (loading, setLoading) = useState { false }
+	val user = useAtom(Store.user.current)
+
 	LaunchedEffect(true) {
 		setLoading(true)
-		Store.user.getCurrentUser(onSuccess = { data, ref ->
-			logcat("currentUser : ${Store.user.currentUser.value}\n data : ${data}")
-		}, onError = { error -> logcat("Error : $error") })
-		setLoading(false)
+		Store.user.getCurrentUser({}) { _, _ -> setLoading(false) }
 	}
+
 	Column(
 		modifier = Modifier
 			.fillMaxWidth()
@@ -44,16 +44,19 @@ fun UserCard(onAddResearch: () -> Unit) {
 				Router.navigate("profile/settings", false)
 			}
 		}
-		if (loading) Box(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(top = 30.dp), contentAlignment = Alignment.Center
-		) {
-			Spinner(size = 30.dp)
-		}
-		else {
+
+		if (loading)
+			Box(
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(top = 30.dp),
+				contentAlignment = Alignment.Center
+			) {
+				Spinner(size = 30.dp)
+			}
+		else if (user != null) {
 			Image(id = R.drawable.avatar_user, size = 80.dp)
-			H2(text = "${Store.user.currentUser.value!!.firstName} ${Store.user.currentUser.value!!.lastName}")
+			H2(text = "${user.firstName} ${user.lastName}")
 			Row(
 				modifier = Modifier.padding(top = 3.dp), horizontalArrangement = Arrangement.spacedBy(gap)
 			) {
@@ -61,30 +64,31 @@ fun UserCard(onAddResearch: () -> Unit) {
 					horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp),
 					verticalAlignment = Alignment.CenterVertically,
 				) {
-					Text(text = Store.user.currentUser.value!!.institution)
+					Text(text = user.institution)
 					Icon(id = R.drawable.icon_dot, size = 7.dp)
 				}
 				Row(
 					horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp),
 					verticalAlignment = Alignment.CenterVertically,
 				) {
-					Text(text = Store.user.currentUser.value!!.department)
+					Text(text = user.department)
 					Icon(id = R.drawable.icon_dot, size = 7.dp)
 				}
-				Text(text = Store.user.currentUser.value!!.position)
+				Text(text = user.position)
 			}
-		}
-		Row(
-			modifier = Modifier.padding(top = 26.dp, bottom = 14.dp),
-			horizontalArrangement = Arrangement.spacedBy(gap),
-		) {
-			Button(
-				text = R.string.add_research,
-				icon = R.drawable.icon_add,
-				modifier = Modifier.weight(1f),
-				height = 40.dp,
-				onClick = onAddResearch
-			)
+
+			Row(
+				modifier = Modifier.padding(top = 26.dp, bottom = 14.dp),
+				horizontalArrangement = Arrangement.spacedBy(gap),
+			) {
+				Button(
+					text = R.string.add_research,
+					icon = R.drawable.icon_add,
+					modifier = Modifier.weight(1f),
+					height = 40.dp,
+					onClick = onAddResearch
+				)
+			}
 		}
 	}
 }
