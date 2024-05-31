@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.theme.pageWithBarPaddingBottom
-import com.example.academicpulse.utils.logcat
 import com.example.academicpulse.utils.useAtom
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.Spinner
