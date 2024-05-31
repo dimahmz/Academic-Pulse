@@ -53,6 +53,9 @@ fun Input(
 	 * - Note: If it's null, it takes the label value if present. */
 	@StringRes placeholder: Int? = null,
 
+	/** [outlined] indicates if the field has borders or not. */
+	outlined: Boolean = true,
+
 	/** [readOnly] indicates if the field should accept any changes by the user interaction. */
 	readOnly: Boolean = false,
 
@@ -125,6 +128,7 @@ fun Input(
 		placeholder = placeholder,
 		required = field.required,
 		valid = field.valid,
+		outlined = outlined,
 		readOnly = readOnly,
 		password = password,
 		icon = icon,
@@ -159,8 +163,11 @@ fun Input(
 	 */
 	required: Boolean = true,
 
-	/** Control the component theme to switch between the main them and error them. */
+	/** [valid] Control the component theme to switch between the main them and error them. */
 	valid: Boolean = true,
+
+	/** [outlined] indicates if the field has borders or not. */
+	outlined: Boolean = true,
 
 	/** [readOnly] indicates if the field should accept any changes by the user interaction. */
 	readOnly: Boolean = false,
@@ -287,6 +294,26 @@ fun Input(
 		}
 	}
 
+	var modifier = Modifier
+		.fillMaxWidth()
+		.height(inputHeight)
+		.focusRequester(focusController)
+		.onFocusChanged { focusState ->
+			setFocusState(focusState.isFocused)
+			onFocusChange?.invoke(focusState.isFocused)
+		}
+	modifier = if (outlined)
+		modifier
+			.border(
+				width = if (isFocused) 2.dp else 1.dp,
+				color = if (isFocused) MaterialTheme.colorScheme.primary
+				else if (!valid) MaterialTheme.colorScheme.error
+				else inputGray,
+				shape = RoundedCornerShape(radius)
+			)
+			.background(color = white, shape = RoundedCornerShape(radius))
+	else modifier.background(color = white)
+
 	Column {
 		if (label != null) {
 			Row(
@@ -299,30 +326,15 @@ fun Input(
 		}
 
 		BasicTextField(
+			modifier = modifier,
+			cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+
 			// Value Handling
 			value = value,
 			onValueChange = {
 				if (required) onChangeValidity?.invoke(it != "")
 				onChange(it)
 			},
-
-			modifier = Modifier
-				.fillMaxWidth()
-				.height(inputHeight)
-				.background(color = white, shape = RoundedCornerShape(radius))
-				.border(
-					width = if (isFocused) 2.dp else 1.dp,
-					color = if (isFocused) MaterialTheme.colorScheme.primary
-					else if (!valid) MaterialTheme.colorScheme.error
-					else inputGray,
-					shape = RoundedCornerShape(radius)
-				)
-				.focusRequester(focusController)
-				.onFocusChanged { focusState ->
-					setFocusState(focusState.isFocused)
-					onFocusChange?.invoke(focusState.isFocused)
-				},
-			cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
 
 			// Statue & Lines
 			enabled = true,
@@ -354,7 +366,7 @@ fun Input(
 		) { innerTextField ->
 			// Input content: value, placeholder and icons
 			Row(
-				Modifier.padding(horizontal = 16.dp),
+				Modifier.padding(horizontal = if (outlined) 16.dp else 0.dp),
 				verticalAlignment = Alignment.CenterVertically
 			) {
 				if (icon != null) {
@@ -368,13 +380,13 @@ fun Input(
 					}
 					innerTextField()
 				}
+				if (password || trailingIcon != null) Spacer(Modifier.width(8.dp))
 				if (password) {
 					val btn = if (passwordVisible) R.drawable.icon_line_confirm else R.drawable.icon_close
 					Icon(id = btn, color = Color.Black.copy(alpha = 0.6f)) {
 						setPasswordVisibility(!passwordVisible)
 					}
 				} else if (trailingIcon != null) trailingIcon()
-				if (password || trailingIcon != null) Spacer(Modifier.width(8.dp))
 			}
 		}
 	}

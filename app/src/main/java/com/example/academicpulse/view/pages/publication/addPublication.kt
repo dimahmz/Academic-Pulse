@@ -1,42 +1,40 @@
 package com.example.academicpulse.view.pages.publication
 
-import android.text.format.DateFormat
-import android.text.format.DateUtils
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.model.Publication
+import com.example.academicpulse.model.User
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
+import com.example.academicpulse.theme.inputLabelGap
 import com.example.academicpulse.theme.pagePaddingX
-import com.example.academicpulse.utils.logcat
 import com.example.academicpulse.utils.stringToDate
 import com.example.academicpulse.utils.useAtom
 import com.example.academicpulse.utils.useField
 import com.example.academicpulse.utils.useForm
 import com.example.academicpulse.utils.useState
-import com.example.academicpulse.view.components.basic.Button
-import com.example.academicpulse.view.components.basic.DatePicker
-import com.example.academicpulse.view.components.basic.Input
-import com.example.academicpulse.view.components.basic.Select
-import com.example.academicpulse.view.components.basic.Spinner
+import com.example.academicpulse.view.components.basic.*
+import com.example.academicpulse.view.components.global.AuthorsRow
 import com.example.academicpulse.view.components.global.Header
 import com.example.academicpulse.view_model.Store
 import com.google.firebase.Timestamp
-import com.google.type.Date
 
 @Composable
 fun AddPublicationPage() {
@@ -61,14 +59,13 @@ fun AddPublicationPage() {
 	fun addPublication() {
 		if (loading || !form.validate()) return
 		setLoading(true)
-		logcat("date ${date.value}")
 		Store.publications.insert(
 			Publication(
 				typeId = type.value,
 				title = title.trim(),
 				abstract = abstract.trim(),
 				doi = doi.trim(),
-				date = Timestamp(stringToDate(date.value, "dd/MM/yyyy"))
+				date = Timestamp(stringToDate(date.value, "dd/MM/yyyy")),
 			)
 		) { error ->
 			form.error = error
