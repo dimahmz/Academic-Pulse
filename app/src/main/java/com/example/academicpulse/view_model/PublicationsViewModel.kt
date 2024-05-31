@@ -3,6 +3,7 @@ package com.example.academicpulse.view_model
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.academicpulse.model.Publication
+import com.example.academicpulse.model.User
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.useCast
 
@@ -13,6 +14,7 @@ class PublicationsViewModel : ViewModel() {
 	val publication = MutableLiveData<Publication>()
 	var selectedPublicationId = ""
 	var redirectedFromForm = false
+	var currentFormAuthors = arrayListOf<User>()
 
 	fun fetchUserPublications(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
 		userPublications.value?.clear()
@@ -72,6 +74,7 @@ class PublicationsViewModel : ViewModel() {
 				) {
 					selectedPublicationId = id
 					redirectedFromForm = true
+					currentFormAuthors = arrayListOf()
 					Router.navigate("publications/one-publication", false)
 				}
 			}

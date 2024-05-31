@@ -59,6 +59,8 @@ fun AddPublicationPage() {
 	fun addPublication() {
 		if (loading || !form.validate()) return
 		setLoading(true)
+		val list = ArrayList<User>(Store.publications.currentFormAuthors.toMutableList())
+		list.add(0, Store.user.current.value!!)
 		Store.publications.insert(
 			Publication(
 				typeId = type.value,
@@ -66,6 +68,7 @@ fun AddPublicationPage() {
 				abstract = abstract.trim(),
 				doi = doi.trim(),
 				date = Timestamp(stringToDate(date.value, "dd/MM/yyyy")),
+				// authors = list,
 			)
 		) { error ->
 			form.error = error
@@ -119,6 +122,19 @@ fun AddPublicationPage() {
 				focusNext = date.focusRequester,
 			)
 			DatePicker(field = date, label = R.string.date)
+			Column {
+				Row(modifier = Modifier.padding(bottom = inputLabelGap)) {
+					Text(text = R.string.authors)
+					Spacer(Modifier.width(inputLabelGap))
+					Text(text = "(${stringResource(R.string.modify)})", underlined = true) {
+						Router.navigate("publications/select-authors", false)
+					}
+				}
+				AuthorsRow(
+					authors = Store.publications.currentFormAuthors,
+					appendCurrentUser = true,
+				)
+			}
 		}
 
 		Spacer(Modifier.height((8 + gap.value).dp))

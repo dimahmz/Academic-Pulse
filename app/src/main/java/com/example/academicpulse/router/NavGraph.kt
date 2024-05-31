@@ -67,6 +67,9 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
 			composable(route = "publications/one-publication") {
 				OnePublicationPage(/* BackHandler, exit the app */)
 			}
+			composable(route = "publications/select-authors") {
+				SelectAuthorsPage(/* BackHandler, exit the app */)
+			}
 		}
 	}
 }

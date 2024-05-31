@@ -15,14 +15,17 @@ import com.example.academicpulse.view.components.basic.Input
 
 @Composable
 fun HomeHeader() {
-	val form = useForm()
-	val search = useField(form = form)
+	val search = useField(form = useForm())
 	Box(
 		modifier = Modifier
 			.fillMaxWidth()
 			.background(MaterialTheme.colorScheme.primary)
 			.padding(vertical = 25.dp, horizontal = 15.dp),
 	) {
-		Input(field = search, icon = R.drawable.icon_search)
+		Input(
+			field = search,
+			icon = R.drawable.icon_search,
+			placeholder = R.string.search,
+		)
 	}
 }

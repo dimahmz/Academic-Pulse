@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,7 +25,6 @@ import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view_model.Store
 import com.google.firebase.Timestamp
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PublicationArticle(publication: Publication) {
 	Column(
@@ -54,28 +52,7 @@ fun PublicationArticle(publication: Publication) {
 			Spacer(Modifier.height(10.dp))
 			Text(text = Publication.formatDate(publication.date))
 		}
-		// Note: Use FlowRow instead of Row for the (overflow: break) option
-		/*FlowRow(
-			modifier = Modifier.fillMaxWidth(),
-			horizontalArrangement = Arrangement.spacedBy(gap),
-		) {
-			publication.contributors.forEach { contributor ->
-				Row(
-					horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp),
-					verticalAlignment = Alignment.CenterVertically,
-					modifier = Modifier.clickable {
-						if (contributor.id == Store.auth.auth.currentUser?.uid)
-							logcat("User click: Show current user profile")
-						else
-							logcat("User click: Show another user profile by id {${contributor.id}}")
-					}
-				) {
-					Image(image = contributor.profile, size = 18.dp)
-					// Text(text = contributor.name)
-				}
-			}
-		}
-		*/
+		// AuthorsRow(authors = publication.authors, showProfileOnClick = true)
 
 		/*	Row(horizontalArrangement = Arrangement.spacedBy(gap)) {
 				Row(horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp)) {
