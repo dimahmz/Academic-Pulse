@@ -22,6 +22,29 @@ import com.example.academicpulse.theme.radius
 @Composable
 fun Button(
 	modifier: Modifier = Modifier,
+	@StringRes text: Int,
+	ghost: Boolean = false,
+	icon: Int? = null,
+	loading: Boolean = false,
+	disabled: Boolean = loading,
+	height: Dp = inputHeight,
+	onClick: (() -> Unit)? = null
+) {
+	Button(
+		modifier = modifier,
+		text = stringResource(text),
+		ghost = ghost,
+		icon = icon,
+		loading = loading,
+		disabled = disabled,
+		height = height,
+		onClick = onClick,
+	)
+}
+
+@Composable
+fun Button(
+	modifier: Modifier = Modifier,
 	text: String? = null,
 	ghost: Boolean = false,
 	icon: Int? = null,
@@ -56,27 +79,4 @@ fun Button(
 		if ((icon != null || loading) && text != null) Spacer(Modifier.width(8.dp))
 		if (text != null) Text(text = text, color = LocalContentColor.current)
 	}
-}
-
-@Composable
-fun Button(
-	modifier: Modifier = Modifier,
-	@StringRes text: Int,
-	ghost: Boolean = false,
-	icon: Int? = null,
-	loading: Boolean = false,
-	disabled: Boolean = loading,
-	height: Dp = inputHeight,
-	onClick: (() -> Unit)? = null
-) {
-	Button(
-		modifier = modifier,
-		text = stringResource(text),
-		ghost = ghost,
-		icon = icon,
-		loading = loading,
-		disabled = disabled,
-		height = height,
-		onClick = onClick,
-	)
 }

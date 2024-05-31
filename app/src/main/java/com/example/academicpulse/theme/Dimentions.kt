@@ -8,7 +8,7 @@ val bottomBarHeight = 67.dp
 val pageWithBarPaddingBottom = bottomBarHeight + 25.dp
 val gap = 12.dp
 val radius = 12.dp
-val inputHeight = 55.dp
+val inputHeight = 40.dp
 val inputLabelGap = 4.dp
 
 val h1TextSize = 23.sp

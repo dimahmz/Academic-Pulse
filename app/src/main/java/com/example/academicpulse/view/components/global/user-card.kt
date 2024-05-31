@@ -87,7 +87,6 @@ fun UserCard(onAddResearch: () -> Unit) {
 					text = R.string.add_research,
 					icon = R.drawable.icon_add,
 					modifier = Modifier.weight(1f),
-					height = 40.dp,
 					onClick = onAddResearch
 				)
 			}
