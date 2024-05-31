@@ -13,11 +13,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.academicpulse.R
 import com.example.academicpulse.theme.pageWithBarPaddingBottom
 import com.example.academicpulse.utils.useAtom
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.Spinner
-import com.example.academicpulse.view.components.global.FetchErrorMessage
+import com.example.academicpulse.view.components.global.ErrorMessage
 import com.example.academicpulse.view.components.global.Line
 import com.example.academicpulse.view.components.global.PublicationArticle
 import com.example.academicpulse.view_model.Store
@@ -40,9 +41,7 @@ fun HomePage() {
 			HomeHeader()
 			Spacer(Modifier.height(15.dp))
 			Line(height = 2.dp)
-		}
-		if (loading) {
-			item(key = "Loader") {
+			if (loading) {
 				Box(
 					modifier = Modifier
 						.fillMaxWidth()
@@ -51,12 +50,10 @@ fun HomePage() {
 				) {
 					Spinner(size = 30.dp)
 				}
-			}
-		} else if (showError) {
-			item(key = "error card") {
-				FetchErrorMessage(errorMessage = "An error has occurred")
-			}
-		} else {
+			} else if (showError) ErrorMessage(errorMessage = R.string.unknown_error)
+		}
+
+		if (!loading && !showError) {
 			items(publications, key = { it.id }) {
 				Spacer(Modifier.height(15.dp))
 				Column {

@@ -1,5 +1,6 @@
 package com.example.academicpulse.view.components.global
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,9 +22,10 @@ import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.theme.h1TextSize
 import com.example.academicpulse.view.components.basic.Icon
+import com.example.academicpulse.view.components.basic.Text
 
 @Composable
-fun FetchErrorMessage(errorMessage: String) {
+fun ErrorMessage(@StringRes errorMessage: Int = R.string.unknown_error) {
 	Box(
 		modifier = Modifier
 			.fillMaxWidth()
@@ -47,8 +48,8 @@ fun FetchErrorMessage(errorMessage: String) {
 			Text(
 				text = errorMessage,
 				color = MaterialTheme.colorScheme.error,
-				fontWeight = FontWeight.Bold,
-				textAlign = TextAlign.Center
+				weight = FontWeight.Bold,
+				align = TextAlign.Center
 			)
 		}
 	}
@@ -57,6 +58,6 @@ fun FetchErrorMessage(errorMessage: String) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewFetchErrorMessage() {
-	FetchErrorMessage(errorMessage = "AN error has occurred")
+	ErrorMessage()
 }
 

@@ -275,7 +275,7 @@ fun Input(
 	onFocusChange: ((Boolean) -> Unit)? = null,
 ) {
 	val (isFocused, setFocusState) = useState { false }
-	val (focus) = useState { focusRequester ?: FocusRequester() }
+	val (focusController) = useState { focusRequester ?: FocusRequester() }
 	val keyboardController = LocalSoftwareKeyboardController.current
 	val (passwordVisible, setPasswordVisibility) = useState { false }
 
@@ -292,7 +292,7 @@ fun Input(
 			Row(
 				modifier = Modifier
 					.padding(bottom = inputLabelGap)
-					.clickable { focus.requestFocus() }) {
+					.clickable { focusController.requestFocus() }) {
 				Text(text = label)
 				if (required) Text(text = " *", color = MaterialTheme.colorScheme.error)
 			}
@@ -317,7 +317,7 @@ fun Input(
 					else inputGray,
 					shape = RoundedCornerShape(radius)
 				)
-				.focusRequester(focus)
+				.focusRequester(focusController)
 				.onFocusChanged { focusState ->
 					setFocusState(focusState.isFocused)
 					onFocusChange?.invoke(focusState.isFocused)
