@@ -111,5 +111,16 @@ class StoreDB private constructor() {
 				}
 			}
 		}
+
+		fun deleteOneById(
+			collection: String,
+			id: String,
+			onError: (error: Int) -> Unit,
+			onSuccess: () -> Unit,
+		) {
+			db.collection(collection).document(id).delete().addOnSuccessListener { onSuccess() }
+				.addOnFailureListener { onError(R.string.unknown_error) }
+		}
+
 	}
 }

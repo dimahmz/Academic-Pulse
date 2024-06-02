@@ -60,6 +60,11 @@
     <string name="about_description_3">We offer a home for you—a place to share your work  and connect with peers around the globe, traversing the borders and  silos of science. We want to empower you to do your best work, advance  your field, and make a better world for all.",</string>
     <string name="about_description_4">For the  intellectually curious, the seekers of truth, the geeks, the makers: our  members offer you a treasure trove of knowledge in areas as diverse as  materials science, agriculture, human health, and quantum physics.",</string>
 
+    <string name="delete_message">Confirm deletion</string>
+    <string name="delete_confirm">Delete</string>
+    <string name="delete_cancel">Cancel</string>
+    <string name="delete_title">Delete Item</string>
+
     <string name="add_research">Add research</string>
     <string name="publication">Publication</string>
     <string name="type">Type</string>
