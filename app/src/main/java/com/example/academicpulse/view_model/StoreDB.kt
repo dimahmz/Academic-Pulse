@@ -118,9 +118,13 @@ class StoreDB private constructor() {
 			onError: (error: Int) -> Unit,
 			onSuccess: () -> Unit,
 		) {
-			db.collection(collection).document(id).delete().addOnSuccessListener { onSuccess() }
-				.addOnFailureListener { onError(R.string.unknown_error) }
+			db.collection(collection).document(id).delete().addOnCompleteListener { deleting ->
+				if (deleting.isSuccessful) onSuccess()
+				else {
+					logcat("Error deleting document by id {$id}", deleting.exception)
+					onError(R.string.unknown_error)
+				}
+			}
 		}
-
 	}
 }
