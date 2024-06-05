@@ -6,6 +6,8 @@ import com.example.academicpulse.model.Publication
 import com.example.academicpulse.model.User
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.useCast
+import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.Filter
 
 class PublicationsViewModel : ViewModel() {
 	private val collection = "publication"
@@ -20,14 +22,16 @@ class PublicationsViewModel : ViewModel() {
 		userPublications.value?.clear()
 		Store.publicationsTypes.getAll(onError) {
 			Store.user.getCurrentUser(onError) { user, _ ->
-				StoreDB.getManyByIds(collection,
+				StoreDB.getManyByIds(
+					collection,
 					ids = useCast(user, "publications", arrayListOf()),
 					onError = onError,
 					onCast = { id, data -> Publication.fromMap(id, data) },
 					onSuccess = { list, _ ->
 						userPublications.value = list
 						onSuccess()
-					})
+					}
+				)
 			}
 		}
 	}
@@ -35,13 +39,14 @@ class PublicationsViewModel : ViewModel() {
 	fun fetchHomePublication(onSuccess: () -> Unit, onError: (Int) -> Unit) {
 		homePublications.value?.clear()
 		Store.publicationsTypes.getAll(onError) {
-			StoreDB.getAll(collection,
+			StoreDB.getMany(
+				collection,
 				onError = onError,
-				onCast = { id, data -> Publication.fromMap(id, data) },
-				onSuccess = { list ->
-					homePublications.value = list
-					onSuccess()
-				})
+				onCast = { id, data -> Publication.fromMap(id, data) }
+			) { list ->
+				homePublications.value = list
+				onSuccess()
+			}
 		}
 	}
 
@@ -80,5 +85,30 @@ class PublicationsViewModel : ViewModel() {
 	fun deleteById(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
 		val id = selectedPublicationId
 		StoreDB.deleteOneById(collection, id, onError, onSuccess)
+	}
+
+	fun fetchAuthors(
+		search: String,
+		selectedList: List<User>,
+		onError: () -> Unit,
+		onSuccess: (ArrayList<User>) -> Unit
+	) {
+		val selected = ArrayList<String>(selectedList.map { it.id })
+		selected.add(Store.user.current.value!!.id)
+		StoreDB.getMany(
+			collection = "user",
+			onError = { onError() },
+			onCast = { id, data -> User.fromMap(id, data) },
+			where = listOf(Filter.notInArray(FieldPath.documentId(), selected))
+		) { result ->
+			onSuccess(
+				ArrayList(result.filter {
+					val searchQuery = search.trim().lowercase()
+					if (searchQuery == "") true
+					else if(("${it.firstName} ${it.lastName}").lowercase().contains(searchQuery)) true
+					else ("${it.lastName} ${it.firstName}").lowercase().contains(searchQuery)
+				})
+			)
+		}
 	}
 }

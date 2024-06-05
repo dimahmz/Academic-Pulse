@@ -36,7 +36,6 @@ import com.example.academicpulse.view.components.basic.Text
 import com.example.academicpulse.view.components.global.AuthorsRow
 import com.example.academicpulse.view.components.global.Line
 import com.example.academicpulse.view_model.Store
-import com.example.academicpulse.view_model.StoreDB
 
 @Composable
 fun SelectAuthorsPage() {
@@ -47,15 +46,14 @@ fun SelectAuthorsPage() {
 
 	LaunchedEffect(search.value.trim()) {
 		setLoading(true)
-		StoreDB.getAll(
-			collection = "user",
-			{ setLoading(false) },
-			{ id, data -> User.fromMap(id, data) },
-			{ array ->
-				setList(array)
-				setLoading(false)
-			}
-		)
+		Store.publications.fetchAuthors(
+			search.value,
+			selectedList,
+			onError = { setLoading(false) },
+		) { array ->
+			setList(array)
+			setLoading(false)
+		}
 	}
 
 	Column(
@@ -131,7 +129,8 @@ fun SelectAuthorsPage() {
 										array.add(it)
 										Store.publications.currentFormAuthors.value = array
 									}
-								}) {
+								}
+						) {
 							Image(id = R.drawable.avatar_user, size = 18.dp)
 							Text(text = "${it.firstName} ${it.lastName}")
 						}

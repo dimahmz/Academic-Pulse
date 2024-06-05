@@ -6,6 +6,8 @@ import com.example.academicpulse.utils.logcat
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.Filter
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.firestore
 
 class StoreDB private constructor() {
@@ -35,12 +37,12 @@ class StoreDB private constructor() {
 
 		fun <T> getManyByIds(
 			collection: String,
-			ids: ArrayList<String>,
+			ids: List<String>,
 			onError: (error: Int) -> Unit,
 			onCast: (id: String, map: Map<String, Any?>) -> T,
 			onSuccess: (list: ArrayList<T>, errors: Int) -> Unit
 		) {
-			if (ids.size == 0) return onSuccess(arrayListOf(), 0)
+			if (ids.isEmpty()) return onSuccess(arrayListOf(), 0)
 			val list = arrayListOf<T>()
 			val size = mutableIntStateOf(ids.size)
 			val errors = mutableIntStateOf(0)
@@ -65,13 +67,19 @@ class StoreDB private constructor() {
 			}
 		}
 
-		fun <T> getAll(
+		fun <T> getMany(
 			collection: String,
+			where: List<Filter>? = null,
+			limit: Int? = null,
 			onError: (error: Int) -> Unit,
 			onCast: (id: String, map: Map<String, Any?>) -> T,
 			onSuccess: (list: ArrayList<T>) -> Unit
 		) {
-			db.collection(collection).get().addOnCompleteListener { docs ->
+			var ref: Query = db.collection(collection)
+			where?.forEach { condition -> ref = ref.where(condition) }
+			if (limit != null) ref = ref.limit(limit.toLong())
+
+			ref.get().addOnCompleteListener { docs ->
 				val result = docs.result
 				if (result != null && docs.isSuccessful) {
 					val list = arrayListOf<T>()
