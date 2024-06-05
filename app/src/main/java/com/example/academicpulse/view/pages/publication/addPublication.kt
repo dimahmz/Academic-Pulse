@@ -44,6 +44,7 @@ fun AddPublicationPage() {
 	val abstract = useField(form = form, ifEmpty = R.string.abstract_required)
 	val doi = useField(form = form, required = false)
 	val date = useField(form = form, ifEmpty = R.string.date_required)
+	val authors = useAtom(Store.publications.currentFormAuthors, arrayListOf())
 	val typeOptions = useAtom(Store.publicationsTypes.list)
 	val (typesFetched, setTypesFetched) = useState { false }
 	val (loading, setLoading) = useState { false }
@@ -59,7 +60,7 @@ fun AddPublicationPage() {
 	fun addPublication() {
 		if (loading || !form.validate()) return
 		setLoading(true)
-		val list = ArrayList<User>(Store.publications.currentFormAuthors.toMutableList())
+		val list = ArrayList<User>(authors.toMutableList())
 		list.add(0, Store.user.current.value!!)
 		Store.publications.insert(
 			Publication(
@@ -130,10 +131,7 @@ fun AddPublicationPage() {
 						Router.navigate("publications/select-authors", false)
 					}
 				}
-				AuthorsRow(
-					authors = Store.publications.currentFormAuthors,
-					appendCurrentUser = true,
-				)
+				AuthorsRow(authors = authors, appendCurrentUser = true)
 			}
 		}
 

@@ -14,7 +14,7 @@ class PublicationsViewModel : ViewModel() {
 	val publication = MutableLiveData<Publication>()
 	var selectedPublicationId = ""
 	var redirectedFromForm = false
-	var currentFormAuthors = arrayListOf<User>()
+	var currentFormAuthors = MutableLiveData(arrayListOf<User>())
 
 	fun fetchUserPublications(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
 		userPublications.value?.clear()
@@ -74,7 +74,7 @@ class PublicationsViewModel : ViewModel() {
 				) {
 					selectedPublicationId = id
 					redirectedFromForm = true
-					currentFormAuthors = arrayListOf()
+					currentFormAuthors.value = arrayListOf()
 					Router.navigate("publications/one-publication", false)
 				}
 			}
