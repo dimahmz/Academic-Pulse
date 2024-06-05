@@ -60,12 +60,12 @@ fun OnePublicationPage() {
 			val redirectedFromForm = Store.publications.redirectedFromForm
 			Store.publications.redirectedFromForm = false
 			Router.back(
-				navBarVisible = true,
-				step = if (redirectedFromForm) 2 else 1
+				navBarVisible = true, step = if (redirectedFromForm) 2 else 1
 			)
 		}
-		Spacer(Modifier.height(14.dp))
 
+		PublicationSettings()
+		Spacer(Modifier.height(14.dp))
 		if (loading) {
 			Box(
 				modifier = Modifier
@@ -110,11 +110,9 @@ fun OnePublicationPage() {
 
 	BackHandler {
 		val redirectedFromForm = Store.publications.redirectedFromForm
-		Store.publications.redirectedFromForm = false
-		/* to = profile/index or home/index */
+		Store.publications.redirectedFromForm = false    /* to = profile/index or home/index */
 		Router.back(
-			navBarVisible = true,
-			step = if (redirectedFromForm) 2 else 1
+			navBarVisible = true, step = if (redirectedFromForm) 2 else 1
 		)
 	}
 }
