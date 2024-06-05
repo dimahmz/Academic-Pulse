@@ -20,16 +20,14 @@ class PublicationsViewModel : ViewModel() {
 		userPublications.value?.clear()
 		Store.publicationsTypes.getAll(onError) {
 			Store.user.getCurrentUser(onError) { user, _ ->
-				StoreDB.getManyByIds(
-					collection,
+				StoreDB.getManyByIds(collection,
 					ids = useCast(user, "publications", arrayListOf()),
 					onError = onError,
 					onCast = { id, data -> Publication.fromMap(id, data) },
 					onSuccess = { list, _ ->
 						userPublications.value = list
 						onSuccess()
-					}
-				)
+					})
 			}
 		}
 	}
@@ -37,15 +35,13 @@ class PublicationsViewModel : ViewModel() {
 	fun fetchHomePublication(onSuccess: () -> Unit, onError: (Int) -> Unit) {
 		homePublications.value?.clear()
 		Store.publicationsTypes.getAll(onError) {
-			StoreDB.getAll(
-				collection,
+			StoreDB.getAll(collection,
 				onError = onError,
 				onCast = { id, data -> Publication.fromMap(id, data) },
 				onSuccess = { list ->
 					homePublications.value = list
 					onSuccess()
-				}
-			)
+				})
 		}
 	}
 
@@ -79,5 +75,10 @@ class PublicationsViewModel : ViewModel() {
 				}
 			}
 		}
+	}
+
+	fun deleteById(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
+		val id = selectedPublicationId
+		StoreDB.deleteOneById(collection, id, onError, onSuccess)
 	}
 }
