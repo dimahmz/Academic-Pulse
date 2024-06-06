@@ -14,6 +14,7 @@ data class Publication(
 	val abstract: String,
 	val doi: String,
 	val date: Timestamp,
+	val authors: List<User>,
 	val reads: Long = 0,
 	val uploads: Long = 0,
 ) {
@@ -37,11 +38,12 @@ data class Publication(
 			"date" to date,
 			"reads" to reads,
 			"uploads" to uploads,
+			"authors" to authors.map { it.id },
 		)
 	}
 
 	companion object {
-		fun fromMap(id: String, map: Map<String, Any?>?): Publication {
+		fun fromMap(id: String, map: Map<String, Any?>?, authors: List<User>): Publication {
 			return Publication(
 				id = id,
 				typeId = useCast(map, "typeId", ""),
@@ -49,6 +51,7 @@ data class Publication(
 				abstract = useCast(map, "abstract", ""),
 				doi = useCast(map, "doi", ""),
 				date = useCast(map, "date", Timestamp(Date())),
+				authors = authors,
 				reads = useCast(map, "reads", 0),
 				uploads = useCast(map, "uploads", 0),
 			)

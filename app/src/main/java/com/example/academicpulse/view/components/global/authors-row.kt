@@ -26,7 +26,7 @@ import com.example.academicpulse.view_model.Store
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AuthorsRow(
-	authors: ArrayList<User>,
+	authors: List<User>,
 	appendCurrentUser: Boolean = false,
 	showProfileOnClick: Boolean = false,
 	onRemoveItem: ((User) -> Unit)? = null,

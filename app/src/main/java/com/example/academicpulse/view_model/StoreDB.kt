@@ -5,6 +5,7 @@ import com.example.academicpulse.R
 import com.example.academicpulse.utils.logcat
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.Filter
 import com.google.firebase.firestore.Query
@@ -39,29 +40,37 @@ class StoreDB private constructor() {
 			collection: String,
 			ids: List<String>,
 			onError: (error: Int) -> Unit,
-			onCast: (id: String, map: Map<String, Any?>) -> T,
-			onSuccess: (list: ArrayList<T>, errors: Int) -> Unit
+			onCast: ((id: String, map: Map<String, Any?>) -> T)? = null,
+			onAsyncCast: ((id: String, map: Map<String, Any?>, resolver: (T) -> Unit) -> Unit)? = null,
+			onSuccess: (list: ArrayList<T>) -> Unit
 		) {
-			if (ids.isEmpty()) return onSuccess(arrayListOf(), 0)
+			if (ids.isEmpty()) return onSuccess(arrayListOf())
 			val list = arrayListOf<T>()
 			val size = mutableIntStateOf(ids.size)
 			val errors = mutableIntStateOf(0)
+
+			fun countDown() {
+				size.intValue--
+				if (size.intValue == 0) {
+					if (errors.intValue != ids.size) onSuccess(list)
+					else onError(R.string.unknown_error)
+				}
+			}
+
 			ids.forEach { id ->
 				db.collection(collection).document(id).get().addOnCompleteListener { doc ->
-					val data = doc.result.data
-					if (doc.isSuccessful && data != null) list.add(onCast(id, data))
-					else if (data == null) {
-						logcat("Warning: Document with id {$id} is not found in the collection {$collection}")
+					if (doc.isSuccessful && doc.result.data != null) {
+						castDocument(doc.result, onCast, onAsyncCast, ::countDown) { list.add(it) }
 					} else {
-						val message = "Error getting document with id {$id} from the collection {$collection}"
-						errors.intValue = errors.intValue.plus(1)
-						logcat(message, doc.exception)
-						onError(R.string.unknown_error)
-					}
-					size.intValue--
-					if (size.intValue == 0) {
-						if (errors.intValue != ids.size) onSuccess(list, errors.intValue)
-						else onError(R.string.unknown_error)
+						if (doc.result.data == null) {
+							logcat("Warning: Document with id {$id} is not found in the collection {$collection}")
+						} else {
+							val message = "Error getting document with id {$id} from the collection {$collection}"
+							errors.intValue = errors.intValue.plus(1)
+							logcat(message, doc.exception)
+							onError(R.string.unknown_error)
+						}
+						countDown()
 					}
 				}
 			}
@@ -72,7 +81,8 @@ class StoreDB private constructor() {
 			where: List<Filter>? = null,
 			limit: Int? = null,
 			onError: (error: Int) -> Unit,
-			onCast: (id: String, map: Map<String, Any?>) -> T,
+			onCast: ((id: String, map: Map<String, Any?>) -> T)? = null,
+			onAsyncCast: ((id: String, map: Map<String, Any?>, resolver: (T) -> Unit) -> Unit)? = null,
 			onSuccess: (list: ArrayList<T>) -> Unit
 		) {
 			var ref: Query = db.collection(collection)
@@ -80,11 +90,16 @@ class StoreDB private constructor() {
 			if (limit != null) ref = ref.limit(limit.toLong())
 
 			ref.get().addOnCompleteListener { docs ->
-				val result = docs.result
-				if (result != null && docs.isSuccessful) {
+				if (docs.isSuccessful) {
+					val size = mutableIntStateOf(docs.result.size())
 					val list = arrayListOf<T>()
-					result.forEach { list.add(onCast(it.id, it.data)) }
-					onSuccess(list)
+					fun countDown() {
+						size.intValue--
+						if (size.intValue == 0) onSuccess(list)
+					}
+					docs.result.forEach { document ->
+						castDocument(document, onCast, onAsyncCast, ::countDown) { list.add(it) }
+					}
 				} else onError(R.string.unknown_error)
 			}
 		}
@@ -132,6 +147,24 @@ class StoreDB private constructor() {
 					logcat("Error deleting document by id {$id}", deleting.exception)
 					onError(R.string.unknown_error)
 				}
+			}
+		}
+
+		private fun <T> castDocument(
+			document: DocumentSnapshot,
+			onCast: ((id: String, map: Map<String, Any?>) -> T)?,
+			onAsyncCast: ((id: String, map: Map<String, Any?>, resolver: (T) -> Unit) -> Unit)? = null,
+			countDown: (() -> Unit)? = null,
+			onSuccess: (T) -> Unit
+		) {
+			if (onAsyncCast != null) {
+				onAsyncCast(document.id, document.data!!) {
+					onSuccess(it)
+					countDown?.invoke()
+				}
+			} else if (onCast != null) {
+				onSuccess(onCast(document.id, document.data!!))
+				countDown?.invoke()
 			}
 		}
 	}

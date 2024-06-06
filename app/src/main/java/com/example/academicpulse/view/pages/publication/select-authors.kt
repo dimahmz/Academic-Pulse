@@ -41,15 +41,14 @@ import com.example.academicpulse.view_model.Store
 fun SelectAuthorsPage() {
 	val search = useField(form = useForm())
 	val (loading, setLoading) = useState { true }
-	val selectedList = useAtom(Store.publications.currentFormAuthors, arrayListOf())
+	val selectedList = useAtom(Store.authors.currentForm, arrayListOf())
 	val (list, setList) = useState { arrayListOf<User>() }
 
 	LaunchedEffect(search.value.trim()) {
 		setLoading(true)
-		Store.publications.fetchAuthors(
+		Store.authors.search(
 			search.value,
 			selectedList,
-			onError = { setLoading(false) },
 		) { array ->
 			setList(array)
 			setLoading(false)
@@ -84,7 +83,7 @@ fun SelectAuthorsPage() {
 			// At click on X icon: unselect the user and add it to the non-selected ones
 			val array = ArrayList<User>(selectedList.toMutableList())
 			array.remove(it)
-			Store.publications.currentFormAuthors.value = array
+			Store.authors.currentForm.value = array
 			val array2 = ArrayList<User>((list).toMutableList())
 			array2.add(it)
 			setList(array2)
@@ -127,7 +126,7 @@ fun SelectAuthorsPage() {
 										setList(array2)
 										val array = ArrayList<User>(selectedList.toMutableList())
 										array.add(it)
-										Store.publications.currentFormAuthors.value = array
+										Store.authors.currentForm.value = array
 									}
 								}
 						) {

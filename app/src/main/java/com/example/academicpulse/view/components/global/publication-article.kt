@@ -52,7 +52,7 @@ fun PublicationArticle(publication: Publication) {
 			Spacer(Modifier.height(10.dp))
 			Text(text = Publication.formatDate(publication.date))
 		}
-		// AuthorsRow(authors = publication.authors, showProfileOnClick = true)
+		AuthorsRow(authors = publication.authors, showProfileOnClick = true)
 
 		/*	Row(horizontalArrangement = Arrangement.spacedBy(gap)) {
 				Row(horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp)) {
@@ -80,6 +80,7 @@ fun PreviewPublicationArticle() {
 			date = Timestamp(1800000000, 0),
 			reads = 60,
 			uploads = 60,
+			authors = listOf(),
 		)
 	)
 }

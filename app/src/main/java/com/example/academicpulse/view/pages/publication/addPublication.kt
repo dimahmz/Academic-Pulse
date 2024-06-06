@@ -44,7 +44,7 @@ fun AddPublicationPage() {
 	val abstract = useField(form = form, ifEmpty = R.string.abstract_required)
 	val doi = useField(form = form, required = false)
 	val date = useField(form = form, ifEmpty = R.string.date_required)
-	val authors = useAtom(Store.publications.currentFormAuthors, arrayListOf())
+	val authors = useAtom(Store.authors.currentForm, arrayListOf())
 	val typeOptions = useAtom(Store.publicationsTypes.list)
 	val (typesFetched, setTypesFetched) = useState { false }
 	val (loading, setLoading) = useState { false }
@@ -69,7 +69,7 @@ fun AddPublicationPage() {
 				abstract = abstract.trim(),
 				doi = doi.trim(),
 				date = Timestamp(stringToDate(date.value, "dd/MM/yyyy")),
-				// authors = list,
+				authors = list,
 			)
 		) { error ->
 			form.error = error
@@ -143,7 +143,10 @@ fun AddPublicationPage() {
 		)
 	}
 
-	BackHandler { Router.back(true /* to = profile/index */) }
+	BackHandler {
+		Store.authors.currentForm.value = arrayListOf()
+		Router.back(true /* to = profile/index */)
+	}
 }
 
 @Preview(showSystemUi = true)

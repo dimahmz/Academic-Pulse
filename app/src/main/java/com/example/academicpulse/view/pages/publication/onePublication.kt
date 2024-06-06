@@ -38,6 +38,7 @@ import com.example.academicpulse.theme.descriptionTextSize
 import com.example.academicpulse.view.components.basic.Title
 import com.example.academicpulse.view.components.global.Line
 import com.example.academicpulse.utils.context
+import com.example.academicpulse.view.components.global.AuthorsRow
 
 @Composable
 fun OnePublicationPage() {
@@ -91,14 +92,17 @@ fun OnePublicationPage() {
 				Text(text = "Type", color = MaterialTheme.colorScheme.background)
 			}
 			Spacer(Modifier.height(10.dp))
-			Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-				Title(text = "DOI")
-				Text(text = publication.doi, size = descriptionTextSize, underlined = true) {
-					val url = "https://www.doi.org/${publication.doi}"
-					val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-					context.startActivity(intent)
+			AuthorsRow(authors = publication.authors, showProfileOnClick = true)
+			Spacer(Modifier.height(10.dp))
+			if (publication.doi != "")
+				Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+					Title(text = "DOI")
+					Text(text = publication.doi, size = descriptionTextSize, underlined = true) {
+						val url = "https://www.doi.org/${publication.doi}"
+						val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+						context.startActivity(intent)
+					}
 				}
-			}
 			Spacer(Modifier.height(15.dp))
 			Line(height = 2.dp)
 			Spacer(Modifier.height(15.dp))

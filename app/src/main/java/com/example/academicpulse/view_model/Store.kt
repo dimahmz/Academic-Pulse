@@ -8,7 +8,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-class Store private constructor(): ViewModel() {
+class Store private constructor() : ViewModel() {
 	// Is app ready
 	private val isReady = MutableStateFlow(false)
 
@@ -17,6 +17,7 @@ class Store private constructor(): ViewModel() {
 	private val publications = PublicationsViewModel()
 	private val user = UserViewModel()
 	private val publicationsTypes = PublicationsTypesViewModel()
+	private val publicationsAuthors = PublicationsAuthorsViewModal()
 
 	init {
 		// The splash screen will disappear only when the logo animation finish and the user account is verified.
@@ -58,5 +59,7 @@ class Store private constructor(): ViewModel() {
 			get() = appStore[0].user
 		val publicationsTypes: PublicationsTypesViewModel
 			get() = appStore[0].publicationsTypes
+		val authors: PublicationsAuthorsViewModal
+			get() = appStore[0].publicationsAuthors
 	}
 }

@@ -3,11 +3,8 @@ package com.example.academicpulse.view_model
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.academicpulse.model.Publication
-import com.example.academicpulse.model.User
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.useCast
-import com.google.firebase.firestore.FieldPath
-import com.google.firebase.firestore.Filter
 
 class PublicationsViewModel : ViewModel() {
 	private val collection = "publication"
@@ -16,22 +13,24 @@ class PublicationsViewModel : ViewModel() {
 	val publication = MutableLiveData<Publication>()
 	var selectedPublicationId = ""
 	var redirectedFromForm = false
-	var currentFormAuthors = MutableLiveData(arrayListOf<User>())
 
 	fun fetchUserPublications(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
 		userPublications.value?.clear()
 		Store.publicationsTypes.getAll(onError) {
 			Store.user.getCurrentUser(onError) { user, _ ->
-				StoreDB.getManyByIds(
+				StoreDB.getManyByIds<Publication>(
 					collection,
 					ids = useCast(user, "publications", arrayListOf()),
 					onError = onError,
-					onCast = { id, data -> Publication.fromMap(id, data) },
-					onSuccess = { list, _ ->
-						userPublications.value = list
-						onSuccess()
+					onAsyncCast = { id, data, resolve ->
+						Store.authors.fetchPublicationAuthors(data) { list ->
+							resolve(Publication.fromMap(id, data, list))
+						}
 					}
-				)
+				) { list ->
+					userPublications.value = list
+					onSuccess()
+				}
 			}
 		}
 	}
@@ -39,10 +38,14 @@ class PublicationsViewModel : ViewModel() {
 	fun fetchHomePublication(onSuccess: () -> Unit, onError: (Int) -> Unit) {
 		homePublications.value?.clear()
 		Store.publicationsTypes.getAll(onError) {
-			StoreDB.getMany(
+			StoreDB.getMany<Publication>(
 				collection,
 				onError = onError,
-				onCast = { id, data -> Publication.fromMap(id, data) }
+				onAsyncCast = { id, data, resolve ->
+					Store.authors.fetchPublicationAuthors(data) { list ->
+						resolve(Publication.fromMap(id, data, list))
+					}
+				}
 			) { list ->
 				homePublications.value = list
 				onSuccess()
@@ -54,8 +57,10 @@ class PublicationsViewModel : ViewModel() {
 		Store.publicationsTypes.getAll(onError) {
 			val id = selectedPublicationId
 			StoreDB.getOneById(collection, id, onError) { data, _ ->
-				publication.value = Publication.fromMap(id, data)
-				onSuccess()
+				Store.authors.fetchPublicationAuthors(data) {
+					publication.value = Publication.fromMap(id, data, it)
+					onSuccess()
+				}
 			}
 		}
 	}
@@ -75,7 +80,7 @@ class PublicationsViewModel : ViewModel() {
 				) {
 					selectedPublicationId = id
 					redirectedFromForm = true
-					currentFormAuthors.value = arrayListOf()
+					Store.authors.currentForm.value = arrayListOf()
 					Router.navigate("publications/one-publication", false)
 				}
 			}
@@ -85,30 +90,5 @@ class PublicationsViewModel : ViewModel() {
 	fun deleteById(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
 		val id = selectedPublicationId
 		StoreDB.deleteOneById(collection, id, onError, onSuccess)
-	}
-
-	fun fetchAuthors(
-		search: String,
-		selectedList: List<User>,
-		onError: () -> Unit,
-		onSuccess: (ArrayList<User>) -> Unit
-	) {
-		val selected = ArrayList<String>(selectedList.map { it.id })
-		selected.add(Store.user.current.value!!.id)
-		StoreDB.getMany(
-			collection = "user",
-			onError = { onError() },
-			onCast = { id, data -> User.fromMap(id, data) },
-			where = listOf(Filter.notInArray(FieldPath.documentId(), selected))
-		) { result ->
-			onSuccess(
-				ArrayList(result.filter {
-					val searchQuery = search.trim().lowercase()
-					if (searchQuery == "") true
-					else if(("${it.firstName} ${it.lastName}").lowercase().contains(searchQuery)) true
-					else ("${it.lastName} ${it.firstName}").lowercase().contains(searchQuery)
-				})
-			)
-		}
 	}
 }
