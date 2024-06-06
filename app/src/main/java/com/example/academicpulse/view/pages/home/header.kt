@@ -6,16 +6,25 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.utils.useField
 import com.example.academicpulse.utils.useForm
 import com.example.academicpulse.view.components.basic.Input
+import com.example.academicpulse.view_model.Store
 
 @Composable
 fun HomeHeader() {
 	val search = useField(form = useForm())
+
+	LaunchedEffect(search.value.trim()) {
+		Store.publications.search(search.value) {
+			Store.publications.filtredHomePublications.value = it
+		}
+	}
+
 	Box(
 		modifier = Modifier
 			.fillMaxWidth()

@@ -10,24 +10,34 @@ class PublicationsViewModel : ViewModel() {
 	private val collection = "publication"
 	val userPublications = MutableLiveData<ArrayList<Publication>>()
 	val homePublications = MutableLiveData<ArrayList<Publication>>()
+	val filtredHomePublications = MutableLiveData<ArrayList<Publication>>()
 	val publication = MutableLiveData<Publication>()
 	var selectedPublicationId = ""
 	var redirectedFromForm = false
+
+	fun search(
+		query: String, onFinish: (ArrayList<Publication>) -> Unit
+	) {
+		if (homePublications.value == null) onFinish(ArrayList())
+		val searchQuery = query.trim().lowercase()
+		onFinish(ArrayList(homePublications.value!!.filter {
+			if (searchQuery == "") true
+			else ("${it.title} ${it.abstract} ${it.type}").lowercase().contains(searchQuery)
+		}))
+	}
 
 	fun fetchUserPublications(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
 		userPublications.value?.clear()
 		Store.publicationsTypes.getAll(onError) {
 			Store.user.getCurrentUser(onError) { user, _ ->
-				StoreDB.getManyByIds<Publication>(
-					collection,
+				StoreDB.getManyByIds<Publication>(collection,
 					ids = useCast(user, "publications", arrayListOf()),
 					onError = onError,
 					onAsyncCast = { id, data, resolve ->
 						Store.authors.fetchPublicationAuthors(data) { list ->
 							resolve(Publication.fromMap(id, data, list))
 						}
-					}
-				) { list ->
+					}) { list ->
 					userPublications.value = list
 					onSuccess()
 				}
@@ -45,9 +55,9 @@ class PublicationsViewModel : ViewModel() {
 					Store.authors.fetchPublicationAuthors(data) { list ->
 						resolve(Publication.fromMap(id, data, list))
 					}
-				}
-			) { list ->
+				}) { list ->
 				homePublications.value = list
+				filtredHomePublications.value = list
 				onSuccess()
 			}
 		}

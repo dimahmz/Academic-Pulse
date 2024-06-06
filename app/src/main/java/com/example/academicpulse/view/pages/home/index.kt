@@ -27,7 +27,7 @@ import com.example.academicpulse.view_model.Store
 fun HomePage() {
 	val (loading, setLoading) = useState { true }
 	val (showError, setShowError) = useState { false }
-	val publications = useAtom(Store.publications.homePublications, arrayListOf())
+	val publications = useAtom(Store.publications.filtredHomePublications, arrayListOf())
 
 	LaunchedEffect(true) {
 		Store.publications.fetchHomePublication(onSuccess = { setLoading(false) }) {
@@ -35,7 +35,6 @@ fun HomePage() {
 			setLoading(false)
 		}
 	}
-
 	LazyColumn(Modifier.padding(bottom = pageWithBarPaddingBottom)) {
 		item(key = "Page header") {
 			HomeHeader()
