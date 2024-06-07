@@ -1,6 +1,8 @@
 package com.example.academicpulse.model
 
 import com.example.academicpulse.utils.useCast
+import com.google.firebase.Timestamp
+import java.util.Date
 
 data class User(
 	val id: String = "",
@@ -11,7 +13,8 @@ data class User(
 	var institution: String = "",
 	var email: String = "",
 	var activated: Boolean = false,
-	var institutionSkipped: Boolean = false
+	var institutionSkipped: Boolean = false,
+	val createdAt: Timestamp = Timestamp(Date()),
 ) {
 	fun toMap(): HashMap<String, Any?> {
 		return hashMapOf(
@@ -22,6 +25,7 @@ data class User(
 			"position" to (if (institutionSkipped) null else position),
 			"email" to email,
 			"activated" to activated,
+			"createdAt" to Timestamp(Date()),
 		)
 	}
 
@@ -38,6 +42,7 @@ data class User(
 				email = useCast(map, "email", ""),
 				activated = useCast(map, "activated", false),
 				institutionSkipped = institution == "",
+				createdAt = useCast(map, "createdAt", Timestamp(Date())),
 			)
 		}
 	}
