@@ -40,6 +40,7 @@ data class Publication(
 			"reads" to reads,
 			"uploads" to uploads,
 			"authors" to authors.map { it.id },
+			"status" to status
 		)
 	}
 
@@ -55,7 +56,7 @@ data class Publication(
 				authors = authors,
 				reads = useCast(map, "reads", 0),
 				uploads = useCast(map, "uploads", 0),
-				status = useCast(map, "status", ""),
+				status = useCast(map, "status", "pending"),
 			)
 		}
 

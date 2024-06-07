@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.academicpulse.model.Publication
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.useCast
+import com.google.firebase.firestore.Filter
 
 class PublicationsViewModel : ViewModel() {
 	private val collection = "publication"
@@ -18,7 +19,10 @@ class PublicationsViewModel : ViewModel() {
 	fun search(
 		query: String, onFinish: (ArrayList<Publication>) -> Unit
 	) {
-		if (homePublications.value == null) onFinish(ArrayList())
+		if (homePublications.value == null) {
+			onFinish(ArrayList())
+			return
+		}
 		val searchQuery = query.trim().lowercase()
 		onFinish(ArrayList(homePublications.value!!.filter {
 			if (searchQuery == "") true
@@ -47,10 +51,12 @@ class PublicationsViewModel : ViewModel() {
 
 	fun fetchHomePublication(onSuccess: () -> Unit, onError: (Int) -> Unit) {
 		homePublications.value?.clear()
+		val filter = arrayListOf(Filter.equalTo("status", "accepted"))
 		Store.publicationsTypes.getAll(onError) {
 			StoreDB.getMany<Publication>(
 				collection,
 				onError = onError,
+				where = filter,
 				onAsyncCast = { id, data, resolve ->
 					Store.authors.fetchPublicationAuthors(data) { list ->
 						resolve(Publication.fromMap(id, data, list))
