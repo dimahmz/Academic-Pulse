@@ -17,6 +17,7 @@ data class Publication(
 	val authors: List<User>,
 	val reads: Long = 0,
 	val uploads: Long = 0,
+	val status: String = "pending"
 ) {
 	private var typeLabel: String? = null
 
@@ -54,6 +55,7 @@ data class Publication(
 				authors = authors,
 				reads = useCast(map, "reads", 0),
 				uploads = useCast(map, "uploads", 0),
+				status = useCast(map, "status", ""),
 			)
 		}
 

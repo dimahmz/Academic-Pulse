@@ -65,6 +65,10 @@
     <string name="delete_cancel">Cancel</string>
     <string name="delete_title">Delete Item</string>
 
+    <string name="pending_status">Pending</string>
+    <string name="accepted_status">Accepted</string>
+    <string name="rejected_status">Rejected</string>
+
     <string name="add_research">Add research</string>
     <string name="publication">Publication</string>
     <string name="type">Type</string>
