@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -13,6 +14,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.academicpulse.theme.AppTheme
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.context
+import com.example.academicpulse.utils.useAtom
+import com.example.academicpulse.view.components.global.LoaderScreen
 import com.example.academicpulse.view_model.Store
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -29,12 +32,18 @@ class Index : ComponentActivity() {
 		setContent {
 			Router.Provider()
 			Store.Provider()
+			val isLoading = useAtom(Store.isLoading)
 			AppTheme {
-				Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-					Scaffold(
-						content = { Router.NavGraph() },
-						bottomBar = { Router.NavBar() },
-					)
+				Box {
+					Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+						Scaffold(
+							content = { Router.NavGraph() },
+							bottomBar = { Router.NavBar() },
+						)
+					}
+					if (isLoading == true) Box {
+						LoaderScreen()
+					}
 				}
 			}
 		}

@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.academicpulse.view.components.basic.Spinner
 
 @Composable
 fun LoaderScreen() {
@@ -20,11 +21,11 @@ fun LoaderScreen() {
 		modifier = Modifier
 			.fillMaxSize()
 			.blur(radius = 3.dp)
-			.background(color = Color.Gray.copy(alpha = 0.5f)), contentAlignment = Alignment.Center
+			.background(color = Color.Black.copy(alpha = 0.5f))
+			.blur(radius = 3.dp),
+		contentAlignment = Alignment.Center
 	) {
-		CircularProgressIndicator(
-			modifier = Modifier.size(88.dp), color = MaterialTheme.colorScheme.primary
-		)
+		Spinner(size = 120.dp)
 	}
 }
 

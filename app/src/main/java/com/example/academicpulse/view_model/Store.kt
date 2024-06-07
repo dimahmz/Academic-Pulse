@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 class Store private constructor() : ViewModel() {
 	// Is app ready
 	private val isReady = MutableStateFlow(false)
+	private var isLoading = MutableLiveData(false)
 
 	// Store modules
 	private val auth = AuthViewModel()
@@ -51,6 +52,11 @@ class Store private constructor() : ViewModel() {
 		// Static getters
 		val isReady: Boolean
 			get() = if (appStore.isEmpty()) false else appStore[0].isReady.value
+		var isLoading: MutableLiveData<Boolean>
+			get() = appStore[0].isLoading
+			set(value) {
+				this.appStore[0].isLoading = value
+			}
 		val auth: AuthViewModel
 			get() = appStore[0].auth
 		val publications: PublicationsViewModel
