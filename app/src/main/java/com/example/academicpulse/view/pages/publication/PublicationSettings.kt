@@ -35,12 +35,12 @@ fun PublicationSettings() {
 	val confirm = Modal(
 		R.string.delete_title, R.string.delete_message, R.string.delete_cancel, R.string.delete_confirm
 	) {
-		Store.isLoading = MutableLiveData(true)
+		Store.isLoading.value = true
 		Store.publications.deleteById(onSuccess = {
 			Router.navigate("profile", false)
-			Store.isLoading = MutableLiveData(false)
+			Store.isLoading.value = false
 		}, onError = {
-			Store.isLoading = MutableLiveData(false)
+			Store.isLoading.value = false
 		})
 	}
 
