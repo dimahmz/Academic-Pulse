@@ -10,6 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import com.example.academicpulse.utils.context
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.*
+import com.example.academicpulse.view_model.Store
 
 @Composable
 fun TestPage() {
@@ -38,11 +39,19 @@ fun TestPage() {
 		onResult = { setURI(it) }
 	)
 
+	LaunchedEffect(Unit) {
+		Store.files.readFile("file1", {}, {})
+	}
+
 	Column {
 		Text(text = "Select file")
 		Button(text = "+") {
 			launcher.launch(arrayOf("application/pdf"))
 		}
 		Text(text = "File name: $fileName")
+		Button(text = "Upload file") {
+			if (uri != null)
+				Store.files.uploadFile(uri, "file1", {}, {})
+		}
 	}
 }

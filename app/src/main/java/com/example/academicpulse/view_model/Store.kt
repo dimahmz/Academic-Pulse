@@ -15,14 +15,15 @@ class Store private constructor() : ViewModel() {
 
 	// Store modules
 	private val auth = AuthViewModel()
-	private val publications = PublicationsViewModel()
 	private val user = UserViewModel()
+	private val publications = PublicationsViewModel()
 	private val publicationsTypes = PublicationsTypesViewModel()
-	private val publicationsAuthors = PublicationsAuthorsViewModal()
+	private val authors = PublicationsAuthorsViewModal()
+	private val files = FilesViewModel()
 
 	init {
 		// The splash screen will disappear only when the logo animation finish and the user account is verified.
-		val tasksCounter = MutableLiveData(2)
+		val tasksCounter = MutableLiveData(1)
 		fun setIsReady() {
 			viewModelScope.launch {
 				delay(600) // Wait for the navigation transition.
@@ -35,7 +36,7 @@ class Store private constructor() : ViewModel() {
 			delay(1000)
 			setIsReady()
 		}
-		auth.signInOnStart(this.user, ::setIsReady)
+		// auth.signInOnStart(this.user, ::setIsReady)
 	}
 
 	// Note: Static variables and methods are used just to hold the global Store instance and be accessible in anywhere.
@@ -56,13 +57,15 @@ class Store private constructor() : ViewModel() {
 			get() = appStore[0].isLoading
 		val auth: AuthViewModel
 			get() = appStore[0].auth
-		val publications: PublicationsViewModel
-			get() = appStore[0].publications
 		val user: UserViewModel
 			get() = appStore[0].user
+		val publications: PublicationsViewModel
+			get() = appStore[0].publications
 		val publicationsTypes: PublicationsTypesViewModel
 			get() = appStore[0].publicationsTypes
 		val authors: PublicationsAuthorsViewModal
-			get() = appStore[0].publicationsAuthors
+			get() = appStore[0].authors
+		val files: FilesViewModel
+			get() = appStore[0].files
 	}
 }
