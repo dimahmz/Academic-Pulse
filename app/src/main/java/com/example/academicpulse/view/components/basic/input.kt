@@ -5,14 +5,13 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActionScope
@@ -61,6 +60,9 @@ fun Input(
 	/** [outlined] indicates if the field has borders or not. */
 	outlined: Boolean = true,
 
+	/** [centered] indicates if the input content should be centered. */
+	centered: Boolean = false,
+
 	/** [readOnly] indicates if the field should accept any changes by the user interaction. */
 	readOnly: Boolean = false,
 
@@ -97,12 +99,12 @@ fun Input(
 	 * ```
 	 * Example usage:
 	 *
-	 * Column {
-	 * 	val (secondFieldFocus) = useState { FocusRequester() }
+	 * val form = Form.use()
+	 * val field1 = Field.use(form = form)
+	 * val field2 = Field.use(form = form)
 	 *
-	 * 	Input(focusNext = { secondFieldFocus.requestFocus() })
-	 * 	Input(focusRequester = secondFieldFocus)
-	 * }
+	 * Input(field = field1, focusNext = field2)
+	 * Input(field = field2)
 	 * ```
 	 */
 	focusNext: Field? = null,
@@ -114,28 +116,32 @@ fun Input(
 	 * - See also: [hideKeyboardOnOk] to handle the keyboard closing before executing [onOk].
 	 * ```
 	 * Example usage:
+	 * val message = Field.use(form = null)
+	 *
 	 * Input(
-	 * 	value = message,
-	 * 	onChange = setMessage,
+	 * 	field = message,
 	 * 	okIcon = ImeAction.Send,
-	 * 	onOk = { sendMessage(message) }
+	 * 	onOk = { sendMessage(message.value) }
 	 * )
 	 * ```
 	 */
 	onOk: (() -> Unit)? = null,
 ) {
-	val colors = MaterialTheme.colorScheme
-	val (modifier) = useState {
-		val mod = Modifier
-			.fillMaxWidth()
-			.height(inputHeight)
-		val focusRequester = field.focusRequester
-		if (focusRequester == null) mod.clickable { field.focus = true }
-		else mod
-			.focusRequester(focusRequester)
-			.onFocusChanged { field.focusChanger(it.isFocused, viaInput = true) }
+	val (interactModifier, setInteractModifier) = useState<Modifier> { Modifier }
+	LaunchedEffect(readOnly) {
+		setInteractModifier(
+			if (readOnly) Modifier
+			else {
+				val focusRequester = field.focusRequester
+				if (focusRequester == null) Modifier.clickable { field.focus = true }
+				else Modifier
+					.focusRequester(focusRequester)
+					.onFocusChanged { field.focusChanger(it.isFocused, viaInput = true) }
+			}
+		)
 	}
 	val (styleModifier, setStyleModifier) = useState<Modifier> { Modifier }
+	val colors = MaterialTheme.colorScheme
 	LaunchedEffect("$outlined ${field.valid} ${field.focus}") {
 		setStyleModifier(
 			if (outlined)
@@ -150,6 +156,12 @@ fun Input(
 		)
 	}
 
+	val modified = Modifier
+		.fillMaxWidth()
+		.height(inputHeight)
+		.composed(factory = { interactModifier })
+		.composed { styleModifier }
+
 	Column {
 		if (label != null) {
 			Row(
@@ -163,13 +175,15 @@ fun Input(
 		}
 
 		if (field.focusRequester == null) {
-			Row(modifier = modifier.composed { styleModifier }) {
+			Row(modifier = modified) {
 				FieldContent(
+					modifier = Modifier.weight(1f),
 					value = renderedValue ?: field.value,
 					label = label,
 					placeholder = placeholder,
 					outlined = outlined,
 					isFocused = field.focus,
+					centered = centered,
 					icon = icon,
 					trailingIcon = trailingIcon,
 				) {
@@ -188,7 +202,7 @@ fun Input(
 			}
 
 			BasicTextField(
-				modifier = modifier.composed { styleModifier },
+				modifier = modified,
 				cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
 
 				// Value Handling
@@ -226,17 +240,18 @@ fun Input(
 					placeholder = placeholder,
 					outlined = outlined,
 					isFocused = field.focus,
+					centered = centered,
+					content = innerTextField,
 					icon = icon,
 					trailingIcon = if (!password) trailingIcon
 					else {
 						{
 							val btn = if (passwordVisible) R.drawable.icon_line_confirm else R.drawable.icon_close
-							Icon(id = btn, color = Color.Black.copy(alpha = 0.6f)) {
+							Icon(id = btn, color = Color.Black.copy(alpha = 0.5f)) {
 								setPasswordVisibility(!passwordVisible)
 							}
 						}
 					},
-					content = innerTextField
 				)
 			}
 		}
@@ -245,43 +260,45 @@ fun Input(
 
 @Composable
 private fun FieldContent(
+	modifier: Modifier = Modifier,
 	value: String,
 	label: Int?,
 	placeholder: Int?,
 	outlined: Boolean,
 	isFocused: Boolean,
+	centered: Boolean,
 	icon: Int?,
 	trailingIcon: @Composable (() -> Unit)? = null,
 	content: @Composable () -> Unit,
 ) {
-	val modifier = Modifier
-		.height((inputHeight.value - 4).dp)
-		.padding(top = 3.dp)
+	val (iconOpacity, setIconOpacity) = useState { 0.3f }
+	LaunchedEffect(value.isBlank()) {
+		setIconOpacity(if (value.isBlank()) 0.3f else 0.5f)
+	}
+
 	Row(
-		Modifier.padding(horizontal = if (outlined) 16.dp else 0.dp),
-		verticalAlignment = Alignment.CenterVertically
+		modifier
+			.height(inputHeight)
+			.padding(horizontal = if (outlined) 16.dp else 0.dp),
+		verticalAlignment = Alignment.CenterVertically,
+		horizontalArrangement = Arrangement.Center,
 	) {
-		if (icon != null) {
-			Icon(id = icon, color = Color.Black.copy(alpha = 0.6f))
-			Spacer(Modifier.width(8.dp))
-		}
-		Box(
-			Modifier
-				.weight(1f)
-				.height(inputHeight)) {
-			if (value.isEmpty() && (placeholder != null || label != null)) {
-				val color = if (isFocused) inputGray.copy(alpha = 0.6f) else inputGray
-				Row(modifier, verticalAlignment = Alignment.CenterVertically) {
+		if (icon != null)
+			Box(modifier = Modifier.padding(end = 8.dp)) {
+				Icon(id = icon, color = Color.Black.copy(alpha = iconOpacity))
+			}
+		var inlineModifier = Modifier.height((inputHeight.value - 6).dp)
+		inlineModifier = if (centered) inlineModifier else inlineModifier.weight(1f)
+		Box(modifier = inlineModifier) {
+			if (value.isBlank() && (placeholder != null || label != null)) {
+				Row(inlineModifier, verticalAlignment = Alignment.CenterVertically) {
+					val color = if (isFocused) inputGray.copy(alpha = 0.6f) else inputGray
 					Text(text = placeholder ?: label!!, color = color)
 				}
 			}
-			Row(modifier, verticalAlignment = Alignment.CenterVertically) {
-				content()
-			}
+			Row(inlineModifier, verticalAlignment = Alignment.CenterVertically, content = { content() })
 		}
-		if (trailingIcon != null) {
-			Spacer(Modifier.width(8.dp))
-			trailingIcon()
-		}
+		if (trailingIcon != null)
+			Box(modifier = Modifier.padding(start = 8.dp), content = { trailingIcon() })
 	}
 }

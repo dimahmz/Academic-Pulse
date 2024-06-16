@@ -9,7 +9,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.utils.forms.*
@@ -52,11 +51,7 @@ fun <Item> Select(
 	getLabel: (it: Item) -> String = { it.toString() },
 ) {
 	val (isOpen, setIsOpen) = useState { false }
-	val focusManager = LocalFocusManager.current
-	field.onFocusChange(fun (state: Boolean) {
-		if (!state) focusManager.clearFocus()
-		setIsOpen(state)
-	})
+	field.onFocusChange(setIsOpen)
 
 	val (renderedValue, setRenderedValue) = useState { "" }
 	LaunchedEffect(field.value) {

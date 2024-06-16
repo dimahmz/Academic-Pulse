@@ -7,12 +7,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.academicpulse.R
 import com.example.academicpulse.theme.*
 import com.example.academicpulse.utils.forms.*
-import com.example.academicpulse.utils.logcat
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
@@ -43,15 +41,11 @@ fun DatePicker(
 	 */
 	icon: Int? = null,
 ) {
-	val focusManager = LocalFocusManager.current
 	val calendarDialogState = rememberSheetState(onCloseRequest = { field.focus = false })
-	field.onFocusChange(fun (state: Boolean) {
+	field.onFocusChange { state ->
 		if (state) calendarDialogState.show()
-		else {
-			focusManager.clearFocus()
-			calendarDialogState.hide()
-		}
-	})
+		else calendarDialogState.hide()
+	}
 
 	MaterialTheme(
 		colorScheme = lightColorScheme(
