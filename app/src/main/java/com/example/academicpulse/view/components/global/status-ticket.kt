@@ -18,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.academicpulse.R
-import com.example.academicpulse.theme.green
 import com.example.academicpulse.theme.orange
 import com.example.academicpulse.theme.red
 import com.example.academicpulse.theme.white
@@ -26,9 +25,9 @@ import com.example.academicpulse.view.components.basic.Text
 
 @Composable
 fun StatusTicket(status: String = "rejected") {
-	var color: Color = green
-	var statusText: Int = R.string.accepted_status
 	if (status.isNotEmpty() && status != "accepted") {
+		val color: Color
+		val statusText: Int
 		if (status == "pending") {
 			color = orange
 			statusText = R.string.pending_status
@@ -37,7 +36,6 @@ fun StatusTicket(status: String = "rejected") {
 			statusText = R.string.rejected_status
 		}
 		Row {
-
 			Box(
 				modifier = Modifier
 					.wrapContentSize()
@@ -57,4 +55,3 @@ fun StatusTicket(status: String = "rejected") {
 fun PreviewStatusTicker() {
 	StatusTicket()
 }
-
