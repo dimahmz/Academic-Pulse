@@ -15,8 +15,7 @@ import com.example.academicpulse.R
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
-import com.example.academicpulse.utils.useField
-import com.example.academicpulse.utils.useForm
+import com.example.academicpulse.utils.forms.*
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view.components.global.Header
 import com.example.academicpulse.view_model.Store
@@ -24,18 +23,18 @@ import com.example.academicpulse.view_model.Store
 @Composable
 fun SignUpInstitutionPage() {
 	val auth = Store.auth
-	val form = useForm()
-	val institution = useField(
+	val form = Form.use()
+	val institution = Field.use(
 		form = form,
 		value = auth.signUpInfo.institution,
 		ifEmpty = R.string.institution_required,
 	)
-	val department = useField(
+	val department = Field.use(
 		form = form,
 		value = auth.signUpInfo.department,
 		ifEmpty = R.string.department_required,
 	)
-	val position = useField(
+	val position = Field.use(
 		form = form,
 		value = auth.signUpInfo.position,
 		ifEmpty = R.string.position_required,
@@ -64,12 +63,12 @@ fun SignUpInstitutionPage() {
 			Input(
 				field = institution,
 				label = R.string.institution,
-				focusNext = department.focusRequester,
+				focusNext = department,
 			)
 			Input(
 				field = department,
 				label = R.string.department,
-				focusNext = position.focusRequester,
+				focusNext = position,
 			)
 			Input(
 				field = position,

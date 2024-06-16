@@ -7,22 +7,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.academicpulse.R
-import com.example.academicpulse.model.Field
 import com.example.academicpulse.theme.*
-import com.example.academicpulse.utils.useField
-import com.example.academicpulse.utils.useForm
-import com.example.academicpulse.utils.useState
+import com.example.academicpulse.utils.forms.*
+import com.example.academicpulse.utils.logcat
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePicker(
 	field: Field,
@@ -46,98 +43,15 @@ fun DatePicker(
 	 */
 	icon: Int? = null,
 ) {
-	DatePicker(
-		value = field.value,
-		label = label,
-		placeholder = placeholder,
-		required = field.required,
-		valid = field.valid,
-		readOnly = readOnly,
-		icon = icon,
-		focusRequester = field.focusRequester,
-		onChange = { field.value = it },
-	)
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DatePicker(
-	value: String,
-
-	/** [label] is a supporting text placed above the field.
-	 * - Note: It can automatically request a focus on the field when it's clicked. */
-	@StringRes label: Int? = null,
-
-	/** [placeholder] is a supporting text placed inside the field.
-	 * - Note: If it's `null`, it takes the label value if present. */
-	@StringRes placeholder: Int? = R.string.date_placeholder,
-
-	/** [required] indicates if the field should not be empty. If `true`, a red symbol (`*`) added next to the [label].
-	 * - Note: It has no effect if [label] is `null`.
-	 * - See also [valid] to apply error style on the field borders.
-	 */
-	required: Boolean = true,
-
-	/** Control the component theme to switch between the main them and error them. */
-	valid: Boolean = true,
-
-	/** [readOnly] indicates if the field should accept any changes by the user interaction. */
-	readOnly: Boolean = false,
-
-	/** [icon] is the resource ID of the prefix icon.
-	 * ```
-	 * Example usage:
-	 * DatePicker(icon = R.drawable.calendar)
-	 * ```
-	 */
-	icon: Int? = null,
-
-	/** [focusRequester] should be used if there is any external Element or script that can trigger focus on the field.
-	 * ```
-	 * Example usage:
-	 * val (focusRequester) = useState { FocusRequester() }
-	 *
-	 * Column {
-	 * 	Button("Click") { focusRequester.requestFocus() }
-	 * 	DatePicker(focusRequester = focusRequester)
-	 * }
-	 * ```
-	 */
-	focusRequester: FocusRequester? = null,
-
-	// Events
-
-	/** [onChange] is invoked when the user change the field value. (Used to update the passed value)
-	 * ```
-	 * Example usage:
-	 * val (date, setDate) = useState { "" }
-	 *
-	 * Column {
-	 * 	Text("Current value is: $date")
-	 * 	DatePicker(value = date, onChange = setDate)
-	 * }
-	 * ```
-	 */
-	onChange: ((String) -> Unit),
-) {
-	val (isOpen, setIsOpen) = useState { false }
 	val focusManager = LocalFocusManager.current
-	fun onCloseDialog() {
-		setIsOpen(false)
-		focusManager.clearFocus()
-	}
-
-	val calendarDialogState = rememberSheetState(
-		onCloseRequest = { onCloseDialog() },
-		onDismissRequest = { onCloseDialog() },
-		onFinishedRequest = { onCloseDialog() },
-	)
-
-	fun showDialog(state: Boolean) {
-		setIsOpen(state)
+	val calendarDialogState = rememberSheetState(onCloseRequest = { field.focus = false })
+	field.onFocusChange(fun (state: Boolean) {
 		if (state) calendarDialogState.show()
-		else calendarDialogState.hide()
-	}
+		else {
+			focusManager.clearFocus()
+			calendarDialogState.hide()
+		}
+	})
 
 	MaterialTheme(
 		colorScheme = lightColorScheme(
@@ -149,40 +63,35 @@ fun DatePicker(
 		),
 	) {
 		CalendarDialog(state = calendarDialogState, selection = CalendarSelection.Date { date ->
-			onChange(date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+			field.value = date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 		})
 	}
 
 	Input(
-		value = value,
+		field = field,
 		label = label,
 		placeholder = placeholder,
-		required = required,
-		valid = valid,
-		readOnly = readOnly || isOpen,
+		readOnly = readOnly,
 		icon = icon,
-		focusRequester = focusRequester,
-		onChange = { /* DO NOTHING */ },
-		onFocusChange = ::showDialog,
 	)
 }
 
 @Preview(showSystemUi = true)
 @Composable
 fun PreviewDatePicker() {
-	val form = useForm()
+	val form = Form.use()
 
 	Column {
 		// Date with today as the initial value.
 		val initialDate = remember { LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) }
-		val date = useField(form = form, value = initialDate)
+		val date = Field.use(form = form, value = initialDate)
 		DatePicker(
 			field = date,
 			label = R.string.date,
 		)
 
 		// Date with no initial value
-		val date2 = useField(form = form)
+		val date2 = Field.use(form = form)
 		DatePicker(
 			field = date2,
 			label = R.string.date,

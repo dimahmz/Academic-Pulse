@@ -23,10 +23,9 @@ import com.example.academicpulse.R
 import com.example.academicpulse.model.User
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.pagePaddingX
+import com.example.academicpulse.utils.forms.*
 import com.example.academicpulse.utils.context
 import com.example.academicpulse.utils.useAtom
-import com.example.academicpulse.utils.useField
-import com.example.academicpulse.utils.useForm
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.H3
 import com.example.academicpulse.view.components.basic.Image
@@ -39,7 +38,7 @@ import com.example.academicpulse.view_model.Store
 
 @Composable
 fun SelectAuthorsPage() {
-	val search = useField(form = useForm())
+	val search = Field.use(form = null)
 	val (loading, setLoading) = useState { true }
 	val selectedList = useAtom(Store.authors.currentForm, arrayListOf())
 	val (list, setList) = useState { arrayListOf<User>() }

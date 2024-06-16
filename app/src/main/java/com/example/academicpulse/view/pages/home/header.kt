@@ -10,14 +10,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
-import com.example.academicpulse.utils.useField
-import com.example.academicpulse.utils.useForm
+import com.example.academicpulse.utils.forms.*
 import com.example.academicpulse.view.components.basic.Input
 import com.example.academicpulse.view_model.Store
 
 @Composable
 fun HomeHeader() {
-	val search = useField(form = useForm())
+	val search = Field.use(form = null)
 
 	LaunchedEffect(search.value.trim()) {
 		Store.publications.search(search.value) {

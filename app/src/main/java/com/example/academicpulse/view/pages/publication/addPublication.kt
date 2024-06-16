@@ -27,8 +27,7 @@ import com.example.academicpulse.theme.inputLabelGap
 import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.utils.stringToDate
 import com.example.academicpulse.utils.useAtom
-import com.example.academicpulse.utils.useField
-import com.example.academicpulse.utils.useForm
+import com.example.academicpulse.utils.forms.*
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view.components.global.AuthorsRow
@@ -38,12 +37,12 @@ import com.google.firebase.Timestamp
 
 @Composable
 fun AddPublicationPage() {
-	val form = useForm()
-	val type = useField(form = form, ifEmpty = R.string.type_required)
-	val title = useField(form = form, ifEmpty = R.string.title_required)
-	val abstract = useField(form = form, ifEmpty = R.string.abstract_required)
-	val doi = useField(form = form, required = false)
-	val date = useField(form = form, ifEmpty = R.string.date_required)
+	val form = Form.use()
+	val type = Field.use(form = form, ifEmpty = R.string.type_required)
+	val title = Field.use(form = form, ifEmpty = R.string.title_required)
+	val abstract = Field.use(form = form, ifEmpty = R.string.abstract_required)
+	val doi = Field.use(form = form, required = false)
+	val date = Field.use(form = form, ifEmpty = R.string.date_required)
 	val authors = useAtom(Store.authors.currentForm, arrayListOf())
 	val typeOptions = useAtom(Store.publicationsTypes.list)
 	val (typesFetched, setTypesFetched) = useState { false }
@@ -65,9 +64,9 @@ fun AddPublicationPage() {
 		Store.publications.insert(
 			Publication(
 				typeId = type.value,
-				title = title.trim(),
-				abstract = abstract.trim(),
-				doi = doi.trim(),
+				title = title.value,
+				abstract = abstract.value,
+				doi = doi.value,
 				date = Timestamp(stringToDate(date.value, "dd/MM/yyyy")),
 				authors = list,
 			)
@@ -98,29 +97,27 @@ fun AddPublicationPage() {
 		Spacer(Modifier.height(14.dp))
 
 		Column(verticalArrangement = Arrangement.spacedBy(gap)) {
-			if (typeOptions != null)
-				Select(
-					field = type,
-					label = R.string.type,
-					items = typeOptions,
-					getValue = { it.id },
-					getLabel = { it.label },
-					focusNext = title.focusRequester,
-				)
+			Select(
+				field = type,
+				label = R.string.type,
+				items = typeOptions!!,
+				getValue = { it.id },
+				getLabel = { it.label },
+			)
 			Input(
 				field = title,
 				label = R.string.title,
-				focusNext = abstract.focusRequester,
+				focusNext = abstract,
 			)
 			Input(
 				field = abstract,
 				label = R.string._abstract,
-				focusNext = doi.focusRequester,
+				focusNext = doi,
 			)
 			Input(
 				field = doi,
 				label = R.string.doi,
-				focusNext = date.focusRequester,
+				focusNext = date,
 			)
 			DatePicker(field = date, label = R.string.date)
 			Column {

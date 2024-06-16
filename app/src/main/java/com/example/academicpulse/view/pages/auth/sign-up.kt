@@ -12,13 +12,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
-import com.example.academicpulse.model.Field
 import com.example.academicpulse.model.SignInInfo
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
-import com.example.academicpulse.utils.useField
-import com.example.academicpulse.utils.useForm
+import com.example.academicpulse.utils.forms.*
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view.components.global.Header
@@ -27,31 +25,31 @@ import com.example.academicpulse.view_model.Store
 @Composable
 fun SignUpPage() {
 	val auth = Store.auth
-	val form = useForm()
-	val firstName = useField(
+	val form = Form.use()
+	val firstName = Field.use(
 		form = form,
 		value = auth.signUpInfo.firstName,
-		regex = Field.name,
+		regex = Form.name,
 		ifEmpty = R.string.first_name_required,
 		ifInvalid = R.string.first_name_invalid,
 	)
-	val lastName = useField(
+	val lastName = Field.use(
 		form = form,
 		value = auth.signUpInfo.lastName,
-		regex = Field.name,
+		regex = Form.name,
 		ifEmpty = R.string.last_name_required,
 		ifInvalid = R.string.last_name_invalid,
 	)
-	val email = useField(
+	val email = Field.use(
 		form = form,
 		value = auth.signUpInfo.email,
-		regex = Field.email,
+		regex = Form.email,
 		ifEmpty = R.string.email_required,
 		ifInvalid = R.string.email_invalid,
 	)
-	val password = useField(
+	val password = Field.use(
 		form = form,
-		regex = Field.password,
+		regex = Form.password,
 		ifEmpty = R.string.password_required,
 		ifInvalid = R.string.password_not_strong,
 	)
@@ -61,8 +59,8 @@ fun SignUpPage() {
 	fun signUp() {
 		if (loading || !form.validate()) return
 		setLoading(true)
-		auth.saveSignUpInfo(firstName.trim(), lastName.trim(), email.trim())
-		auth.signUp(SignInInfo(email.trim(), password.trim())) { message ->
+		auth.saveSignUpInfo(firstName.value, lastName.value, email.value)
+		auth.signUp(SignInInfo(email.value, password.value)) { message ->
 			setLoading(false)
 			form.error = message
 		}
@@ -84,17 +82,17 @@ fun SignUpPage() {
 			Input(
 				field = firstName,
 				label = R.string.first_name,
-				focusNext = lastName.focusRequester,
+				focusNext = lastName,
 			)
 			Input(
 				field = lastName,
 				label = R.string.last_name,
-				focusNext = email.focusRequester,
+				focusNext = email,
 			)
 			Input(
 				field = email,
 				label = R.string.institution_email,
-				focusNext = password.focusRequester,
+				focusNext = password,
 				keyboardType = KeyboardType.Email,
 			)
 			Input(

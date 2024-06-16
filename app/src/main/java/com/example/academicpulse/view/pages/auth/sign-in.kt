@@ -20,13 +20,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
-import com.example.academicpulse.model.Field
 import com.example.academicpulse.model.SignInInfo
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
-import com.example.academicpulse.utils.useField
-import com.example.academicpulse.utils.useForm
+import com.example.academicpulse.utils.forms.*
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view_model.Store
@@ -34,18 +32,18 @@ import com.example.academicpulse.view_model.Store
 @Composable
 fun SignInPage() {
 	val auth = Store.auth
-	val form = useForm()
-	val email = useField(
+	val form = Form.use()
+	val email = Field.use(
 		form = form,
 		value = auth.signInInfo.email,
-		regex = Field.email,
+		regex = Form.email,
 		ifEmpty = R.string.email_required,
 		ifInvalid = R.string.email_invalid,
 	)
-	val password = useField(
+	val password = Field.use(
 		form = form,
 		value = auth.signInInfo.password,
-		regex = Field.password,
+		regex = Form.password,
 		ifEmpty = R.string.password_required,
 		ifInvalid = R.string.password_invalid,
 	)
@@ -55,7 +53,7 @@ fun SignInPage() {
 	fun signIn() {
 		if (loading || !form.validate()) return
 		setLoading(true)
-		auth.signIn(SignInInfo(email.trim(), password.trim())) { error ->
+		auth.signIn(SignInInfo(email.value, password.value)) { error ->
 			setLoading(false)
 			form.error = error
 		}
@@ -86,7 +84,7 @@ fun SignInPage() {
 				Input(
 					field = email,
 					label = R.string.email_address,
-					focusNext = password.focusRequester,
+					focusNext = password,
 					keyboardType = KeyboardType.Email,
 				)
 				Input(
