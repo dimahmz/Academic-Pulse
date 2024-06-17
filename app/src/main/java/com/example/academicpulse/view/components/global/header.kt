@@ -1,6 +1,6 @@
 package com.example.academicpulse.view.components.global
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -21,12 +21,12 @@ fun Header(title: Int, navBarVisibleAfterBack: Boolean = false) {
 }
 
 @Composable
-fun Header(title: Int, onClick: () -> Unit) {
-	Box(
+fun Header(title: Int, suffix: @Composable (() -> Unit)? = null, onClick: () -> Unit) {
+	Row(
 		modifier = Modifier
 			.padding(vertical = 25.dp)
 			.fillMaxWidth(),
-		contentAlignment = Alignment.CenterStart
+		verticalAlignment = Alignment.CenterVertically,
 	) {
 		Icon(
 			id = R.drawable.icon_left_arrow,
@@ -37,8 +37,10 @@ fun Header(title: Int, onClick: () -> Unit) {
 
 		H1(
 			text = title,
-			modifier = Modifier.fillMaxWidth(),
+			modifier = Modifier.weight(1f),
 			align = TextAlign.Center
 		)
+
+		suffix?.invoke()
 	}
 }

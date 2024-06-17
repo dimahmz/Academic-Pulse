@@ -39,6 +39,7 @@ import com.example.academicpulse.view.components.basic.Title
 import com.example.academicpulse.view.components.global.Line
 import com.example.academicpulse.utils.context
 import com.example.academicpulse.view.components.global.AuthorsRow
+import com.example.academicpulse.view.components.global.PublicationSettings
 
 @Composable
 fun OnePublicationPage() {
@@ -55,7 +56,10 @@ fun OnePublicationPage() {
 			.fillMaxHeight()
 			.padding(horizontal = pagePaddingX),
 	) {
-		Header(title = R.string.publication) {
+		Header(
+			title = R.string.publication,
+			suffix = { PublicationSettings() }
+		) {
 			val redirectedFromForm = Store.publications.redirectedFromForm
 			Store.publications.redirectedFromForm = false
 			Router.back(
@@ -64,8 +68,6 @@ fun OnePublicationPage() {
 				step = if (redirectedFromForm) 2 else 1
 			)
 		}
-
-		PublicationSettings()
 		Spacer(Modifier.height(14.dp))
 
 		if (loading) {

@@ -1,4 +1,4 @@
-package com.example.academicpulse.view.pages.publication
+package com.example.academicpulse.view.components.global
 
 
 import androidx.compose.foundation.layout.Box
