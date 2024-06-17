@@ -17,23 +17,28 @@ class FilesViewModel : ViewModel() {
 	private val publications = "publications"
 
 	private val listCache = arrayListOf<Pair<String, MutableLiveData<Uri>>>()
-	private fun cacheFile(id: String, file: Uri) {
+	private fun cacheFile(id: String, file: Uri?) {
 		val index = listCache.indexOfFirst { (filename) -> id == filename }
 		if (index == -1) listCache.add(Pair(id, MutableLiveData(file)))
 		else listCache[index].second.value = file
 	}
 
-	fun readFile(id: String, onError: (Int) -> Unit, onSuccess: () -> Unit) {
+	fun readFile(id: String, onError: (Int) -> Unit, onSuccess: (Uri?) -> Unit) {
 		val fullPath = "$publications/$id"
-		if (listCache.find { (id) -> fullPath == id } != null) return onSuccess()
+		val cachedFile = listCache.find { (id) -> fullPath == id }
+		if (cachedFile != null) return onSuccess(cachedFile.second.value)
 		val localFile = File.createTempFile("file1", ".pdf")
 		storage.child(fullPath).getFile(localFile).addOnCompleteListener { uploading ->
 			if (uploading.isSuccessful) {
-				cacheFile(fullPath, Uri.fromFile(localFile))
-				onSuccess()
+				val file = Uri.fromFile(localFile)
+				cacheFile(fullPath, file)
+				onSuccess(file)
 			} else {
-				if (uploading.exception?.message?.contains("does not exist") == true)
+				if (uploading.exception?.message?.contains("does not exist") == true) {
 					logcat("Warning: File with ID name {$id} is not found in the path {$publications}")
+					cacheFile(fullPath,  null)
+					onSuccess(null)
+				}
 				else logcat("Error reading file with ID name {$id}", uploading.exception)
 				onError(R.string.unknown_error)
 			}
@@ -41,7 +46,10 @@ class FilesViewModel : ViewModel() {
 	}
 
 	fun uploadFile(file: Uri?, id: String, onError: (Int) -> Unit, onSuccess: () -> Unit) {
-		if (file == null) return onSuccess()
+		if (file == null) {
+			cacheFile("$publications/$id", null)
+			return onSuccess()
+		}
 		storage.child("$publications/$id").putFile(file).addOnCompleteListener { uploading ->
 			if (uploading.isSuccessful) {
 				cacheFile("$publications/$id", file)

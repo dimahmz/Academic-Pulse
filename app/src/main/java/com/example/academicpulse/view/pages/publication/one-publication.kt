@@ -112,6 +112,18 @@ fun OnePublicationPage() {
 			Spacer(Modifier.height(10.dp))
 			Text(text = publication.abstract, size = descriptionTextSize)
 			Spacer(Modifier.height(5.dp))
+			publication.fetchFile()
+			if (!publication.fileAvailability)
+				Box(
+					modifier = Modifier
+						.fillMaxWidth()
+						.padding(top = 30.dp), contentAlignment = Alignment.Center
+				) {
+					Spinner(size = 30.dp)
+				}
+			else if (publication.file != null) {
+				Text(text = "Pdf file exists")
+			}
 		}
 	}
 

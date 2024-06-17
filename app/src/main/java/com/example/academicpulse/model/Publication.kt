@@ -1,6 +1,7 @@
 package com.example.academicpulse.model
 
 import android.net.Uri
+import androidx.compose.runtime.mutableStateOf
 import com.example.academicpulse.utils.useCast
 import com.example.academicpulse.view_model.Store
 import com.google.firebase.Timestamp
@@ -8,21 +9,23 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-data class Publication(
+class Publication(
 	val id: String = "",
 	val typeId: String,
 	val title: String,
 	val abstract: String,
-	val file: Uri? = null,
+	file: Uri? = null,
 	val doi: String,
 	val date: Timestamp,
-	val createdAt: Timestamp = Timestamp(Date()),
 	val authors: List<User>,
 	val reads: Long = 0,
 	val uploads: Long = 0,
-	val status: String = "pending"
+	val status: String = "pending",
+	val createdAt: Timestamp = Timestamp(Date()),
 ) {
 	private var typeLabel: String? = null
+	private var _file = mutableStateOf(file)
+	private val _fileAvailability = mutableStateOf(false)
 
 	val type: String
 		get() {
@@ -32,6 +35,19 @@ data class Publication(
 			}
 			return typeLabel ?: "Article"
 		}
+	val fileAvailability: Boolean
+		get() = _fileAvailability.value
+	val file: Uri?
+		get() = _file.value
+
+	fun fetchFile() {
+		if (_file.value != null) {
+			if (!_fileAvailability.value) _fileAvailability.value = true
+		} else Store.files.readFile(id, { _fileAvailability.value = true }) {
+			if (it != null) _file.value = it
+			_fileAvailability.value = true
+		}
+	}
 
 	fun toMap(): HashMap<String, Any?> {
 		return hashMapOf(
