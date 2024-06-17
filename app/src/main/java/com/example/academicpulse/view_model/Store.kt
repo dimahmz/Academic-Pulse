@@ -23,7 +23,7 @@ class Store private constructor() : ViewModel() {
 
 	init {
 		// The splash screen will disappear only when the logo animation finish and the user account is verified.
-		val tasksCounter = MutableLiveData(1)
+		val tasksCounter = MutableLiveData(2)
 		fun setIsReady() {
 			viewModelScope.launch {
 				delay(600) // Wait for the navigation transition.
@@ -36,7 +36,7 @@ class Store private constructor() : ViewModel() {
 			delay(1000)
 			setIsReady()
 		}
-		// auth.signInOnStart(this.user, ::setIsReady)
+		auth.signInOnStart(this.user, ::setIsReady)
 	}
 
 	// Note: Static variables and methods are used just to hold the global Store instance and be accessible in anywhere.

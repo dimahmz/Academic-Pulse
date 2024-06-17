@@ -9,7 +9,7 @@ import com.example.academicpulse.utils.context
 import com.example.academicpulse.utils.useAtom
 
 class Router private constructor(private var navController: NavHostController) {
-	private var route = MutableLiveData("test")
+	private var route = MutableLiveData("auth")
 	private var navBarVisible = MutableLiveData(false)
 
 	// Note: Static variables and methods are used just to hold the global Router instance and be accessible in anywhere.

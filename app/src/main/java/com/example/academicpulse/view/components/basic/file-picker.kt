@@ -5,12 +5,17 @@ import android.provider.OpenableColumns
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.academicpulse.R
+import com.example.academicpulse.theme.gap
 import com.example.academicpulse.utils.context
 import com.example.academicpulse.utils.forms.*
 import com.example.academicpulse.utils.useState
+import com.example.academicpulse.view_model.Store
 
 @Composable
 fun FilePicker(
@@ -83,4 +88,29 @@ fun FilePicker(
 		icon = icon,
 		centered = true,
 	)
+}
+
+@Preview
+@Composable
+fun PreviewFilePicker() {
+	val (uri, setURI) = useState<Uri?> { null }
+	val file = Field.use(form = null)
+
+	LaunchedEffect(Unit) {
+		Store.files.readFile("file1", {}, {})
+	}
+
+	Column(verticalArrangement = Arrangement.spacedBy(gap)) {
+		FilePicker(
+			field = file,
+			label = R.string.date,
+			mimeTypes = arrayOf("application/pdf"),
+			defaultFileName = "Article",
+			uri = uri,
+			onChangeURI = setURI
+		)
+		Button(text = "Upload file") {
+			if (uri != null) Store.files.uploadFile(uri, "file1", {}, {})
+		}
+	}
 }

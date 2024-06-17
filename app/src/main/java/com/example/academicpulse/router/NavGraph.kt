@@ -71,9 +71,5 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
 				SelectAuthorsPage(/* BackHandler, exit the app */)
 			}
 		}
-		composable(route = "test") {
-			TestPage()
-			BackHandler { Router.exit() }
-		}
 	}
 }
