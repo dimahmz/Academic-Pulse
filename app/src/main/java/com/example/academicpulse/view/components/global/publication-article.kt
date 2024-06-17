@@ -40,12 +40,6 @@ fun PublicationArticle(publication: Publication) {
 		verticalArrangement = Arrangement.spacedBy(8.dp),
 	) {
 		Column {
-			Row(
-				Modifier.fillMaxSize(),
-				horizontalArrangement = Arrangement.End,
-			) {
-				StatusTicket(status = publication.status)
-			}
 			H2(text = publication.title, modifier = Modifier.fillMaxWidth())
 			Spacer(Modifier.height(10.dp))
 			Box(

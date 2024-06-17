@@ -45,39 +45,46 @@ fun UserCard(onAddResearch: () -> Unit) {
 			}
 		}
 
-		if (loading)
-			Box(
-				modifier = Modifier
-					.fillMaxWidth()
-					.padding(top = 30.dp),
-				contentAlignment = Alignment.Center
-			) {
-				Spinner(size = 30.dp)
-			}
+		if (loading) Box(
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(top = 30.dp), contentAlignment = Alignment.Center
+		) {
+			Spinner(size = 30.dp)
+		}
 		else if (user != null) {
 			Image(id = R.drawable.avatar_user, size = 80.dp)
 			H2(text = "${user.firstName} ${user.lastName}")
 
-			if (!user.institutionSkipped)
+			if (user.institution != null) {
 				Row(
-					modifier = Modifier.padding(top = 3.dp), horizontalArrangement = Arrangement.spacedBy(gap)
+					horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp),
+					verticalAlignment = Alignment.CenterVertically,
 				) {
-					Row(
-						horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp),
-						verticalAlignment = Alignment.CenterVertically,
-					) {
-						Text(text = user.institution)
-						Icon(id = R.drawable.icon_dot, size = 7.dp)
-					}
-					Row(
-						horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp),
-						verticalAlignment = Alignment.CenterVertically,
-					) {
-						Text(text = user.department)
-						Icon(id = R.drawable.icon_dot, size = 7.dp)
-					}
+					Icon(id = R.drawable.icon_dot, size = 7.dp)
+					Text(text = user.institution)
+				}
+			}
+
+			if (user.department != null) {
+				Row(
+					horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp),
+					verticalAlignment = Alignment.CenterVertically,
+				) {
+					Icon(id = R.drawable.icon_dot, size = 7.dp)
+					Text(text = user.department)
+				}
+			}
+
+			if (user.position != null) {
+				Row(
+					horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp),
+					verticalAlignment = Alignment.CenterVertically,
+				) {
+					Icon(id = R.drawable.icon_dot, size = 7.dp)
 					Text(text = user.position)
 				}
+			}
 
 			Row(
 				modifier = Modifier.padding(top = 26.dp, bottom = 14.dp),
@@ -99,3 +106,4 @@ fun UserCard(onAddResearch: () -> Unit) {
 fun PreviewUserCard() {
 	UserCard { /* At click on add research. */ }
 }
+

@@ -98,6 +98,7 @@ fun AddPublicationPage() {
 				items = typeOptions!!,
 				getValue = { it.id },
 				getLabel = { it.label },
+				icon = R.drawable.icon_down_arrow
 			)
 			Input(
 				field = form.title,
