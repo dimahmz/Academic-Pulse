@@ -22,14 +22,6 @@ import com.example.academicpulse.view_model.Store
 fun PublicationSettings() {
 	val (isOpen, setIsOpen) = useState { false }
 
-	fun onCloseDialog() {
-		setIsOpen(false)
-	}
-
-	fun onOpenDialog() {
-		setIsOpen(true)
-	}
-
 	val confirm = Modal(
 		R.string.delete_title, R.string.delete_message, R.string.delete_cancel, R.string.delete_confirm
 	) {
@@ -47,15 +39,16 @@ fun PublicationSettings() {
 			id = R.drawable.icon_settings,
 			color = MaterialTheme.colorScheme.primary,
 			size = (h1TextSize.value * 20 / 23).dp,
-			onClick = ::onOpenDialog
+			onClick = { setIsOpen(true) }
 		)
-		DropdownMenu(expanded = isOpen, onDismissRequest = { onCloseDialog() }) {
+		DropdownMenu(expanded = isOpen, onDismissRequest = { setIsOpen(false) }) {
 			DropdownMenuItem(contentPadding = PaddingValues(horizontal = gap, vertical = 0.dp),
 				text = { Text(text = "Delete") },
 				onClick = {
 					confirm.show()
-					onCloseDialog()
-				})
+					setIsOpen(false)
+				}
+			)
 		}
 	}
 }
