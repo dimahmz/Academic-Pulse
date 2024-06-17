@@ -40,7 +40,8 @@ class FilesViewModel : ViewModel() {
 		}
 	}
 
-	fun uploadFile(file: Uri, id: String, onError: (Int) -> Unit, onSuccess: () -> Unit) {
+	fun uploadFile(file: Uri?, id: String, onError: (Int) -> Unit, onSuccess: () -> Unit) {
+		if (file == null) return onSuccess()
 		storage.child("$publications/$id").putFile(file).addOnCompleteListener { uploading ->
 			if (uploading.isSuccessful) {
 				cacheFile("$publications/$id", file)

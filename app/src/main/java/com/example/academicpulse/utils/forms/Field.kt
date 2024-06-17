@@ -1,5 +1,6 @@
 package com.example.academicpulse.utils.forms
 
+import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +24,7 @@ class Field private constructor(
 	private val _focus = mutableStateOf(false)
 	private var _focusRequester: FocusRequester? = FocusRequester()
 	private var _onFocus: ((Boolean) -> Unit)? = null
+	val uri = mutableStateOf<Uri?>(null)
 
 	// Accessors
 	var value: String
@@ -70,8 +72,7 @@ class Field private constructor(
 	}
 
 	fun onFocusChange(callback: (Boolean) -> Unit) {
-		if (_onFocus != null) return
-		_focusRequester = null
+		if (_focusRequester != null) _focusRequester = null
 		_onFocus = callback
 	}
 

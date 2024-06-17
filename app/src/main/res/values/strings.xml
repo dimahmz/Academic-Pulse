@@ -75,6 +75,8 @@
     <string name="title">Title</string>
     <string name="_abstract">Abstract</string>
     <string name="doi">DOI</string>
+    <string name="pdf_file">File</string>
+    <string name="select_file">Select file</string>
     <string name="date">Date</string>
     <string name="date_placeholder">dd/mm/yyyy</string>
     <string name="authors">Authors</string>

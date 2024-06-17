@@ -25,9 +25,9 @@ import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.inputLabelGap
 import com.example.academicpulse.theme.pagePaddingX
+import com.example.academicpulse.utils.forms.*
 import com.example.academicpulse.utils.stringToDate
 import com.example.academicpulse.utils.useAtom
-import com.example.academicpulse.utils.forms.*
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view.components.global.AuthorsRow
@@ -41,6 +41,7 @@ fun AddPublicationPage() {
 	val type = Field.use(form = form, ifEmpty = R.string.type_required)
 	val title = Field.use(form = form, ifEmpty = R.string.title_required)
 	val abstract = Field.use(form = form, ifEmpty = R.string.abstract_required)
+	val file = Field.use(form = form, required = false)
 	val doi = Field.use(form = form, required = false)
 	val date = Field.use(form = form, ifEmpty = R.string.date_required)
 	val authors = useAtom(Store.authors.currentForm, arrayListOf())
@@ -66,6 +67,7 @@ fun AddPublicationPage() {
 				typeId = type.value,
 				title = title.value,
 				abstract = abstract.value,
+				file = file.uri.value,
 				doi = doi.value,
 				date = Timestamp(stringToDate(date.value, "dd/MM/yyyy")),
 				authors = list,
@@ -113,6 +115,12 @@ fun AddPublicationPage() {
 				field = abstract,
 				label = R.string._abstract,
 				focusNext = doi,
+			)
+			FilePicker(
+				field = file,
+				label = R.string.pdf_file,
+				mimeTypes = arrayOf("application/pdf"),
+				defaultFileName = "Article",
 			)
 			Input(
 				field = doi,

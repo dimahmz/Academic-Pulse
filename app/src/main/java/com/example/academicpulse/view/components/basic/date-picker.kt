@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.academicpulse.R
 import com.example.academicpulse.theme.*
 import com.example.academicpulse.utils.forms.*
+import com.example.academicpulse.utils.useAtom
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
@@ -42,30 +43,42 @@ fun DatePicker(
 	 */
 	icon: Int? = null,
 ) {
-	val calendarDialogState = rememberSheetState(onCloseRequest = { field.focus = false })
-	val focusManager = LocalFocusManager.current
-	field.onFocusChange { state ->
-		if (state) calendarDialogState.show()
-		else {
-			focusManager.clearFocus()
-			calendarDialogState.hide()
+	val onFocus: ((Boolean) -> Unit)?
+	if (useAtom(activityLaunchRequest, false)) {
+		onFocus = null
+	} else {
+		val calendarDialogState = rememberSheetState(onCloseRequest = { field.focus = false })
+		val focusManager = LocalFocusManager.current
+		onFocus = { state ->
+			if (state) calendarDialogState.show()
+			else {
+				focusManager.clearFocus()
+				calendarDialogState.hide()
+			}
+		}
+		field.onFocusChange { state ->
+			if (state) calendarDialogState.show()
+			else {
+				focusManager.clearFocus()
+				calendarDialogState.hide()
+			}
+		}
+		MaterialTheme(
+			colorScheme = lightColorScheme(
+				surface = white, // Background color
+				onSurface = textColor, // Color of texts
+				primary = primary, // Color of "cancel" and today date texts, Background color of selected date
+				onPrimary = white, // Color of arrows, background color of selected date text
+				secondaryContainer = primary, // Background color of arrows
+			),
+		) {
+			CalendarDialog(state = calendarDialogState, selection = CalendarSelection.Date { date ->
+				field.value = date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+			})
 		}
 	}
 
-	MaterialTheme(
-		colorScheme = lightColorScheme(
-			surface = white, // Background color
-			onSurface = textColor, // Color of texts
-			primary = primary, // Color of "cancel" and today date texts, Background color of selected date
-			onPrimary = white, // Color of arrows, background color of selected date text
-			secondaryContainer = primary, // Background color of arrows
-		),
-	) {
-		CalendarDialog(state = calendarDialogState, selection = CalendarSelection.Date { date ->
-			field.value = date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-		})
-	}
-
+	field.onFocusChange { state -> onFocus?.invoke(state) }
 	Input(
 		field = field,
 		label = label,

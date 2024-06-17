@@ -73,8 +73,8 @@ class PublicationsViewModel : ViewModel() {
 		Store.publicationsTypes.getAll(onError) {
 			val id = selectedPublicationId
 			StoreDB.getOneById(collection, id, onError) { data, _ ->
-				Store.authors.fetchPublicationAuthors(data) {
-					publication.value = Publication.fromMap(id, data, it)
+				Store.authors.fetchPublicationAuthors(data) { list ->
+					publication.value = Publication.fromMap(id, data, list)
 					onSuccess()
 				}
 			}
@@ -94,10 +94,13 @@ class PublicationsViewModel : ViewModel() {
 					data = hashMapOf("publications" to publications),
 					onError = onError, // TODO : if this fails we should remove the publication
 				) {
-					selectedPublicationId = id
-					redirectedFromForm = true
-					Store.authors.currentForm.value = arrayListOf()
-					Router.navigate("publications/one-publication", false)
+					// Upload the publication file IF EXISTS
+					Store.files.uploadFile(publication.file, id, onError) {
+						selectedPublicationId = id
+						redirectedFromForm = true
+						Store.authors.currentForm.value = arrayListOf()
+						Router.navigate("publications/one-publication", false)
+					}
 				}
 			}
 		}

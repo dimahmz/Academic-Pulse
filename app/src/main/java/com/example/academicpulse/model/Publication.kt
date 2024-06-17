@@ -1,5 +1,6 @@
 package com.example.academicpulse.model
 
+import android.net.Uri
 import com.example.academicpulse.utils.useCast
 import com.example.academicpulse.view_model.Store
 import com.google.firebase.Timestamp
@@ -12,6 +13,7 @@ data class Publication(
 	val typeId: String,
 	val title: String,
 	val abstract: String,
+	val file: Uri? = null,
 	val doi: String,
 	val date: Timestamp,
 	val createdAt: Timestamp = Timestamp(Date()),
