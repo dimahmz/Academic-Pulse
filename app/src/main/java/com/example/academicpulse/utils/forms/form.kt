@@ -17,7 +17,7 @@ class Form private constructor() {
 	private val _valid: MutableState<Boolean> = mutableStateOf(true)
 
 	// Accessors
-	val fields: MutableList<Field>
+	val fields: List<Field>
 		get() = _fields
 	val valid: Boolean
 		get() = _valid.value
