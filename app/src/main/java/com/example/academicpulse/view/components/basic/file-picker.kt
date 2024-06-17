@@ -51,7 +51,7 @@ fun FilePicker(
 		onResult = {
 			activityLaunchRequest.value = false
 			field.focus = false
-			field.uri.value = it
+			field.uri = it
 
 			var name = ""
 			if (it != null) {
@@ -102,8 +102,7 @@ fun PreviewFilePicker() {
 			defaultFileName = "Article",
 		)
 		Button(text = "Upload file") {
-			val uri = file.uri.value
-			if (uri != null) Store.files.uploadFile(uri, "file1", {}, {})
+			Store.files.uploadFile(file.uri, "file1", {}, {})
 		}
 	}
 }

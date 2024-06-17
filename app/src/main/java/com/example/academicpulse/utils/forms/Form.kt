@@ -9,7 +9,10 @@ import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.Text
 
 /** This class is used in the context of forms, to hold a group of [Field]s and validate them as a one piece.
- * - Note: use [Form.use] to instantiate forms.
+ *
+ * **Note:**
+ * 	- use [Form.use] to instantiate forms inside composable functions.
+ * 	- use [Form.simple] to instantiate forms in other contexts like ViewModel.
  */
 class Form private constructor() {
 	private val _fields: MutableList<Field> = mutableListOf()
@@ -39,7 +42,7 @@ class Form private constructor() {
 	fun validate(focusOnFirstInvalidField: Boolean = true): Boolean {
 		error = null
 		_valid.value = true
-		for (field in _fields.reversed()) {
+		_fields.reversed().forEach { field ->
 			val isValid = Field.validate(field)
 			if (field.valid != isValid) field.valid = isValid
 			if (valid && !isValid) _valid.value = false
@@ -52,6 +55,10 @@ class Form private constructor() {
 				}
 			}
 		return valid
+	}
+
+	fun clearAll() {
+		_fields.forEach { field -> field.clear() }
 	}
 
 	/** A composable UI element that hold the form error if exist.
@@ -81,6 +88,12 @@ class Form private constructor() {
 		@Composable
 		fun use(): Form {
 			return useState { Form() }.first
+		}
+
+		/** Instantiate without remembering a form. */
+		@Composable
+		fun simple(): Form {
+			return Form()
 		}
 	}
 }

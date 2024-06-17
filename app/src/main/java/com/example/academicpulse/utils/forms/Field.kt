@@ -9,7 +9,10 @@ import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.Input
 
 /** This class is used in the context of form fields, to group some [Input] props and facilitate handling errors.
- * - Note: use [Field.use] to instantiate fields.
+ *
+ * **Note:**
+ * 	- use [Field.use] to instantiate fields inside composable functions.
+ * 	- use [Field.simple] to instantiate fields in other contexts like ViewModel.
  */
 class Field private constructor(
 	val form: Form?,
@@ -24,7 +27,7 @@ class Field private constructor(
 	private val _focus = mutableStateOf(false)
 	private var _focusRequester: FocusRequester? = FocusRequester()
 	private var _onFocus: ((Boolean) -> Unit)? = null
-	val uri = mutableStateOf<Uri?>(null)
+	private val _uri = mutableStateOf<Uri?>(null)
 
 	// Accessors
 	var value: String
@@ -45,6 +48,11 @@ class Field private constructor(
 		}
 	val focusRequester: FocusRequester?
 		get() = _focusRequester
+	var uri: Uri?
+		get() = _uri.value
+		set(value) {
+			_uri.value = value
+		}
 
 	fun focusChanger(state: Boolean, viaInput: Boolean) {
 		val oldState = _focus.value
@@ -71,13 +79,20 @@ class Field private constructor(
 		return fieldValue
 	}
 
+	fun clear() {
+		_value.value = ""
+		_valid.value = true
+		_focus.value = false
+		_uri.value = null
+	}
+
 	fun onFocusChange(callback: (Boolean) -> Unit) {
 		if (_focusRequester != null) _focusRequester = null
 		_onFocus = callback
 	}
 
 	companion object {
-		/** Instantiate and remember a field with primitive options.
+		/** Instantiate and remember a field.
 		 * - Note: It is automatically added to the form fields list (Don't use form.addField).
 		 *
 		 * ```
@@ -102,11 +117,43 @@ class Field private constructor(
 			@StringRes ifEmpty: Int? = null,
 			@StringRes ifInvalid: Int? = null,
 		): Field {
-			return useState {
-				val field = Field(form, value = value ?: "", required, regex, ifEmpty, ifInvalid)
-				form?.addField(field)
-				field
-			}.first
+			return useState { simple(form, value, required, regex, ifEmpty, ifInvalid) }.first
+		}
+
+		/** Instantiate without remembering a field.
+		 * - Note: It is automatically added to the form fields list (Don't use form.addField).
+		 *
+		 * ```
+		 * Example usage:
+		 *
+		 * class MyViewModel: ViewModel() {
+		 * 	val form = Form.simple()
+		 *
+		 * 	val email = Field.simple(
+		 * 		form = form,
+		 * 		value = Store.auth.signInInfo.email,
+		 * 		regex = Field.email,
+		 * 		ifEmpty = R.string.email_required,
+		 * 		ifInvalid = R.string.email_invalid,
+		 * 	)
+		 *
+		 * 	fun clearForm() {
+		 * 		form.clearAll()
+		 * 	}
+		 * }
+		 * ```
+		 */
+		fun simple(
+			form: Form?,
+			value: String? = "",
+			required: Boolean = true,
+			regex: String? = null,
+			@StringRes ifEmpty: Int? = null,
+			@StringRes ifInvalid: Int? = null,
+		): Field {
+			val field = Field(form, value = value ?: "", required, regex, ifEmpty, ifInvalid)
+			form?.addField(field)
+			return field
 		}
 
 		fun validate(field: Field): Boolean {
