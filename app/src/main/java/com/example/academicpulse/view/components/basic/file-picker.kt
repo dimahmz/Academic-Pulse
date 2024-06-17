@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.academicpulse.R
 import com.example.academicpulse.theme.gap
@@ -78,7 +79,11 @@ fun FilePicker(
 		}
 	)
 
-	field.onFocusChange { state -> if (state) launcher.launch(mimeTypes) }
+	val focusManager = LocalFocusManager.current
+	field.onFocusChange { state ->
+		if (state) launcher.launch(mimeTypes)
+		else focusManager.clearFocus()
+	}
 
 	Input(
 		field = field,

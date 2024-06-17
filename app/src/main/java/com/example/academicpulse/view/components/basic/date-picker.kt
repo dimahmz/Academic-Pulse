@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.academicpulse.R
 import com.example.academicpulse.theme.*
@@ -42,9 +43,13 @@ fun DatePicker(
 	icon: Int? = null,
 ) {
 	val calendarDialogState = rememberSheetState(onCloseRequest = { field.focus = false })
+	val focusManager = LocalFocusManager.current
 	field.onFocusChange { state ->
 		if (state) calendarDialogState.show()
-		else calendarDialogState.hide()
+		else {
+			focusManager.clearFocus()
+			calendarDialogState.hide()
+		}
 	}
 
 	MaterialTheme(
