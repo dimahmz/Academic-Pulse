@@ -35,7 +35,7 @@ fun PublicationSettings() {
 	) {
 		Store.isLoading.value = true
 		Store.publications.deleteById(onSuccess = {
-			Router.navigate("profile", false)
+			Router.navigate("profile/index", true)
 			Store.isLoading.value = false
 		}, onError = {
 			Store.isLoading.value = false

@@ -49,7 +49,7 @@ fun AuthorsRow(
 			if (showProfileOnClick)
 				modifier.clickable {
 					if (author.id == Store.user.current.value!!.id)
-						Router.navigate("profile", true)
+						Router.navigate("profile/index", true)
 					else
 						logcat("User click: Show another user profile by id {${author.id}}")
 				}

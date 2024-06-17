@@ -20,56 +20,53 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
 	NavHost(
 		navController = navController, startDestination = startDestination
 	) {
-		navigation(route = "home", startDestination = "home/index") {
-			composable(route = "home/index") {
-				HomePage()
-				BackHandler { Router.exit() }
-			}
+		// Auth Routes
+		composable(route = "auth/sign-in") {
+			SignInPage(/* BackHandler, exit the app */)
 		}
-		navigation(route = "notifications", startDestination = "notifications/index") {
-			composable(route = "notifications/index") {
-				NotificationPage()
-				BackHandler { Router.navigate("home", true) }
-			}
+		composable(route = "auth/activation") {
+			ActivationPage(/* BackHandler, exit the app */)
 		}
-		navigation(route = "profile", startDestination = "profile/index") {
-			composable(route = "profile/index") {
-				ProfilePage(/* BackHandler, replaceWith = home */)
-			}
-			composable(route = "profile/settings") {
-				SettingsPage(/* BackHandler, to = profile/index */)
-			}
-			composable(route = "profile/about") {
-				AboutPage(/* BackHandler, to = profile/settings */)
-			}
+		composable(route = "auth/sign-up-institution") {
+			SignUpInstitutionPage(/* BackHandler, to = auth/sign-in */)
 		}
-		navigation(route = "auth", startDestination = "auth/sign-in") {
-			composable(route = "auth/sign-in") {
-				SignInPage(/* BackHandler, exit the app */)
-			}
-			composable(route = "auth/activation") {
-				ActivationPage(/* BackHandler, exit the app */)
-			}
-			composable(route = "auth/sign-up-institution") {
-				SignUpInstitutionPage(/* BackHandler, to = auth/sign-in */)
-			}
-			composable(route = "auth/sign-up") {
-				SignUpPage(/* BackHandler, to = auth/sign-up-institution */)
-			}
-			composable(route = "auth/verification") {
-				VerificationPage(/* BackHandler, to = auth/sign-in */)
-			}
+		composable(route = "auth/sign-up") {
+			SignUpPage(/* BackHandler, to = auth/sign-up-institution */)
 		}
-		navigation(route = "publications", startDestination = "publications/add-publication") {
-			composable(route = "publications/add-publication") {
-				AddPublicationPage(/* BackHandler, to = profile/index */)
-			}
-			composable(route = "publications/one-publication") {
-				OnePublicationPage(/* BackHandler, exit the app */)
-			}
-			composable(route = "publications/select-authors") {
-				SelectAuthorsPage(/* BackHandler, exit the app */)
-			}
+		composable(route = "auth/verification") {
+			VerificationPage(/* BackHandler, to = auth/sign-in */)
+		}
+
+		// Unique Routes
+		composable(route = "home") {
+			HomePage()
+			BackHandler { Router.exit() }
+		}
+		composable(route = "notifications") {
+			NotificationPage()
+			BackHandler { Router.navigate("home", true) }
+		}
+
+		// Profile Routes
+		composable(route = "profile/index") {
+			ProfilePage(/* BackHandler, replaceWith = home */)
+		}
+		composable(route = "profile/settings") {
+			SettingsPage(/* BackHandler, to = profile/index */)
+		}
+		composable(route = "profile/about") {
+			AboutPage(/* BackHandler, to = profile/settings */)
+		}
+
+		// Publications Routes
+		composable(route = "publications/add-publication") {
+			AddPublicationPage(/* BackHandler, to = profile/index */)
+		}
+		composable(route = "publications/one-publication") {
+			OnePublicationPage(/* BackHandler, exit the app */)
+		}
+		composable(route = "publications/select-authors") {
+			SelectAuthorsPage(/* BackHandler, exit the app */)
 		}
 	}
 }

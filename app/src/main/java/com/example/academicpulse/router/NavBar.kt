@@ -29,7 +29,7 @@ private data class NavbarItem(
 private val navbarItems = listOf(
 	NavbarItem("home", R.string.home, R.drawable.icon_home),
 	NavbarItem("notifications", R.string.notification, R.drawable.icon_notifications),
-	NavbarItem("profile", R.string.profile, R.drawable.icon_profile),
+	NavbarItem("profile/index", R.string.profile, R.drawable.icon_profile),
 )
 
 /** Bottom NavBar UI element containing main root routes with their icons, allowing direct navigation to them */
