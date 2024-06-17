@@ -2,19 +2,32 @@ package com.example.academicpulse.view_model
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.academicpulse.R
 import com.example.academicpulse.model.Publication
 import com.example.academicpulse.router.Router
+import com.example.academicpulse.utils.forms.*
 import com.example.academicpulse.utils.useCast
 import com.google.firebase.firestore.Filter
+
+class PublicationForm {
+	val form = Form.simple()
+	val type = Field.simple(form = form, ifEmpty = R.string.type_required)
+	val title = Field.simple(form = form, ifEmpty = R.string.title_required)
+	val abstract = Field.simple(form = form, ifEmpty = R.string.abstract_required)
+	val file = Field.simple(form = form, required = false)
+	val doi = Field.simple(form = form, required = false)
+	val date = Field.simple(form = form, ifEmpty = R.string.date_required)
+}
 
 class PublicationsViewModel : ViewModel() {
 	private val collection = "publication"
 	val userPublications = MutableLiveData<ArrayList<Publication>>()
-	val homePublications = MutableLiveData<ArrayList<Publication>>()
-	val filtredHomePublications = MutableLiveData<ArrayList<Publication>>()
+	private val homePublications = MutableLiveData<ArrayList<Publication>>()
+	val filteredHomePublications = MutableLiveData<ArrayList<Publication>>()
 	val publication = MutableLiveData<Publication>()
 	var selectedPublicationId = ""
 	var redirectedFromForm = false
+	val form = PublicationForm()
 
 	fun search(
 		query: String, onFinish: (ArrayList<Publication>) -> Unit
@@ -63,7 +76,7 @@ class PublicationsViewModel : ViewModel() {
 					}
 				}) { list ->
 				homePublications.value = list
-				filtredHomePublications.value = list
+				filteredHomePublications.value = list
 				onSuccess()
 			}
 		}
@@ -98,6 +111,7 @@ class PublicationsViewModel : ViewModel() {
 					Store.files.uploadFile(publication.file, id, onError) {
 						selectedPublicationId = id
 						redirectedFromForm = true
+						form.form.clearAll()
 						Store.authors.currentForm.value = arrayListOf()
 						Router.navigate("publications/one-publication", false)
 					}

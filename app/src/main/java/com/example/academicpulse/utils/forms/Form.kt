@@ -91,7 +91,6 @@ class Form private constructor() {
 		}
 
 		/** Instantiate without remembering a form. */
-		@Composable
 		fun simple(): Form {
 			return Form()
 		}

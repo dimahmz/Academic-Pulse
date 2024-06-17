@@ -25,7 +25,6 @@ import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.inputLabelGap
 import com.example.academicpulse.theme.pagePaddingX
-import com.example.academicpulse.utils.forms.*
 import com.example.academicpulse.utils.stringToDate
 import com.example.academicpulse.utils.useAtom
 import com.example.academicpulse.utils.useState
@@ -37,13 +36,7 @@ import com.google.firebase.Timestamp
 
 @Composable
 fun AddPublicationPage() {
-	val form = Form.use()
-	val type = Field.use(form = form, ifEmpty = R.string.type_required)
-	val title = Field.use(form = form, ifEmpty = R.string.title_required)
-	val abstract = Field.use(form = form, ifEmpty = R.string.abstract_required)
-	val file = Field.use(form = form, required = false)
-	val doi = Field.use(form = form, required = false)
-	val date = Field.use(form = form, ifEmpty = R.string.date_required)
+	val form = Store.publications.form
 	val authors = useAtom(Store.authors.currentForm, arrayListOf())
 	val typeOptions = useAtom(Store.publicationsTypes.list)
 	val (typesFetched, setTypesFetched) = useState { false }
@@ -58,22 +51,22 @@ fun AddPublicationPage() {
 	}
 
 	fun addPublication() {
-		if (loading || !form.validate()) return
+		if (loading || !form.form.validate()) return
 		setLoading(true)
 		val list = ArrayList<User>(authors.toMutableList())
 		list.add(0, Store.user.current.value!!)
 		Store.publications.insert(
 			Publication(
-				typeId = type.value,
-				title = title.value,
-				abstract = abstract.value,
-				file = file.uri.value,
-				doi = doi.value,
-				date = Timestamp(stringToDate(date.value, "dd/MM/yyyy")),
+				typeId = form.type.value,
+				title = form.title.value,
+				abstract = form.abstract.value,
+				file = form.file.uri,
+				doi = form.doi.value,
+				date = Timestamp(stringToDate(form.date.value, "dd/MM/yyyy")),
 				authors = list,
 			)
 		) { error ->
-			form.error = error
+			form.form.error = error
 			setLoading(false)
 		}
 	}
@@ -100,34 +93,34 @@ fun AddPublicationPage() {
 
 		Column(verticalArrangement = Arrangement.spacedBy(gap)) {
 			Select(
-				field = type,
+				field = form.type,
 				label = R.string.type,
 				items = typeOptions!!,
 				getValue = { it.id },
 				getLabel = { it.label },
 			)
 			Input(
-				field = title,
+				field = form.title,
 				label = R.string.title,
-				focusNext = abstract,
+				focusNext = form.abstract,
 			)
 			Input(
-				field = abstract,
+				field = form.abstract,
 				label = R.string._abstract,
-				focusNext = doi,
+				focusNext = form.doi,
 			)
 			FilePicker(
-				field = file,
+				field = form.file,
 				label = R.string.pdf_file,
 				mimeTypes = arrayOf("application/pdf"),
 				defaultFileName = "Article",
 			)
 			Input(
-				field = doi,
+				field = form.doi,
 				label = R.string.doi,
-				focusNext = date,
+				focusNext = form.date,
 			)
-			DatePicker(field = date, label = R.string.date)
+			DatePicker(field = form.date, label = R.string.date)
 			Column {
 				Row(modifier = Modifier.padding(bottom = inputLabelGap)) {
 					Text(text = R.string.authors)
@@ -141,7 +134,7 @@ fun AddPublicationPage() {
 		}
 
 		Spacer(Modifier.height((8 + gap.value).dp))
-		form.Error()
+		form.form.Error()
 		Spacer(Modifier.height(8.dp))
 		Button(
 			text = R.string.add_research, loading = loading, onClick = ::addPublication
@@ -149,6 +142,7 @@ fun AddPublicationPage() {
 	}
 
 	BackHandler {
+		form.form.clearAll()
 		Store.authors.currentForm.value = arrayListOf()
 		Router.back(true /* to = profile/index */)
 	}

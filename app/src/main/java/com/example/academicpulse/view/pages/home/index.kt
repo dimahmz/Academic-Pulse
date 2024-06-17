@@ -31,7 +31,7 @@ import com.example.academicpulse.view_model.Store
 fun HomePage() {
 	val (loading, setLoading) = useState { true }
 	val (showError, setShowError) = useState { false }
-	val publications = useAtom(Store.publications.filtredHomePublications, arrayListOf())
+	val publications = useAtom(Store.publications.filteredHomePublications, arrayListOf())
 
 	LaunchedEffect(true) {
 		Store.publications.fetchHomePublication(onSuccess = { setLoading(false) }) {
@@ -45,7 +45,7 @@ fun HomePage() {
 
 			LaunchedEffect(search.value.trim()) {
 				Store.publications.search(search.value) {
-					Store.publications.filtredHomePublications.value = it
+					Store.publications.filteredHomePublications.value = it
 				}
 			}
 
