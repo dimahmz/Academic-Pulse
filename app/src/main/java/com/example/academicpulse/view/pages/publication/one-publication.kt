@@ -40,6 +40,7 @@ import com.example.academicpulse.view.components.global.Line
 import com.example.academicpulse.utils.context
 import com.example.academicpulse.view.components.global.AuthorsRow
 import com.example.academicpulse.view.components.global.PublicationSettings
+import com.example.academicpulse.view.components.global.openPublicationPdfButton
 
 @Composable
 fun OnePublicationPage() {
@@ -80,10 +81,6 @@ fun OnePublicationPage() {
 			}
 		} else if (publication != null) {
 			Spacer(Modifier.height(14.dp))
-			H2(text = publication.title)
-			Spacer(Modifier.height(14.dp))
-			Text(text = Publication.formatDate(publication.date))
-			Spacer(Modifier.height(10.dp))
 			Box(
 				modifier = Modifier
 					.wrapContentSize()
@@ -91,27 +88,14 @@ fun OnePublicationPage() {
 					.background(MaterialTheme.colorScheme.primary)
 					.padding(horizontal = 30.dp, vertical = 8.dp), contentAlignment = Alignment.Center
 			) {
-				Text(text = "Type", color = MaterialTheme.colorScheme.background)
+				Text(text = publication.type, color = MaterialTheme.colorScheme.background)
 			}
-			Spacer(Modifier.height(10.dp))
-			AuthorsRow(authors = publication.authors, showProfileOnClick = true)
-			Spacer(Modifier.height(10.dp))
-			if (publication.doi != "")
-				Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-					Title(text = "DOI")
-					Text(text = publication.doi, size = descriptionTextSize, underlined = true) {
-						val url = "https://www.doi.org/${publication.doi}"
-						val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-						context.startActivity(intent)
-					}
-				}
 			Spacer(Modifier.height(15.dp))
-			Line(height = 2.dp)
-			Spacer(Modifier.height(15.dp))
-			H2(text = "Abstract")
+			H2(text = publication.title)
+			// Publication's Date
 			Spacer(Modifier.height(10.dp))
-			Text(text = publication.abstract, size = descriptionTextSize)
-			Spacer(Modifier.height(5.dp))
+			Text(text = Publication.formatDate(publication.date))
+			// Publication's File
 			publication.fetchFile()
 			if (!publication.fileAvailability)
 				Box(
@@ -122,8 +106,34 @@ fun OnePublicationPage() {
 					Spinner(size = 30.dp)
 				}
 			else if (publication.file != null) {
-				Text(text = "Pdf file exists")
+				Spacer(Modifier.height(10.dp))
+				openPublicationPdfButton()
+				/*logcat("${publication.file}")*/
 			}
+			// Publication's DOI
+			if (publication.doi != ""){
+				Spacer(Modifier.height(15.dp))
+				Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+					Title(text = "DOI")
+					Text(text = publication.doi, size = descriptionTextSize, underlined = true) {
+						val url = "https://www.doi.org/${publication.doi}"
+						val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+						context.startActivity(intent)
+					}
+				}
+			}
+			Spacer(Modifier.height(10.dp))
+			// Publication's Authors
+			AuthorsRow(authors = publication.authors, showProfileOnClick = true)
+			Spacer(Modifier.height(10.dp))
+			Spacer(Modifier.height(15.dp))
+			Line(height = 2.dp)
+			Spacer(Modifier.height(15.dp))
+			// Publication's Abstract
+			H2(text = "Abstract")
+			Spacer(Modifier.height(10.dp))
+			Text(text = publication.abstract, size = descriptionTextSize)
+			Spacer(Modifier.height(5.dp))
 		}
 	}
 

@@ -87,4 +87,5 @@
     <string name="abstract_required">The abstract is required.</string>
     <string name="date_required">The date is required.</string>
     <string name="authors_length">You can only select a maximum of 6 authors.</string>
+    <string name="full_text">full-text</string>
 </resources>
