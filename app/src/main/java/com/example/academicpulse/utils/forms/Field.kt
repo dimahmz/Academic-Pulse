@@ -60,7 +60,7 @@ class Field private constructor(
 			form?.fields?.forEach {
 				if (it != this && it._focus.value) {
 					it._focus.value = false
-					_onFocus?.invoke(false)
+					it._onFocus?.invoke(false)
 				}
 			}
 			_focus.value = true

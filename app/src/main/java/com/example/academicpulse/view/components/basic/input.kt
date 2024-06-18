@@ -159,7 +159,7 @@ fun Input(
 	val modified = Modifier
 		.fillMaxWidth()
 		.height(inputHeight)
-		.composed(factory = { interactModifier })
+		.composed { interactModifier }
 		.composed { styleModifier }
 
 	Column {

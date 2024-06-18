@@ -45,9 +45,9 @@ fun AuthorsRow(
 		horizontalArrangement = Arrangement.spacedBy(gap),
 	) {
 		list.forEach { author ->
-			val modifier = Modifier
+			var modifier: Modifier = Modifier
 			if (showProfileOnClick)
-				modifier.clickable {
+				modifier = modifier.clickable {
 					if (author.id == Store.user.current.value!!.id)
 						Router.navigate("profile/index", true)
 					else
