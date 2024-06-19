@@ -107,7 +107,9 @@ fun OnePublicationPage() {
 				}
 			else if (publication.file != null) {
 				Spacer(Modifier.height(10.dp))
-				openPublicationPdfButton()
+				openPublicationPdfButton(){
+					Router.navigate("publications/full-text", false)
+				}
 				/*logcat("${publication.file}")*/
 			}
 			// Publication's DOI

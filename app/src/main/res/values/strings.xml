@@ -12,6 +12,7 @@
     <string name="no_data">Nothing here yet</string>
     <string name="modify">Modify</string>
     <string name="search">Search</string>
+    <string name="file_is_loading">file is loading</string>
 
     <string name="sign_in">Log in</string>
     <string name="log_out">Log out</string>

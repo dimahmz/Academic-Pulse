@@ -68,5 +68,8 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
 		composable(route = "publications/select-authors") {
 			SelectAuthorsPage(/* BackHandler, exit the app */)
 		}
+		composable(route = "publications/full-text") {
+			PublicationPdfViewerPage(/* BackHandler, exit the app */)
+		}
 	}
 }

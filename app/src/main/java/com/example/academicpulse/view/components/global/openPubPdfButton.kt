@@ -8,17 +8,19 @@ import com.example.academicpulse.R
 import com.example.academicpulse.view.components.basic.Button
 
 @Composable
-fun openPublicationPdfButton() {
+fun openPublicationPdfButton(onClickBtn: () -> Unit) {
 
 	Button(
 		text = R.string.full_text,
 		icon = R.drawable.icon_open_link,
 		modifier = Modifier.wrapContentWidth()
-	)
+	) {
+		onClickBtn()
+	}
 }
 
 @Preview(showBackground = true)
 @Composable
 fun viewOpenPublicationPdfButton() {
-	openPublicationPdfButton()
+	openPublicationPdfButton() { }
 }
