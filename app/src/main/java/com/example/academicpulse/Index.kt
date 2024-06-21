@@ -32,7 +32,6 @@ class Index : ComponentActivity() {
 		setContent {
 			Router.Provider()
 			Store.Provider()
-			val isLoading = useAtom(Store.isLoading)
 			AppTheme {
 				Box {
 					Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -41,9 +40,7 @@ class Index : ComponentActivity() {
 							bottomBar = { Router.NavBar() },
 						)
 					}
-					if (isLoading == true) Box {
-						LoaderScreen()
-					}
+					if (useAtom(Store.isLoading, false)) LoaderScreen()
 				}
 			}
 		}
