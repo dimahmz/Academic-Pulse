@@ -1,6 +1,7 @@
 package com.example.academicpulse.view.pages.publication
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,41 +25,25 @@ import com.example.academicpulse.view.components.basic.Spinner
 import com.example.academicpulse.view.components.global.PdfViewer
 import com.example.academicpulse.view_model.Store
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Composable
-fun PublicationPdfViewerPage() {
-	Surface(
-		modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
-	) {
-		Scaffold() {
-			ComposePDFViewer()
-		}
-	}
-}
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ComposePDFViewer() {
+fun PDFViewerPage() {
 
 	val (isLoading, setIsLoading) = useState { true }
 	var (fileIsReady, setFileIsReady) = useState { false }
-	var (fileUri, setFileUri) = useState<Any> { 0 }
+	var (fileUri, setFileUri) = useState<Uri?> { null }
 
 	LaunchedEffect(true) {
-		Store.files.readFile(Store.publications.selectedPublicationId, onError = {
-			Router.back(true)
-		}) {
+		Store.files.readFile(Store.publications.selectedPublicationId, {}) {
 			setFileIsReady(true)
-			if (it != null) {
-				setFileUri(it)
-			}
+			setFileUri(it!!)
 		}
 	}
 
 	Box() {
 		if (fileIsReady) {
 			PdfViewer(modifier = Modifier.fillMaxSize(),
-				pdfSource = fileUri,
+				pdfSource = fileUri as Object,
 				loadingListener = { loading, currentPage, maxPage ->
 					setIsLoading(loading)
 				})

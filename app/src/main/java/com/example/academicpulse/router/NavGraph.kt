@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import com.example.academicpulse.view.pages.auth.*
 import com.example.academicpulse.view.pages.home.*
 import com.example.academicpulse.view.pages.notifications.*
@@ -63,13 +62,13 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
 			AddPublicationPage(/* BackHandler, to = profile/index */)
 		}
 		composable(route = "publications/one-publication") {
-			OnePublicationPage(/* BackHandler, exit the app */)
+			OnePublicationPage(/* BackHandler, to = profile/index or home/index */)
 		}
 		composable(route = "publications/select-authors") {
-			SelectAuthorsPage(/* BackHandler, exit the app */)
+			SelectAuthorsPage(/* BackHandler, to = publication/add-publication */)
 		}
-		composable(route = "publications/full-text") {
-			PublicationPdfViewerPage(/* BackHandler, exit the app */)
+		composable(route = "publications/pdf-viewer") {
+			PDFViewerPage(/* BackHandler, to = publication/one-publication */)
 		}
 	}
 }

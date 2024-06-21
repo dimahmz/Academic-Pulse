@@ -108,7 +108,7 @@ fun OnePublicationPage() {
 			else if (publication.file != null) {
 				Spacer(Modifier.height(10.dp))
 				openPublicationPdfButton(){
-					Router.navigate("publications/full-text", false)
+					Router.navigate("publications/pdf-viewer", false)
 				}
 				/*logcat("${publication.file}")*/
 			}
