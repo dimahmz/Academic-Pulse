@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.theme.pageWithBarPaddingBottom
 import com.example.academicpulse.utils.forms.Field
+import com.example.academicpulse.utils.logcat
 import com.example.academicpulse.utils.useAtom
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.Input
@@ -33,19 +34,24 @@ fun HomePage() {
 	val (showError, setShowError) = useState { false }
 	val publications = useAtom(Store.publications.filteredHomePublications, arrayListOf())
 
-	LaunchedEffect(true) {
-		Store.publications.fetchHomePublication(onSuccess = { setLoading(false) }) {
-			setShowError(true)
-			setLoading(false)
-		}
-	}
 	LazyColumn(Modifier.padding(bottom = pageWithBarPaddingBottom)) {
 		item(key = "Page header") {
 			val search = Field.use(form = null)
 
 			LaunchedEffect(search.value.trim()) {
-				Store.publications.search(search.value) {
-					Store.publications.filteredHomePublications.value = it
+				setLoading(true)
+				if (search.value.isEmpty()) {
+					Store.publications.fetchHomePublication(onSuccess = {
+						setLoading(false)
+					}, onError = {
+						setShowError(true)
+						setLoading(false)
+					})
+				} else {
+					Store.publications.search(search.value) {
+						Store.publications.filteredHomePublications.value = it
+						setLoading(false)
+					}
 				}
 			}
 
