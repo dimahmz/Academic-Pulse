@@ -57,10 +57,11 @@ fun OnePublicationPage() {
 			.fillMaxHeight()
 			.padding(horizontal = pagePaddingX),
 	) {
-		Header(
-			title = R.string.publication,
-			suffix = { PublicationSettings() }
-		) {
+		Header(title = R.string.publication, suffix = {
+			if (Store.publications.belongsToThisUser(publication)) {
+				PublicationSettings()
+			}
+		}) {
 			val redirectedFromForm = Store.publications.redirectedFromForm
 			Store.publications.redirectedFromForm = false
 			Router.back(

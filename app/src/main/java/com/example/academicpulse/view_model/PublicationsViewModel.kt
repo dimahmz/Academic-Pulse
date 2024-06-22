@@ -43,6 +43,11 @@ class PublicationsViewModel : ViewModel() {
 		}))
 	}
 
+	fun belongsToThisUser(clickedPublication: Publication?): Boolean {
+		if (clickedPublication == null) return false
+		return clickedPublication.authors.find { it.id == Store.user.current.value!!.id } != null
+	}
+
 	fun fetchUserPublications(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
 		userPublications.value?.clear()
 		Store.publicationsTypes.getAll(onError) {
