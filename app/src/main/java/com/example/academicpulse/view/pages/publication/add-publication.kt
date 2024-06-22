@@ -43,7 +43,7 @@ fun AddPublicationPage() {
 	val (loading, setLoading) = useState { false }
 
 	// Fetch the available types
-	LaunchedEffect(true) {
+	LaunchedEffect(Unit) {
 		Store.publicationsTypes.getAll(
 			onError = { Router.back(navBarVisible = true) },
 			onSuccess = { setTypesFetched(true) },

@@ -30,7 +30,7 @@ fun ProfilePage() {
 	val (loading, setLoading) = useState { true }
 	val publications = useAtom(Store.publications.userPublications, arrayListOf())
 
-	LaunchedEffect(true) {
+	LaunchedEffect(Unit) {
 		Store.publications.fetchUserPublications(onSuccess = { setLoading(false) }) {
 			setLoading(false)
 		}

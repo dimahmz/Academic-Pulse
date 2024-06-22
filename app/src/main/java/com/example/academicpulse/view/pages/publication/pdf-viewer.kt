@@ -15,7 +15,7 @@ import com.example.academicpulse.view_model.Store
 fun PDFViewerPage() {
 	val (fileUri, setFileUri) = useState<Uri?> { null }
 
-	LaunchedEffect(true) {
+	LaunchedEffect(Unit) {
 		Store.files.readFile(Store.publications.selectedPublicationId, {}, setFileUri)
 	}
 

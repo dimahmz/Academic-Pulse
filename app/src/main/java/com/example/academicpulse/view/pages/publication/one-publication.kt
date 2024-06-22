@@ -46,7 +46,8 @@ import com.example.academicpulse.view.components.global.openPublicationPdfButton
 fun OnePublicationPage() {
 	val (loading, setLoading) = useState { true }
 	val publication = useAtom(Store.publications.publication)
-	LaunchedEffect(true) {
+
+	LaunchedEffect(Unit) {
 		Store.publications.fetchSelected(onSuccess = { setLoading(false) }) {
 			setLoading(false)
 		}

@@ -27,7 +27,7 @@ fun UserCard(onAddResearch: () -> Unit) {
 	val (loading, setLoading) = useState { false }
 	val user = useAtom(Store.user.current)
 
-	LaunchedEffect(true) {
+	LaunchedEffect(Unit) {
 		setLoading(true)
 		Store.user.getCurrentUser({}) { _, _ -> setLoading(false) }
 	}
