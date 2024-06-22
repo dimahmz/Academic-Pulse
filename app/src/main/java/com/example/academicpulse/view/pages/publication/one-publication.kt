@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -73,15 +72,8 @@ fun OnePublicationPage() {
 		}
 		Spacer(Modifier.height(14.dp))
 
-		if (loading) {
-			Box(
-				modifier = Modifier
-					.fillMaxWidth()
-					.padding(top = 30.dp), contentAlignment = Alignment.Center
-			) {
-				Spinner(size = 30.dp)
-			}
-		} else if (publication != null) {
+		if (loading) Spinner()
+		else if (publication != null) {
 			Spacer(Modifier.height(14.dp))
 			Box(
 				modifier = Modifier
@@ -94,26 +86,21 @@ fun OnePublicationPage() {
 			}
 			Spacer(Modifier.height(15.dp))
 			H2(text = publication.title)
+
 			// Publication's Date
 			Spacer(Modifier.height(10.dp))
 			Text(text = Publication.formatDate(publication.date))
+
 			// Publication's File
 			publication.fetchFile()
-			if (!publication.fileAvailability)
-				Box(
-					modifier = Modifier
-						.fillMaxWidth()
-						.padding(top = 30.dp), contentAlignment = Alignment.Center
-				) {
-					Spinner(size = 30.dp)
-				}
+			if (!publication.fileAvailability) Spinner()
 			else if (publication.file != null) {
 				Spacer(Modifier.height(10.dp))
 				openPublicationPdfButton(){
 					Router.navigate("publications/pdf-viewer", false)
 				}
-				/*logcat("${publication.file}")*/
 			}
+
 			// Publication's DOI
 			if (publication.doi.isNotBlank()){
 				Spacer(Modifier.height(15.dp))
@@ -127,12 +114,13 @@ fun OnePublicationPage() {
 				}
 			}
 			Spacer(Modifier.height(10.dp))
+
 			// Publication's Authors
 			AuthorsRow(authors = publication.authors, showProfileOnClick = true)
-			Spacer(Modifier.height(10.dp))
 			Spacer(Modifier.height(15.dp))
 			Line(height = 2.dp)
 			Spacer(Modifier.height(15.dp))
+
 			// Publication's Abstract
 			H2(text = "Abstract")
 			Spacer(Modifier.height(10.dp))

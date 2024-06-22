@@ -75,7 +75,7 @@ fun Button(
 		),
 	) {
 		if (icon != null && !loading) Icon(id = icon, color = LocalContentColor.current)
-		else if (loading) Spinner(color = LocalContentColor.current)
+		else if (loading) Spinner(inline = true, color = LocalContentColor.current)
 		if ((icon != null || loading) && text != null) Spacer(Modifier.width(8.dp))
 		if (text != null) Text(text = text, color = LocalContentColor.current)
 	}

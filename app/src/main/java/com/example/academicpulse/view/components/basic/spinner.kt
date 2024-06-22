@@ -12,13 +12,28 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun Spinner(
 	modifier: Modifier = Modifier,
+	inline: Boolean = false,
 	color: Color? = null,
-	size: Dp = 20.dp,
+	size: Dp = if (inline) 20.dp else 30.dp,
 	stroke: Dp = (size.value * 1.7 / 20).dp,
 ) {
-	CircularProgressIndicator(
-		modifier = modifier.size(size),
-		color = color ?: MaterialTheme.colorScheme.primary,
-		strokeWidth = stroke,
-	)
+	if (inline)
+		CircularProgressIndicator(
+			modifier = modifier.size(size),
+			color = color ?: MaterialTheme.colorScheme.primary,
+			strokeWidth = stroke,
+		)
+	else
+		Box(
+			modifier = modifier
+				.fillMaxWidth()
+				.padding(top = 30.dp),
+			contentAlignment = Alignment.Center
+		) {
+			CircularProgressIndicator(
+				modifier = Modifier.size(size),
+				color = color ?: MaterialTheme.colorScheme.primary,
+				strokeWidth = stroke,
+			)
+		}
 }

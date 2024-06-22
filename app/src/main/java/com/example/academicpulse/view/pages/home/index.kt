@@ -70,16 +70,8 @@ fun HomePage() {
 
 			Spacer(Modifier.height(15.dp))
 			Line(height = 2.dp)
-			if (loading) {
-				Box(
-					modifier = Modifier
-						.fillMaxWidth()
-						.padding(top = 30.dp),
-					contentAlignment = Alignment.Center
-				) {
-					Spinner(size = 30.dp)
-				}
-			} else if (showError) ErrorMessage(errorMessage = R.string.unknown_error)
+			if (loading) Spinner()
+			else if (showError) ErrorMessage(errorMessage = R.string.unknown_error)
 		}
 
 		if (!loading && !showError) {

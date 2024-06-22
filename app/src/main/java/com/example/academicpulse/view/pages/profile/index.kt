@@ -3,7 +3,6 @@ package com.example.academicpulse.view.pages.profile
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -39,34 +38,23 @@ fun ProfilePage() {
 	}
 
 	if (loadingUser) {
-		Box(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(top = 30.dp), contentAlignment = Alignment.Center
-		) {
-			Spinner(size = 30.dp)
-		}
-	} else {
-		LazyColumn(modifier = Modifier.padding(bottom = bottomBarHeight)) {
-			item(key = "Page header") {
-				UserCard(loadingUser) { Router.navigate("publications/add-publication", false) }
-				Line(height = 2.dp)
-				if (loadingPublications) Box(
-					modifier = Modifier
-						.fillMaxWidth()
-						.padding(top = 30.dp), contentAlignment = Alignment.Center
-				) {
-					Spinner(size = 30.dp)
-				}
-			}
+		Spinner()
+		return
+	}
 
-			if (!loadingUser && !loadingPublications) {
-				items(publications, key = { it.id }) {
-					Column(modifier = Modifier.padding(horizontal = (pagePaddingX.value / 2).dp)) {
-						StatusTicket(status = it.status)
-						PublicationArticle(it)
-						Line(height = 1.dp)
-					}
+	LazyColumn(modifier = Modifier.padding(bottom = bottomBarHeight)) {
+		item(key = "Page header") {
+			UserCard(loadingUser) { Router.navigate("publications/add-publication", false) }
+			Line(height = 2.dp)
+			if (loadingPublications) Spinner()
+		}
+
+		if (!loadingUser && !loadingPublications) {
+			items(publications, key = { it.id }) {
+				Column(modifier = Modifier.padding(horizontal = (pagePaddingX.value / 2).dp)) {
+					StatusTicket(status = it.status)
+					PublicationArticle(it)
+					Line(height = 1.dp)
 				}
 			}
 		}

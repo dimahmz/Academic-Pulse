@@ -95,46 +95,38 @@ fun SelectAuthorsPage() {
 		)
 		Line(height = 1.dp)
 
+		if (loading) {
+			Spinner()
+			return
+		}
+
 		LazyColumn(Modifier.weight(1f)) {
-			if (loading) {
-				item(key = "Page header") {
-					Box(
-						modifier = Modifier
+			items(list, key = { it.id }) {
+				Column {
+					Spacer(Modifier.height(7.dp))
+					Row(
+						Modifier
 							.fillMaxWidth()
-							.padding(top = 30.dp),
-						contentAlignment = Alignment.Center
-					) {
-						Spinner(size = 30.dp)
-					}
-				}
-			} else {
-				items(list, key = { it.id }) {
-					Column {
-						Spacer(Modifier.height(7.dp))
-						Row(
-							Modifier
-								.fillMaxWidth()
-								.clickable {
-									if (selectedList.size >= 5) {
-										Toast
-											.makeText(context, R.string.authors_length, Toast.LENGTH_LONG)
-											.show()
-									} else {
-										val array2 = ArrayList<User>((list).toMutableList())
-										array2.remove(it)
-										setList(array2)
-										val array = ArrayList<User>(selectedList.toMutableList())
-										array.add(it)
-										Store.authors.currentForm.value = array
-									}
+							.clickable {
+								if (selectedList.size >= 5) {
+									Toast
+										.makeText(context, R.string.authors_length, Toast.LENGTH_LONG)
+										.show()
+								} else {
+									val array2 = ArrayList<User>((list).toMutableList())
+									array2.remove(it)
+									setList(array2)
+									val array = ArrayList<User>(selectedList.toMutableList())
+									array.add(it)
+									Store.authors.currentForm.value = array
 								}
-						) {
-							Image(id = R.drawable.avatar_user, size = 18.dp)
-							Text(text = "${it.firstName} ${it.lastName}")
-						}
-						Spacer(Modifier.height(7.dp))
-						Line(height = 1.dp)
+							}
+					) {
+						Image(id = R.drawable.avatar_user, size = 18.dp)
+						Text(text = "${it.firstName} ${it.lastName}")
 					}
+					Spacer(Modifier.height(7.dp))
+					Line(height = 1.dp)
 				}
 			}
 		}
