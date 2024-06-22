@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,19 +17,12 @@ import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.utils.useAtom
-import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view_model.Store
 
 @Composable
-fun UserCard(onAddResearch: () -> Unit) {
-	val (loading, setLoading) = useState { false }
+fun UserCard(loading: Boolean, onAddResearch: () -> Unit) {
 	val user = useAtom(Store.user.current)
-
-	LaunchedEffect(Unit) {
-		setLoading(true)
-		Store.user.getCurrentUser({}) { _, _ -> setLoading(false) }
-	}
 
 	Column(
 		modifier = Modifier
@@ -45,14 +37,7 @@ fun UserCard(onAddResearch: () -> Unit) {
 			}
 		}
 
-		if (loading) Box(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(top = 30.dp), contentAlignment = Alignment.Center
-		) {
-			Spinner(size = 30.dp)
-		}
-		else if (user != null) {
+		if (!loading && user != null) {
 			Image(id = R.drawable.avatar_user, size = 80.dp)
 			H2(text = "${user.firstName} ${user.lastName}")
 

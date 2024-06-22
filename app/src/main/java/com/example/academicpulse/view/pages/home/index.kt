@@ -30,31 +30,31 @@ import com.example.academicpulse.view_model.Store
 
 @Composable
 fun HomePage() {
+	val search = Field.use(form = null)
 	val (loading, setLoading) = useState { true }
 	val (showError, setShowError) = useState { false }
 	val publications = useAtom(Store.publications.filteredHomePublications, arrayListOf())
 
+	LaunchedEffect(search.value.trim()) {
+		setLoading(true)
+		if (search.value.isEmpty()) {
+			Store.publications.fetchHomePublication(
+				onSuccess = { setLoading(false) },
+				onError = {
+					setShowError(true)
+					setLoading(false)
+				},
+			)
+		} else {
+			Store.publications.search(search.value) {
+				Store.publications.filteredHomePublications.value = it
+				setLoading(false)
+			}
+		}
+	}
+
 	LazyColumn(Modifier.padding(bottom = pageWithBarPaddingBottom)) {
 		item(key = "Page header") {
-			val search = Field.use(form = null)
-
-			LaunchedEffect(search.value.trim()) {
-				setLoading(true)
-				if (search.value.isEmpty()) {
-					Store.publications.fetchHomePublication(onSuccess = {
-						setLoading(false)
-					}, onError = {
-						setShowError(true)
-						setLoading(false)
-					})
-				} else {
-					Store.publications.search(search.value) {
-						Store.publications.filteredHomePublications.value = it
-						setLoading(false)
-					}
-				}
-			}
-
 			Box(
 				modifier = Modifier
 					.fillMaxWidth()

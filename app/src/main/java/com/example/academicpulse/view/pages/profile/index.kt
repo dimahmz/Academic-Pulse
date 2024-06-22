@@ -27,33 +27,47 @@ import com.example.academicpulse.view_model.Store
 
 @Composable
 fun ProfilePage() {
-	val (loading, setLoading) = useState { true }
+	val (loadingUser, setLoadingUser) = useState { true }
+	val (loadingPublications, setLoadingPublications) = useState { true }
 	val publications = useAtom(Store.publications.userPublications, arrayListOf())
 
 	LaunchedEffect(Unit) {
-		Store.publications.fetchUserPublications(onSuccess = { setLoading(false) }) {
-			setLoading(false)
+		Store.user.getCurrentUser({}) { _, _ -> setLoadingUser(false) }
+		Store.publications.fetchUserPublications(onSuccess = { setLoadingPublications(false) }) {
+			setLoadingPublications(false)
 		}
 	}
 
-	LazyColumn(modifier = Modifier.padding(bottom = bottomBarHeight)) {
-		item(key = "Page header") {
-			UserCard { Router.navigate("publications/add-publication", false) }
-			Line(height = 2.dp)
-			if (loading) Box(
-				modifier = Modifier
-					.fillMaxWidth()
-					.padding(top = 30.dp), contentAlignment = Alignment.Center
-			) {
-				Spinner(size = 30.dp)
-			}
+	if (loadingUser) {
+		Box(
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(top = 30.dp), contentAlignment = Alignment.Center
+		) {
+			Spinner(size = 30.dp)
 		}
+	} else {
+		LazyColumn(modifier = Modifier.padding(bottom = bottomBarHeight)) {
+			item(key = "Page header") {
+				UserCard(loadingUser) { Router.navigate("publications/add-publication", false) }
+				Line(height = 2.dp)
+				if (loadingPublications) Box(
+					modifier = Modifier
+						.fillMaxWidth()
+						.padding(top = 30.dp), contentAlignment = Alignment.Center
+				) {
+					Spinner(size = 30.dp)
+				}
+			}
 
-		if (!loading) items(publications, key = { it.id }) {
-			Column(modifier = Modifier.padding(horizontal = (pagePaddingX.value / 2).dp)) {
-				StatusTicket(status = it.status)
-				PublicationArticle(it)
-				Line(height = 1.dp)
+			if (!loadingUser && !loadingPublications) {
+				items(publications, key = { it.id }) {
+					Column(modifier = Modifier.padding(horizontal = (pagePaddingX.value / 2).dp)) {
+						StatusTicket(status = it.status)
+						PublicationArticle(it)
+						Line(height = 1.dp)
+					}
+				}
 			}
 		}
 	}
