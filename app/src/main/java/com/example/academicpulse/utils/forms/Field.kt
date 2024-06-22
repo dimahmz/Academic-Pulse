@@ -33,7 +33,7 @@ class Field private constructor(
 	var value: String
 		get() = _value.value
 		set(value) {
-			if (required) this.valid = (value != "")
+			if (required) this.valid = value.isNotEmpty()
 			_value.value = value
 		}
 	var valid: Boolean
@@ -159,7 +159,7 @@ class Field private constructor(
 		fun validate(field: Field): Boolean {
 			val value = field.trim()
 			field.valid = true
-			if (field.required && value == "") {
+			if (field.required && value.isBlank()) {
 				field.valid = false
 				if (field.ifEmpty != null) field.form?.error = field.ifEmpty
 				else if (field.ifInvalid != null) field.form?.error = field.ifInvalid

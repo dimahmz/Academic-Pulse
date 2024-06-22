@@ -19,12 +19,11 @@ class AuthViewModel : ViewModel() {
 	val signUpInfo: User = User()
 
 	fun saveInstitutionInfo(
-		institution: String, department: String, position: String, skipped: Boolean
+		institution: String, department: String, position: String
 	) {
 		signUpInfo.institution = institution
 		signUpInfo.department = department
 		signUpInfo.position = position
-		signUpInfo.institutionSkipped = skipped
 	}
 
 	fun saveSignUpInfo(firstName: String, lastName: String, email: String) {

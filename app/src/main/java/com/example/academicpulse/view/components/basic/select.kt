@@ -60,7 +60,7 @@ fun <Item> Select(
 
 	val (renderedValue, setRenderedValue) = useState { "" }
 	LaunchedEffect(field.value) {
-		if (field.value == "") return@LaunchedEffect setRenderedValue(field.value)
+		if (field.value.isEmpty()) return@LaunchedEffect setRenderedValue(field.value)
 		val item = items.find { getValue(it) == field.value }
 		setRenderedValue(if (item == null) field.value else getLabel(item))
 	}

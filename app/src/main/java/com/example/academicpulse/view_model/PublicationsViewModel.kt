@@ -38,7 +38,7 @@ class PublicationsViewModel : ViewModel() {
 		}
 		val searchQuery = query.trim().lowercase()
 		onFinish(ArrayList(homePublications.value!!.filter {
-			if (searchQuery == "") true
+			if (searchQuery.isBlank()) true
 			else ("${it.title} ${it.abstract} ${it.type}").lowercase().contains(searchQuery)
 		}))
 	}

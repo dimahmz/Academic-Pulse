@@ -13,9 +13,11 @@ data class User(
 	var institution: String = "",
 	var email: String = "",
 	var activated: Boolean = false,
-	var institutionSkipped: Boolean = false,
 	val createdAt: Timestamp = Timestamp(Date()),
 ) {
+	val institutionSkipped: Boolean
+		get() = institution.isBlank()
+
 	fun toMap(): HashMap<String, Any?> {
 		return hashMapOf(
 			"firstName" to firstName,
@@ -41,7 +43,6 @@ data class User(
 				institution = institution,
 				email = useCast(map, "email", ""),
 				activated = useCast(map, "activated", false),
-				institutionSkipped = institution == "",
 				createdAt = useCast(map, "createdAt", Timestamp(Date())),
 			)
 		}

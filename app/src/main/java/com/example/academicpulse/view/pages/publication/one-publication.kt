@@ -114,7 +114,7 @@ fun OnePublicationPage() {
 				/*logcat("${publication.file}")*/
 			}
 			// Publication's DOI
-			if (publication.doi != ""){
+			if (publication.doi.isNotBlank()){
 				Spacer(Modifier.height(15.dp))
 				Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
 					Title(text = "DOI")

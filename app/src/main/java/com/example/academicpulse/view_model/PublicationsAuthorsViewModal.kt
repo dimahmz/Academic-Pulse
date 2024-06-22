@@ -31,7 +31,7 @@ class PublicationsAuthorsViewModal {
 			onFinish(
 				ArrayList(listCache.filter {
 					if (selected.contains(it.id)) false
-					else if (searchQuery == "") true
+					else if (searchQuery.isBlank()) true
 					else if (("${it.firstName} ${it.lastName}").lowercase().contains(searchQuery)) true
 					else ("${it.lastName} ${it.firstName}").lowercase().contains(searchQuery)
 				})

@@ -56,35 +56,21 @@ fun UserCard(onAddResearch: () -> Unit) {
 			Image(id = R.drawable.avatar_user, size = 80.dp)
 			H2(text = "${user.firstName} ${user.lastName}")
 
-			if (user.institution != null) {
+			if (!user.institutionSkipped)
 				Row(
 					horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp),
 					verticalAlignment = Alignment.CenterVertically,
 				) {
-					Icon(id = R.drawable.icon_dot, size = 7.dp)
 					Text(text = user.institution)
+					if (user.department.isNotBlank()) {
+						Icon(id = R.drawable.icon_dot, size = 7.dp)
+						Text(text = user.department)
+					}
+					if (user.position.isNotBlank()) {
+						Icon(id = R.drawable.icon_dot, size = 7.dp)
+						Text(text = user.position)
+					}
 				}
-			}
-
-			if (user.department != null) {
-				Row(
-					horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp),
-					verticalAlignment = Alignment.CenterVertically,
-				) {
-					Icon(id = R.drawable.icon_dot, size = 7.dp)
-					Text(text = user.department)
-				}
-			}
-
-			if (user.position != null) {
-				Row(
-					horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp),
-					verticalAlignment = Alignment.CenterVertically,
-				) {
-					Icon(id = R.drawable.icon_dot, size = 7.dp)
-					Text(text = user.position)
-				}
-			}
 
 			Row(
 				modifier = Modifier.padding(top = 26.dp, bottom = 14.dp),

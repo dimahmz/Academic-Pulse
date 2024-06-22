@@ -42,7 +42,7 @@ fun SignUpInstitutionPage() {
 
 	fun navigate(validate: Boolean) {
 		if (!validate || form.validate()) {
-			auth.saveInstitutionInfo(institution.trim(), department.trim(), position.trim(), !validate)
+			auth.saveInstitutionInfo(institution.trim(), department.trim(), position.trim())
 			Router.navigate("auth/sign-up", false)
 		}
 	}
