@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import com.example.academicpulse.R
@@ -48,6 +49,7 @@ fun Text(
 		fontSize = size,
 		textAlign = align,
 		maxLines = maxLines,
+		overflow = if (maxLines == Int.MAX_VALUE) TextOverflow.Clip else TextOverflow.Ellipsis,
 		textDecoration = if (underlined) TextDecoration.Underline else null,
 		lineHeight = (size.value * 10 / 7).sp,
 		fontWeight = weight,

@@ -29,6 +29,7 @@ fun AuthorsRow(
 	authors: List<User>,
 	appendCurrentUser: Boolean = false,
 	showProfileOnClick: Boolean = false,
+	isProfilePage: Boolean = false,
 	onRemoveItem: ((User) -> Unit)? = null,
 ) {
 	val (list, setList) = useState { authors }
@@ -48,7 +49,7 @@ fun AuthorsRow(
 			var modifier: Modifier = Modifier
 			if (showProfileOnClick)
 				modifier = modifier.clickable {
-					if (author.id == Store.users.current.value!!.id) Router.navigate("profile")
+					if (!isProfilePage && author.id == Store.users.current.value!!.id) Router.navigate("profile")
 					else logcat("User click: Show another user profile by id {${author.id}}")
 				}
 			Row(

@@ -18,7 +18,6 @@ import com.example.academicpulse.view.components.basic.Spinner
 import com.example.academicpulse.view.components.global.Line
 import com.example.academicpulse.view.components.global.UserCard
 import com.example.academicpulse.view.components.global.PublicationArticle
-import com.example.academicpulse.view.components.global.StatusTicket
 import com.example.academicpulse.view_model.Store
 
 @Composable
@@ -49,7 +48,6 @@ fun ProfilePage() {
 		if (!loadingPublications) {
 			items(publications, key = { it.id }) {
 				Column(modifier = Modifier.padding(horizontal = (pagePaddingX.value / 2).dp)) {
-					StatusTicket(status = it.status)
 					PublicationArticle(it, true)
 					Line(height = 1.dp)
 				}

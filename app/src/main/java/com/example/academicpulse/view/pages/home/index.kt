@@ -4,9 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,7 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.router.Router
-import com.example.academicpulse.theme.pageWithBarPaddingBottom
+import com.example.academicpulse.theme.bottomBarHeight
+import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.utils.forms.Field
 import com.example.academicpulse.utils.useAtom
 import com.example.academicpulse.utils.useState
@@ -53,7 +52,7 @@ fun HomePage() {
 		}
 	}
 
-	LazyColumn(Modifier.padding(bottom = pageWithBarPaddingBottom)) {
+	LazyColumn(Modifier.padding(bottom = bottomBarHeight)) {
 		item(key = "Page header") {
 			Box(
 				modifier = Modifier
@@ -67,20 +66,15 @@ fun HomePage() {
 					placeholder = R.string.search,
 				)
 			}
-
-			Spacer(Modifier.height(15.dp))
-			Line(height = 2.dp)
 			if (loading) Spinner()
 			else if (showError) ErrorMessage(errorMessage = R.string.unknown_error)
 		}
 
 		if (!loading && !showError) {
 			items(publications, key = { it.id }) {
-				Spacer(Modifier.height(15.dp))
-				Column {
+				Column(modifier = Modifier.padding(horizontal = (pagePaddingX.value / 2).dp)) {
 					PublicationArticle(it)
-					Spacer(Modifier.height(10.dp))
-					Line(height = 2.dp)
+					Line(height = 1.dp)
 				}
 			}
 		}
