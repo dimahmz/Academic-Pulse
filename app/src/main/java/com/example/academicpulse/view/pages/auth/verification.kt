@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.router.Router
@@ -46,10 +45,4 @@ fun VerificationPage() {
 	}
 
 	BackHandler { Router.back("auth/sign-in", step = 3) }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun PreviewVerifyEmailPage() {
-	VerificationPage()
 }

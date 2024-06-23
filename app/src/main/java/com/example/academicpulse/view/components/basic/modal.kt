@@ -2,20 +2,14 @@ package com.example.academicpulse.view.components.basic
 
 import android.annotation.SuppressLint
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.academicpulse.R
 import com.example.academicpulse.theme.error
-import com.example.academicpulse.theme.gap
 import com.example.academicpulse.theme.primary
 import com.example.academicpulse.theme.white
-import com.example.academicpulse.utils.logcat
 import com.maxkeppeker.sheets.core.models.base.ButtonStyle
 import com.maxkeppeker.sheets.core.models.base.SelectionButton
 import com.maxkeppeker.sheets.core.models.base.SheetState
@@ -64,35 +58,4 @@ fun Modal(
 		)
 	}
 	return dialogState
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun PreviewModal() {
-	val confirm = Modal(
-		title = R.string.title,
-		message = R.string.about_description_1,
-		cancelText = R.string.skip,
-		okText = R.string.continued,
-	) {
-		logcat("on confirm")
-	}
-	val danger = Modal(
-		title = R.string.title,
-		message = R.string.about_description_1,
-		cancelText = R.string.skip,
-		okText = R.string.continued,
-		danger = true,
-		onCancel = { logcat("Optional callback") },
-	) {
-		logcat("on confirm danger")
-	}
-
-	Column(verticalArrangement = Arrangement.spacedBy(gap)) {
-		Button(text = "Confirm modal") {
-			logcat("before show confirm")
-			confirm.show()
-		}
-		Button(text = "Danger modal", onClick = danger::show)
-	}
 }

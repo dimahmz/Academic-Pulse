@@ -1,14 +1,11 @@
 package com.example.academicpulse.view.components.basic
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.academicpulse.R
 import com.example.academicpulse.theme.*
 import com.example.academicpulse.utils.forms.*
@@ -16,7 +13,6 @@ import com.example.academicpulse.utils.useAtom
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,27 +82,4 @@ fun DatePicker(
 		readOnly = readOnly,
 		icon = icon,
 	)
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun PreviewDatePicker() {
-	val form = Form.use()
-
-	Column {
-		// Date with today as the initial value.
-		val initialDate = remember { LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) }
-		val date = Field.use(form = form, value = initialDate)
-		DatePicker(
-			field = date,
-			label = R.string.date,
-		)
-
-		// Date with no initial value
-		val date2 = Field.use(form = form)
-		DatePicker(
-			field = date2,
-			label = R.string.date,
-		)
-	}
 }

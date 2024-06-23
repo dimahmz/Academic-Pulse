@@ -4,17 +4,12 @@ import android.provider.OpenableColumns
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.MutableLiveData
 import com.example.academicpulse.R
-import com.example.academicpulse.theme.gap
 import com.example.academicpulse.utils.context
 import com.example.academicpulse.utils.forms.*
-import com.example.academicpulse.view_model.Store
 
 val activityLaunchRequest = MutableLiveData(false)
 
@@ -87,22 +82,4 @@ fun FilePicker(
 		icon = icon,
 		centered = true,
 	)
-}
-
-@Preview
-@Composable
-fun PreviewFilePicker() {
-	val file = Field.use(form = null)
-
-	Column(verticalArrangement = Arrangement.spacedBy(gap)) {
-		FilePicker(
-			field = file,
-			label = R.string.date,
-			mimeTypes = arrayOf("application/pdf"),
-			defaultFileName = "Article",
-		)
-		Button(text = "Upload file") {
-			Store.files.uploadFile(file.uri, "file1", {}, {})
-		}
-	}
 }

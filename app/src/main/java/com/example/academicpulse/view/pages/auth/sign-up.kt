@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.model.SignInInfo
@@ -121,10 +120,4 @@ fun SignUpPage() {
 	}
 
 	BackHandler(onBack = ::back)
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun PreviewSignUpUserPage() {
-	SignUpPage()
 }

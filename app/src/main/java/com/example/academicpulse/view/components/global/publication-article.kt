@@ -16,14 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.model.Publication
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view_model.Store
-import com.google.firebase.Timestamp
 
 @Composable
 fun PublicationArticle(publication: Publication, isProfilePage: Boolean = false) {
@@ -66,22 +64,4 @@ fun PublicationArticle(publication: Publication, isProfilePage: Boolean = false)
 				}
 			}*/
 	}
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewPublicationArticle() {
-	PublicationArticle(
-		Publication(
-			id = "92163248id",
-			typeId = "id",
-			title = "Load Balancing in Cloud Environment: A State-of-the-Art Review",
-			abstract = "Example of abstract",
-			doi = "Example of doi",
-			date = Timestamp(1800000000, 0),
-			reads = 60,
-			uploads = 60,
-			authors = listOf(),
-		)
-	)
 }

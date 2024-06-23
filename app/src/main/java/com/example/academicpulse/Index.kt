@@ -50,7 +50,7 @@ class Index : ComponentActivity() {
 	private fun configureFirebaseServices() {
 		if (DEV_ENV) {
 			Firebase.auth.useEmulator(LOCALHOST, AUTH_PORT)
-			Firebase.firestore.useEmulator(LOCALHOST, FIRESTORE_PORT)
+			Firebase.firestore.useEmulator(LOCALHOST, FIRE_STORE_PORT)
 			Firebase.firestore.firestoreSettings = firestoreSettings {
 				isPersistenceEnabled = false
 			}
