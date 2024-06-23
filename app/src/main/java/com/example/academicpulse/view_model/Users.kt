@@ -59,7 +59,7 @@ class Users : ViewModel() {
 		}
 
 		StoreDB.getMany(
-			collection = "user",
+			collection,
 			where = listOf(Filter.notInArray(FieldPath.documentId(), selected)),
 			onCast = { id, data -> User.fromMap(id, data) },
 			onError = { finish() },
@@ -71,17 +71,19 @@ class Users : ViewModel() {
 
 	fun fetchAuthors(
 		publicationData: Map<String, Any?>,
-		onSuccess: (List<User>) -> Unit,
+		onFinish: (List<User>) -> Unit,
 	) {
 		val ids = useCast(publicationData, "authors", listOf<String>())
+		fun finish() { onFinish(listCache.filter { ids.contains(it.id) }) }
+
 		StoreDB.getManyByIds(
-			collection = "user",
+			collection,
 			ids = ids,
 			onCast = { id, data -> User.fromMap(id, data) },
-			onError = { onSuccess(listCache.filter { ids.contains(it.id) }) },
+			onError = { finish() },
 		) { list ->
 			cacheList(list)
-			onSuccess(list)
+			finish()
 		}
 	}
 }

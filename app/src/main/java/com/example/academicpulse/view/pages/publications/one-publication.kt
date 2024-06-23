@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.pagePaddingX
-import com.example.academicpulse.utils.useAtom
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.H2
 import com.example.academicpulse.view.components.basic.Spinner
@@ -44,12 +43,16 @@ import com.example.academicpulse.view.components.global.PublicationSettings
 @Composable
 fun OnePublicationPage() {
 	val (loading, setLoading) = useState { true }
-	val publication = useAtom(Store.publications.publication)
+	val (publication, setPublication) = useState<Publication?> { null }
 
 	LaunchedEffect(Unit) {
-		Store.publications.fetchSelected(onSuccess = { setLoading(false) }) {
-			setLoading(false)
-		}
+		Store.publications.fetchSelected(
+			onError = { setLoading(false) },
+			onSuccess = {
+				setPublication(it)
+				setLoading(false)
+			},
+		)
 	}
 
 	fun back() {
