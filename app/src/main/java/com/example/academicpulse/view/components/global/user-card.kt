@@ -20,7 +20,7 @@ import com.example.academicpulse.view_model.Store
 
 @Composable
 fun UserCard() {
-	val user = useAtom(Store.user.current)
+	val user = useAtom(Store.users.current)
 
 	Column(
 		modifier = Modifier

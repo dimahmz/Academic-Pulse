@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.academicpulse.model.PublicationType
 
-class PublicationsTypesViewModel : ViewModel() {
+class PublicationsTypes : ViewModel() {
 	private val collection = "publicationType"
 	private val _publicationTypes = MutableLiveData<ArrayList<PublicationType>>()
 	private var alreadyFetched = false

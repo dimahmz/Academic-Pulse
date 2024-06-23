@@ -1,14 +1,24 @@
 package com.example.academicpulse.view_model
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.example.academicpulse.R
 import com.example.academicpulse.model.User
 import com.example.academicpulse.utils.useCast
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.Filter
 
-class PublicationsAuthorsViewModal {
-	var currentForm = MutableLiveData(arrayListOf<User>())
+class Users : ViewModel() {
+	private val collection = "user"
+	private val auth = Firebase.auth
+	private val currentUser = MutableLiveData<User>()
+	val current: LiveData<User> = currentUser
 	private var listCache = arrayListOf<User>()
+	var currentForm = MutableLiveData(arrayListOf<User>())
 
 	private fun cacheList(list: ArrayList<User>) {
 		list.forEach {
@@ -18,13 +28,24 @@ class PublicationsAuthorsViewModal {
 		}
 	}
 
+	fun getCurrentUser(
+		onError: (error: Int) -> Unit,
+		onSuccess: (data: Map<String, Any?>, ref: DocumentReference) -> Unit
+	) {
+		val user = auth.currentUser ?: return onError(R.string.unknown_error)
+		StoreDB.getOneById(collection, user.uid, onError) { data, ref ->
+			currentUser.value = User.fromMap(user.uid, data)
+			onSuccess(data, ref)
+		}
+	}
+
 	fun search(
 		query: String,
 		selectedList: List<User>,
 		onFinish: (ArrayList<User>) -> Unit
 	) {
 		val selected = ArrayList<String>(selectedList.map { it.id })
-		selected.add(Store.user.current.value!!.id)
+		selected.add(current.value!!.id)
 
 		fun finish() {
 			val searchQuery = query.trim().lowercase()
@@ -49,7 +70,7 @@ class PublicationsAuthorsViewModal {
 		}
 	}
 
-	fun fetchPublicationAuthors(
+	fun fetchAuthors(
 		publicationData: Map<String, Any?>,
 		onSuccess: (List<User>) -> Unit,
 	) {

@@ -65,6 +65,7 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
 		composable(route = "profile/settings") {
 			SettingsPage()
 			// BackHandler = back: profile
+			// About = navigate: profile/about
 			// Log out = navigate: auth/sign-in
 		}
 		composable(route = "profile/about") {
@@ -83,10 +84,10 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
 			// BackHandler || Continue = back: publication/add-publication
 		}
 		composable(route = "publications/one-publication") {
+			OnePublicationPage()
 			// BackHandler || onDelete = back: home || profile
 			// View PDF = navigate: publications/pdf-viewer
 			// DOI = Intent: https://www.doi.org/{{ doi }}
-			OnePublicationPage()
 		}
 		composable(route = "publications/pdf-viewer") {
 			PDFViewerPage()

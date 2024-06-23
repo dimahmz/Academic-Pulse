@@ -10,7 +10,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 
-class AuthViewModel : ViewModel() {
+class Auth : ViewModel() {
 	// Firebase cloud database instance
 	private val db = Firebase.firestore
 	private val auth = Firebase.auth
@@ -41,7 +41,7 @@ class AuthViewModel : ViewModel() {
 		signUpInfo.email = ""
 	}
 
-	fun signInOnStart(vm: UserViewModel, setIsReady: () -> Unit) {
+	fun signInOnStart(vm: Users, setIsReady: () -> Unit) {
 		// If no user is logged in, keep the router in the sign up page, otherwise check for account activation.
 		vm.getCurrentUser(onError = { setIsReady() }) { user, _ ->
 			if (user["activated"] == true) Router.navigate("home")
@@ -63,7 +63,7 @@ class AuthViewModel : ViewModel() {
 				return@addOnCompleteListener onError(R.string.verify_email_first)
 
 			// Check the user account activation.
-			Store.user.getCurrentUser(onError = onError) { user, _ ->
+			Store.users.getCurrentUser(onError = onError) { user, _ ->
 				if (user["activated"] == true) {
 					signInInfo = SignInInfo("", "")
 					clearSignUp()

@@ -9,7 +9,7 @@ import com.example.academicpulse.utils.forms.*
 import com.example.academicpulse.utils.useCast
 import com.google.firebase.firestore.Filter
 
-class PublicationsViewModel : ViewModel() {
+class Publications : ViewModel() {
 	private val collection = "publication"
 	val userPublications = MutableLiveData<ArrayList<Publication>>()
 	private val homePublications = MutableLiveData<ArrayList<Publication>>()
@@ -36,18 +36,18 @@ class PublicationsViewModel : ViewModel() {
 
 	fun belongsToThisUser(clickedPublication: Publication?): Boolean {
 		if (clickedPublication == null) return false
-		return clickedPublication.authors.find { it.id == Store.user.current.value!!.id } != null
+		return clickedPublication.authors.find { it.id == Store.users.current.value!!.id } != null
 	}
 
 	fun fetchUserPublications(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
 		userPublications.value?.clear()
 		Store.publicationsTypes.getAll(onError) {
-			Store.user.getCurrentUser(onError) { user, _ ->
+			Store.users.getCurrentUser(onError) { user, _ ->
 				StoreDB.getManyByIds<Publication>(collection,
 					ids = useCast(user, "publications", arrayListOf()),
 					onError = onError,
 					onAsyncCast = { id, data, resolve ->
-						Store.authors.fetchPublicationAuthors(data) { list ->
+						Store.users.fetchAuthors(data) { list ->
 							resolve(Publication.fromMap(id, data, list))
 						}
 					}) { list ->
@@ -67,7 +67,7 @@ class PublicationsViewModel : ViewModel() {
 				onError = onError,
 				where = filter,
 				onAsyncCast = { id, data, resolve ->
-					Store.authors.fetchPublicationAuthors(data) { list ->
+					Store.users.fetchAuthors(data) { list ->
 						resolve(Publication.fromMap(id, data, list))
 					}
 				}) { list ->
@@ -82,7 +82,7 @@ class PublicationsViewModel : ViewModel() {
 		Store.publicationsTypes.getAll(onError) {
 			val id = selectedPublicationId
 			StoreDB.getOneById(collection, id, onError) { data, _ ->
-				Store.authors.fetchPublicationAuthors(data) { list ->
+				Store.users.fetchAuthors(data) { list ->
 					publication.value = Publication.fromMap(id, data, list)
 					onSuccess()
 				}
@@ -92,7 +92,7 @@ class PublicationsViewModel : ViewModel() {
 
 	fun insert(publication: Publication, onError: (error: Int) -> Unit) {
 		// Get the current user ref because we need to update its publications list
-		Store.user.getCurrentUser(onError) { user, userRef ->
+		Store.users.getCurrentUser(onError) { user, userRef ->
 			// Insert the publication and get its generated id
 			StoreDB.insert(collection, publication.toMap(), onError) { id ->
 				// Insert the new publication id in the user publications then update it
@@ -108,7 +108,7 @@ class PublicationsViewModel : ViewModel() {
 						selectedPublicationId = id
 						redirectedFromForm = true
 						form.form.clearAll()
-						Store.authors.currentForm.value = arrayListOf()
+						Store.users.currentForm.value = arrayListOf()
 						Router.navigate("publications/one-publication")
 					}
 				}

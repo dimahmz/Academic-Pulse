@@ -35,7 +35,7 @@ fun AuthorsRow(
 
 	LaunchedEffect(authors) {
 		val array = ArrayList<User>(authors.toMutableList())
-		if (appendCurrentUser) array.add(0, Store.user.current.value!!)
+		if (appendCurrentUser) array.add(0, Store.users.current.value!!)
 		setList(array)
 	}
 
@@ -48,7 +48,7 @@ fun AuthorsRow(
 			var modifier: Modifier = Modifier
 			if (showProfileOnClick)
 				modifier = modifier.clickable {
-					if (author.id == Store.user.current.value!!.id) Router.navigate("profile")
+					if (author.id == Store.users.current.value!!.id) Router.navigate("profile")
 					else logcat("User click: Show another user profile by id {${author.id}}")
 				}
 			Row(
@@ -58,7 +58,7 @@ fun AuthorsRow(
 			) {
 				Image(id = R.drawable.avatar_user, size = 18.dp)
 				Text(text = "${author.firstName} ${author.lastName}")
-				if (onRemoveItem != null && author.id != Store.user.current.value!!.id) {
+				if (onRemoveItem != null && author.id != Store.users.current.value!!.id) {
 					Icon(id = R.drawable.icon_close, color = Color.Black.copy(alpha = 0.6f)) {
 						onRemoveItem(author)
 					}

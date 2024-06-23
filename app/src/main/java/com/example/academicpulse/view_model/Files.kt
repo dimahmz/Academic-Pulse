@@ -9,7 +9,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.storage.storage
 import java.io.File
 
-class FilesViewModel : ViewModel() {
+class Files : ViewModel() {
 	// Firebase cloud storage instance
 	private val storage = Firebase.storage.reference
 
