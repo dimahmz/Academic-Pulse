@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -37,9 +38,9 @@ import com.example.academicpulse.theme.descriptionTextSize
 import com.example.academicpulse.view.components.basic.Title
 import com.example.academicpulse.view.components.global.Line
 import com.example.academicpulse.utils.context
+import com.example.academicpulse.view.components.basic.Button
 import com.example.academicpulse.view.components.global.AuthorsRow
 import com.example.academicpulse.view.components.global.PublicationSettings
-import com.example.academicpulse.view.components.global.openPublicationPdfButton
 
 @Composable
 fun OnePublicationPage() {
@@ -52,24 +53,27 @@ fun OnePublicationPage() {
 		}
 	}
 
+	fun back() {
+		val fromForm = Store.publications.redirectedFromForm
+		val fromProfile = Store.publications.redirectedFromProfile
+		Store.publications.redirectedFromForm = false
+		Store.publications.redirectedFromProfile = false
+		Router.back(
+			target = if (fromForm || fromProfile) "profile" else "home",
+			step = if (fromForm) 2 else 1,
+		)
+	}
+
 	Column(
 		modifier = Modifier
 			.fillMaxHeight()
 			.padding(horizontal = pagePaddingX),
 	) {
-		Header(title = R.string.publication, suffix = {
+		Header(title = R.string.publication, onClick = ::back, suffix = {
 			if (Store.publications.belongsToThisUser(publication)) {
-				PublicationSettings()
+				PublicationSettings(::back)
 			}
-		}) {
-			val redirectedFromForm = Store.publications.redirectedFromForm
-			Store.publications.redirectedFromForm = false
-			Router.back(
-				/* to = profile/index or home/index */
-				navBarVisible = true,
-				step = if (redirectedFromForm) 2 else 1
-			)
-		}
+		})
 		Spacer(Modifier.height(14.dp))
 
 		if (loading) Spinner()
@@ -96,13 +100,15 @@ fun OnePublicationPage() {
 			if (!publication.fileAvailability) Spinner()
 			else if (publication.file != null) {
 				Spacer(Modifier.height(10.dp))
-				openPublicationPdfButton(){
-					Router.navigate("publications/pdf-viewer", false)
-				}
+				Button(
+					text = R.string.full_text,
+					icon = R.drawable.icon_open_link,
+					modifier = Modifier.wrapContentWidth()
+				) { Router.navigate("publications/pdf-viewer") }
 			}
 
 			// Publication's DOI
-			if (publication.doi.isNotBlank()){
+			if (publication.doi.isNotBlank()) {
 				Spacer(Modifier.height(15.dp))
 				Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
 					Title(text = "DOI")
@@ -129,15 +135,7 @@ fun OnePublicationPage() {
 		}
 	}
 
-	BackHandler {
-		val redirectedFromForm = Store.publications.redirectedFromForm
-		Store.publications.redirectedFromForm = false
-		Router.back(
-			/* to = profile/index or home/index */
-			navBarVisible = true,
-			step = if (redirectedFromForm) 2 else 1
-		)
-	}
+	BackHandler(onBack = ::back)
 }
 
 @Preview(showSystemUi = true)

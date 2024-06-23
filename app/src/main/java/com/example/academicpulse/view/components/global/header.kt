@@ -10,15 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
-import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.h1TextSize
 import com.example.academicpulse.view.components.basic.H1
 import com.example.academicpulse.view.components.basic.Icon
-
-@Composable
-fun Header(title: Int, navBarVisibleAfterBack: Boolean = false) {
-	Header(title) { Router.back(navBarVisibleAfterBack) }
-}
 
 @Composable
 fun Header(title: Int, suffix: @Composable (() -> Unit)? = null, onClick: () -> Unit) {

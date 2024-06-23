@@ -40,10 +40,15 @@ fun SignUpInstitutionPage() {
 		ifEmpty = R.string.position_required,
 	)
 
+	fun back() {
+		auth.clearSignUp()
+		Router.back("auth/sign-in")
+	}
+
 	fun navigate(validate: Boolean) {
 		if (!validate || form.validate()) {
 			auth.saveInstitutionInfo(institution.trim(), department.trim(), position.trim())
-			Router.navigate("auth/sign-up", false)
+			Router.navigate("auth/sign-up")
 		}
 	}
 
@@ -52,7 +57,7 @@ fun SignUpInstitutionPage() {
 			.fillMaxHeight()
 			.padding(horizontal = pagePaddingX),
 	) {
-		Header(title = R.string.sign_up)
+		Header(title = R.string.sign_up, onClick = ::back)
 
 		Column(modifier = Modifier.padding(bottom = 30.dp)) {
 			Title(text = R.string.institution_info)
@@ -89,10 +94,7 @@ fun SignUpInstitutionPage() {
 		}
 	}
 
-	BackHandler {
-		auth.clearSignUp()
-		Router.back(false /* to = auth/sign-in */)
-	}
+	BackHandler(onBack = ::back)
 }
 
 @Preview(showSystemUi = true)

@@ -44,23 +44,23 @@ fun ProfilePage() {
 
 	LazyColumn(modifier = Modifier.padding(bottom = bottomBarHeight)) {
 		item(key = "Page header") {
-			UserCard(loadingUser) { Router.navigate("publications/add-publication", false) }
+			UserCard()
 			Line(height = 2.dp)
 			if (loadingPublications) Spinner()
 		}
 
-		if (!loadingUser && !loadingPublications) {
+		if (!loadingPublications) {
 			items(publications, key = { it.id }) {
 				Column(modifier = Modifier.padding(horizontal = (pagePaddingX.value / 2).dp)) {
 					StatusTicket(status = it.status)
-					PublicationArticle(it)
+					PublicationArticle(it, true)
 					Line(height = 1.dp)
 				}
 			}
 		}
 	}
 
-	BackHandler { Router.navigate("home", true) }
+	BackHandler { Router.navigate("home") }
 }
 
 @Preview(showSystemUi = true)

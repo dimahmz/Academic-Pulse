@@ -1,7 +1,6 @@
 package com.example.academicpulse.view.components.global
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.router.Router
@@ -21,7 +19,7 @@ import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view_model.Store
 
 @Composable
-fun UserCard(loading: Boolean, onAddResearch: () -> Unit) {
+fun UserCard() {
 	val user = useAtom(Store.user.current)
 
 	Column(
@@ -33,11 +31,11 @@ fun UserCard(loading: Boolean, onAddResearch: () -> Unit) {
 		Row(modifier = Modifier.padding(top = pagePaddingX)) {
 			Spacer(Modifier.weight(1f))
 			Icon(id = R.drawable.icon_settings, size = 20.dp) {
-				Router.navigate("profile/settings", false)
+				Router.navigate("profile/settings")
 			}
 		}
 
-		if (!loading && user != null) {
+		if (user != null) {
 			Image(id = R.drawable.avatar_user, size = 80.dp)
 			H2(text = "${user.firstName} ${user.lastName}")
 
@@ -65,16 +63,8 @@ fun UserCard(loading: Boolean, onAddResearch: () -> Unit) {
 					text = R.string.add_research,
 					icon = R.drawable.icon_add,
 					modifier = Modifier.weight(1f),
-					onClick = onAddResearch
-				)
+				) { Router.navigate("publications/add-publication") }
 			}
 		}
 	}
 }
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewUserCard() {
-	UserCard { /* At click on add research. */ }
-}
-

@@ -1,5 +1,6 @@
 package com.example.academicpulse.view.pages.home
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,13 +13,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
+import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.pageWithBarPaddingBottom
 import com.example.academicpulse.utils.forms.Field
-import com.example.academicpulse.utils.logcat
 import com.example.academicpulse.utils.useAtom
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.Input
@@ -85,4 +85,6 @@ fun HomePage() {
 			}
 		}
 	}
+
+	BackHandler { Router.exit() }
 }

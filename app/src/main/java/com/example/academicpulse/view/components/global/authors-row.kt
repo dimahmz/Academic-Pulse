@@ -48,10 +48,8 @@ fun AuthorsRow(
 			var modifier: Modifier = Modifier
 			if (showProfileOnClick)
 				modifier = modifier.clickable {
-					if (author.id == Store.user.current.value!!.id)
-						Router.navigate("profile/index", true)
-					else
-						logcat("User click: Show another user profile by id {${author.id}}")
+					if (author.id == Store.user.current.value!!.id) Router.navigate("profile")
+					else logcat("User click: Show another user profile by id {${author.id}}")
 				}
 			Row(
 				modifier = modifier,

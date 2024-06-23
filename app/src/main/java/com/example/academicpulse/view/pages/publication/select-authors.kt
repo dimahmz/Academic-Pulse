@@ -73,7 +73,7 @@ fun SelectAuthorsPage() {
 
 			Row(Modifier.fillMaxWidth()) {
 				Spacer(Modifier.weight(1f))
-				Text(text = R.string.continued) { Router.back(false) }
+				Text(text = R.string.continued) { Router.back("publications/add-publication") }
 			}
 		}
 		Line(height = 1.dp)
@@ -132,5 +132,5 @@ fun SelectAuthorsPage() {
 		}
 	}
 
-	BackHandler { Router.back(false) }
+	BackHandler { Router.back("publications/add-publication") }
 }

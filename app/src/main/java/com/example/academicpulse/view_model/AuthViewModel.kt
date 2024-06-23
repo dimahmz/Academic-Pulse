@@ -44,8 +44,8 @@ class AuthViewModel : ViewModel() {
 	fun signInOnStart(vm: UserViewModel, setIsReady: () -> Unit) {
 		// If no user is logged in, keep the router in the sign up page, otherwise check for account activation.
 		vm.getCurrentUser(onError = { setIsReady() }) { user, _ ->
-			if (user["activated"] == true) Router.navigate("home", true)
-			else if (user["activated"] == false) Router.navigate("auth/activation", false)
+			if (user["activated"] == true) Router.navigate("home")
+			else if (user["activated"] == false) Router.navigate("auth/activation")
 			setIsReady()
 		}
 	}
@@ -67,8 +67,8 @@ class AuthViewModel : ViewModel() {
 				if (user["activated"] == true) {
 					signInInfo = SignInInfo("", "")
 					clearSignUp()
-					Router.navigate("home", true)
-				} else Router.navigate("auth/activation", false)
+					Router.navigate("home")
+				} else Router.navigate("auth/activation")
 			}
 		}
 	}
@@ -91,7 +91,7 @@ class AuthViewModel : ViewModel() {
 								if (sending.isSuccessful) {
 									clearSignUp()
 									signInInfo = info
-									Router.navigate("auth/verification", false)
+									Router.navigate("auth/verification")
 								} else onError(R.string.unknown_error)
 							}
 						}
@@ -101,6 +101,6 @@ class AuthViewModel : ViewModel() {
 
 	fun logOut() {
 		auth.signOut()
-		Router.navigate("auth/sign-in", false)
+		Router.navigate("auth/sign-in")
 	}
 }

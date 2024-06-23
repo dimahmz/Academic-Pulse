@@ -5,9 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,14 +26,15 @@ import com.example.academicpulse.view_model.Store
 import com.google.firebase.Timestamp
 
 @Composable
-fun PublicationArticle(publication: Publication) {
+fun PublicationArticle(publication: Publication, isProfilePage: Boolean = false) {
 	Column(
 		modifier = Modifier
 			.fillMaxWidth()
 			.padding(vertical = pagePaddingX, horizontal = (pagePaddingX.value / 2).dp)
 			.clickable {
 				Store.publications.selectedPublicationId = publication.id
-				Router.navigate("publications/one-publication", false)
+				Store.publications.redirectedFromProfile = isProfilePage
+				Router.navigate("publications/one-publication")
 			},
 		verticalArrangement = Arrangement.spacedBy(8.dp),
 	) {

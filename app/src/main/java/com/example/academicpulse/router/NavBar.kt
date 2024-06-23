@@ -25,28 +25,29 @@ private data class NavbarItem(
 	val icon: Int,
 	var count: Int = 0,
 )
-
 private val navbarItems = listOf(
 	NavbarItem("home", R.string.home, R.drawable.icon_home),
 	NavbarItem("notifications", R.string.notification, R.drawable.icon_notifications),
-	NavbarItem("profile/index", R.string.profile, R.drawable.icon_profile),
+	NavbarItem("profile", R.string.profile, R.drawable.icon_profile),
 )
+private val visibleWhen = listOf("home", "notifications", "profile")
 
 /** Bottom NavBar UI element containing main root routes with their icons, allowing direct navigation to them */
 @Composable
-fun NavBar(route: String, navBarVisible: Boolean) {
-	if (!navBarVisible) return
+fun NavBar(route: String) {
+	if (!visibleWhen.contains(route)) return
+
 	NavigationBar(
 		modifier = Modifier.height(bottomBarHeight),
 		containerColor = MaterialTheme.colorScheme.secondary,
 	) {
 		navbarItems.forEach {
-			val selected = route.startsWith(it.route)
+			val selected = route == it.route
 			val color = if (selected) MaterialTheme.colorScheme.primary else navBavIconColor
 			NavigationBarItem(
 				colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent),
 				selected = selected,
-				onClick = { Router.navigate(it.route, true) },
+				onClick = { if (!selected) Router.navigate(it.route) },
 				label = { Text(text = it.title, color = color, size = descriptionTextSize) },
 				icon = {
 					BadgedBox(

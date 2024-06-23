@@ -2,7 +2,6 @@ package com.example.academicpulse.view.pages.publication
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,7 +42,7 @@ fun AddPublicationPage() {
 	// Fetch the available types
 	LaunchedEffect(Unit) {
 		Store.publicationsTypes.getAll(
-			onError = { Router.back(navBarVisible = true) },
+			onError = { Router.back("profile") },
 			onSuccess = { setTypesFetched(true) },
 		)
 	}
@@ -70,6 +68,12 @@ fun AddPublicationPage() {
 		}
 	}
 
+	fun back() {
+		form.form.clearAll()
+		Store.authors.currentForm.value = arrayListOf()
+		Router.back("profile")
+	}
+
 	if (!typesFetched) {
 		Spinner()
 		return
@@ -80,7 +84,7 @@ fun AddPublicationPage() {
 			.fillMaxHeight()
 			.padding(horizontal = pagePaddingX),
 	) {
-		Header(title = R.string.add_research, true)
+		Header(title = R.string.add_research, onClick = ::back)
 		Spacer(Modifier.height(14.dp))
 
 		Column(verticalArrangement = Arrangement.spacedBy(gap)) {
@@ -119,7 +123,7 @@ fun AddPublicationPage() {
 					Text(text = R.string.authors)
 					Spacer(Modifier.width(inputLabelGap))
 					Text(text = "(${stringResource(R.string.modify)})", underlined = true) {
-						Router.navigate("publications/select-authors", false)
+						Router.navigate("publications/select-authors")
 					}
 				}
 				AuthorsRow(authors = authors, appendCurrentUser = true)
@@ -134,11 +138,7 @@ fun AddPublicationPage() {
 		)
 	}
 
-	BackHandler {
-		form.form.clearAll()
-		Store.authors.currentForm.value = arrayListOf()
-		Router.back(true /* to = profile/index */)
-	}
+	BackHandler(onBack = ::back)
 }
 
 @Preview(showSystemUi = true)

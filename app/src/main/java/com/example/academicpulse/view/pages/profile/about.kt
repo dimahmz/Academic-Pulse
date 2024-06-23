@@ -26,7 +26,7 @@ fun AboutPage() {
 			.fillMaxHeight()
 			.padding(horizontal = pagePaddingX),
 	) {
-		Header(title = R.string.about)
+		Header(title = R.string.about) { Router.back("profile/settings") }
 		Spacer(Modifier.height(14.dp))
 
 		Column(verticalArrangement = Arrangement.spacedBy((gap.value * 1.7).dp)) {
@@ -37,7 +37,7 @@ fun AboutPage() {
 		}
 	}
 
-	BackHandler { Router.back(false /* to = profile/settings */) }
+	BackHandler { Router.back("profile/settings") }
 }
 
 @Preview(showSystemUi = true)

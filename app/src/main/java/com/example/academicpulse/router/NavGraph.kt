@@ -1,6 +1,5 @@
 package com.example.academicpulse.router
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -12,63 +11,86 @@ import com.example.academicpulse.view.pages.profile.*
 import com.example.academicpulse.view.pages.publication.*
 
 /** NavGraph is a schema that contains all the pages used in the App.
- * - Each page is declared with its instance, path key and back handler button behavior.
+ * - Each page is declared with its instance, path key and comments indicate all pages that it can navigate to.
  */
 @Composable
 fun NavGraph(navController: NavHostController, startDestination: String) {
-	NavHost(
-		navController = navController, startDestination = startDestination
-	) {
-		// Auth Routes
-		composable(route = "auth/sign-in") {
-			SignInPage(/* BackHandler, exit the app */)
-		}
-		composable(route = "auth/activation") {
-			ActivationPage(/* BackHandler, exit the app */)
-		}
-		composable(route = "auth/sign-up-institution") {
-			SignUpInstitutionPage(/* BackHandler, to = auth/sign-in */)
-		}
-		composable(route = "auth/sign-up") {
-			SignUpPage(/* BackHandler, to = auth/sign-up-institution */)
-		}
-		composable(route = "auth/verification") {
-			VerificationPage(/* BackHandler, to = auth/sign-in */)
-		}
-
-		// Unique Routes
+	NavHost(navController = navController, startDestination = startDestination) {
+		// ---------------------------- Unique Routes ----------------------------
 		composable(route = "home") {
 			HomePage()
-			BackHandler { Router.exit() }
+			// BackHandler = exit
+			// PublicationArticle Click = navigate: publications/one-publication
 		}
 		composable(route = "notifications") {
 			NotificationPage()
-			BackHandler { Router.navigate("home", true) }
+			// BackHandler = navigate: home
 		}
 
-		// Profile Routes
-		composable(route = "profile/index") {
-			ProfilePage(/* BackHandler, replaceWith = home */)
+		// ---------------------------- Auth Routes ----------------------------
+		composable(route = "auth/sign-in") {
+			SignInPage()
+			// BackHandler = exit
+			// Register now = navigate: auth/sign-up-institution
+			// Log in = navigate: home || auth/activation
+		}
+		composable(route = "auth/activation") {
+			ActivationPage()
+			// BackHandler = exit
+			// Log out = navigate: auth/sign-in
+		}
+		composable(route = "auth/sign-up-institution") {
+			SignUpInstitutionPage()
+			// BackHandler = back: auth/sign-in
+			// Next || Skip = navigate: sign-up
+		}
+		composable(route = "auth/sign-up") {
+			SignUpPage()
+			// BackHandler = back: auth/sign-up-institution
+			// Continue = navigate: auth/verification
+		}
+		composable(route = "auth/verification") {
+			VerificationPage()
+			// BackHandler || Back to Login = back: auth/sign-in
+		}
+
+		// ---------------------------- Profile Routes ----------------------------
+		composable(route = "profile") {
+			ProfilePage()
+			// BackHandler = navigate: home
+			// UserCard icon_settings = navigate: profile/settings
+			// UserCard Add research = navigate: publications/add-publication
+			// PublicationArticle Click = navigate: publications/one-publication
 		}
 		composable(route = "profile/settings") {
-			SettingsPage(/* BackHandler, to = profile/index */)
+			SettingsPage()
+			// BackHandler = back: profile
+			// Log out = navigate: auth/sign-in
 		}
 		composable(route = "profile/about") {
-			AboutPage(/* BackHandler, to = profile/settings */)
+			AboutPage()
+			// BackHandler = back: profile/settings
 		}
 
-		// Publications Routes
+		// ---------------------------- Publications Routes ----------------------------
 		composable(route = "publications/add-publication") {
-			AddPublicationPage(/* BackHandler, to = profile/index */)
-		}
-		composable(route = "publications/one-publication") {
-			OnePublicationPage(/* BackHandler, to = profile/index or home/index */)
+			AddPublicationPage()
+			// BackHandler = back: profile
+			// Authors (Modify) = navigate: publications/select-authors
 		}
 		composable(route = "publications/select-authors") {
-			SelectAuthorsPage(/* BackHandler, to = publication/add-publication */)
+			SelectAuthorsPage()
+			// BackHandler || Continue = back: publication/add-publication
+		}
+		composable(route = "publications/one-publication") {
+			// BackHandler || onDelete = back: home || profile
+			// View PDF = navigate: publications/pdf-viewer
+			// DOI = Intent: https://www.doi.org/{{ doi }}
+			OnePublicationPage()
 		}
 		composable(route = "publications/pdf-viewer") {
-			PDFViewerPage(/* BackHandler, to = publication/one-publication */)
+			PDFViewerPage()
+			// BackHandler = back: publications/one-publication
 		}
 	}
 }

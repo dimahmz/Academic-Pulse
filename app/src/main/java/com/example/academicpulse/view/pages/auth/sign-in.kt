@@ -115,16 +115,13 @@ fun SignInPage() {
 					color = MaterialTheme.colorScheme.primary,
 					weight = FontWeight.Bold
 				) {
-					Router.navigate("auth/sign-up-institution", false)
+					Router.navigate("auth/sign-up-institution")
 				}
 			}
 		}
 	}
 
-	BackHandler {
-		if (loading) return@BackHandler
-		Router.exit()
-	}
+	BackHandler { if (!loading) Router.exit() }
 }
 
 @Preview(showSystemUi = true)

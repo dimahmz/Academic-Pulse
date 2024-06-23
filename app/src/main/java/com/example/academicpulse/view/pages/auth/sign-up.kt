@@ -66,12 +66,18 @@ fun SignUpPage() {
 		}
 	}
 
+	fun back() {
+		if (loading) return
+		auth.saveSignUpInfo(firstName.trim(), lastName.trim(), email.trim())
+		Router.back("auth/sign-up-institution")
+	}
+
 	Column(
 		modifier = Modifier
 			.fillMaxHeight()
 			.padding(horizontal = pagePaddingX),
 	) {
-		Header(title = R.string.sign_up)
+		Header(title = R.string.sign_up, onClick = ::back)
 
 		Column(modifier = Modifier.padding(bottom = 30.dp)) {
 			Title(text = R.string.institution_info)
@@ -114,11 +120,7 @@ fun SignUpPage() {
 		)
 	}
 
-	BackHandler {
-		if (loading) return@BackHandler
-		auth.saveSignUpInfo(firstName.trim(), lastName.trim(), email.trim())
-		Router.back(false /* to = auth/sign-up-institution */)
-	}
+	BackHandler(onBack = ::back)
 }
 
 @Preview(showSystemUi = true)

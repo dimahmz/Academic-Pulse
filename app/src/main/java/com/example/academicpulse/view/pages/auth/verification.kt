@@ -42,13 +42,10 @@ fun VerificationPage() {
 		Button(
 			text = R.string.back_sign_in,
 			modifier = Modifier.padding(top = 40.dp),
-			onClick = { Router.back(false, step = 3 /* to = auth/sign-in */) }
-		)
+		) { Router.back("auth/sign-in", step = 3) }
 	}
 
-	BackHandler {
-		Router.back(false, step = 3 /* to = auth/sign-in */)
-	}
+	BackHandler { Router.back("auth/sign-in", step = 3) }
 }
 
 @Preview(showSystemUi = true)

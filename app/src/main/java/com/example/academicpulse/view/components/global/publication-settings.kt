@@ -19,19 +19,17 @@ import com.example.academicpulse.view.components.basic.Text
 import com.example.academicpulse.view_model.Store
 
 @Composable
-fun PublicationSettings() {
+fun PublicationSettings(onDelete: () -> Unit) {
 	val (isOpen, setIsOpen) = useState { false }
 
 	val confirm = Modal(
 		R.string.delete_title, R.string.delete_message, R.string.delete_cancel, R.string.delete_confirm
 	) {
 		Store.isLoading.value = true
-		Store.publications.deleteById(onSuccess = {
-			Router.navigate("profile/index", true)
-			Store.isLoading.value = false
-		}, onError = {
-			Store.isLoading.value = false
-		})
+		Store.publications.deleteById(
+			onError = { Store.isLoading.value = false },
+			onSuccess = onDelete,
+		)
 	}
 
 	Box {

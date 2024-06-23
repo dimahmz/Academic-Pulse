@@ -33,18 +33,18 @@ fun SettingsPage() {
 			.fillMaxHeight()
 			.padding(horizontal = pagePaddingX),
 	) {
-		Header(title = R.string.settings, true)
+		Header(title = R.string.settings) { Router.back("profile") }
 		Spacer(Modifier.height(14.dp))
 		
 		Element(R.string.about, R.drawable.icon_about) {
-			Router.navigate("profile/about", false)
+			Router.navigate("profile/about")
 		}
 		Element(R.string.log_out, R.drawable.icon_logout) {
 			Store.auth.logOut()
 		}
 	}
 
-	BackHandler { Router.back(true /* to = profile/index */) }
+	BackHandler { Router.back("profile") }
 }
 
 @Composable

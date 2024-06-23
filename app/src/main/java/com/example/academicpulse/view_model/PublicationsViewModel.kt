@@ -9,16 +9,6 @@ import com.example.academicpulse.utils.forms.*
 import com.example.academicpulse.utils.useCast
 import com.google.firebase.firestore.Filter
 
-class PublicationForm {
-	val form = Form.simple()
-	val type = Field.simple(form = form, ifEmpty = R.string.type_required)
-	val title = Field.simple(form = form, ifEmpty = R.string.title_required)
-	val abstract = Field.simple(form = form, ifEmpty = R.string.abstract_required)
-	val file = Field.simple(form = form, required = false)
-	val doi = Field.simple(form = form, required = false)
-	val date = Field.simple(form = form, ifEmpty = R.string.date_required)
-}
-
 class PublicationsViewModel : ViewModel() {
 	private val collection = "publication"
 	val userPublications = MutableLiveData<ArrayList<Publication>>()
@@ -27,6 +17,7 @@ class PublicationsViewModel : ViewModel() {
 	val publication = MutableLiveData<Publication>()
 	var selectedPublicationId = ""
 	var redirectedFromForm = false
+	var redirectedFromProfile = false
 	val form = PublicationForm()
 
 	fun search(
@@ -118,7 +109,7 @@ class PublicationsViewModel : ViewModel() {
 						redirectedFromForm = true
 						form.form.clearAll()
 						Store.authors.currentForm.value = arrayListOf()
-						Router.navigate("publications/one-publication", false)
+						Router.navigate("publications/one-publication")
 					}
 				}
 			}
@@ -128,5 +119,15 @@ class PublicationsViewModel : ViewModel() {
 	fun deleteById(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
 		val id = selectedPublicationId
 		StoreDB.deleteOneById(collection, id, onError, onSuccess)
+	}
+
+	class PublicationForm {
+		val form = Form.simple()
+		val type = Field.simple(form = form, ifEmpty = R.string.type_required)
+		val title = Field.simple(form = form, ifEmpty = R.string.title_required)
+		val abstract = Field.simple(form = form, ifEmpty = R.string.abstract_required)
+		val file = Field.simple(form = form, required = false)
+		val doi = Field.simple(form = form, required = false)
+		val date = Field.simple(form = form, ifEmpty = R.string.date_required)
 	}
 }

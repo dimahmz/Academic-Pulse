@@ -10,7 +10,6 @@ import com.example.academicpulse.utils.useAtom
 
 class Router private constructor(private var navController: NavHostController) {
 	private var route = MutableLiveData("auth/sign-in")
-	private var navBarVisible = MutableLiveData(false)
 
 	// Note: Static variables and methods are used just to hold the global Router instance and be accessible in anywhere.
 	companion object {
@@ -29,31 +28,27 @@ class Router private constructor(private var navController: NavHostController) {
 		/** Bottom NavBar UI element containing main root routes with their icons, allowing direct navigation to them */
 		@Composable
 		fun NavBar() {
-			val route = useAtom(appRouter[0].route, "auth")
-			val navBarVisible = useAtom(appRouter[0].navBarVisible, false)
-			return NavBar(route = route, navBarVisible = navBarVisible)
+			return NavBar(useAtom(appRouter[0].route, "auth/sign-in"))
 		}
 
 		/** NavGraph is a schema that contains all the pages used in the App.
-		 * - Each page is declared with its instance, path key and back handler button behavior.
+		 * - Each page is declared with its instance, path key and comments indicate all pages that it can navigate to.
 		 */
 		@Composable
 		fun NavGraph() {
-			val route = appRouter[0].route.value ?: "auth"
+			val route = appRouter[0].route.value ?: "auth/sign-in"
 			NavGraph(navController = appRouter[0].navController, startDestination = route)
 		}
 
 		/** Use a normal navigation by adding the current page to backstack and redirect to the next page. */
-		fun navigate(target: String, navBarVisible: Boolean) {
-			appRouter[0].navBarVisible.value = navBarVisible
+		fun navigate(target: String) {
 			appRouter[0].route.value = target
 			appRouter[0].navController.navigate(target)
 		}
 
 		/** Navigate to a previous page. */
-		fun back(navBarVisible: Boolean, step: Int = 1, target: String? = null) {
-			appRouter[0].navBarVisible.value = navBarVisible
-			if (target != null) appRouter[0].route.value = target
+		fun back(target: String, step: Int = 1) {
+			appRouter[0].route.value = target
 			repeat(step) { appRouter[0].navController.popBackStack() }
 		}
 
