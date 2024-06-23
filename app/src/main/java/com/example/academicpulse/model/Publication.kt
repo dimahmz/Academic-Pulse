@@ -30,7 +30,7 @@ class Publication(
 	val type: String
 		get() {
 			if (typeLabel == null) {
-				val type = Store.publicationsTypes.list.value?.find { it.id == typeId }
+				val type = Store.publicationsTypes.getOne(typeId)
 				if (type != null) typeLabel = type.label
 			}
 			return typeLabel ?: "Article"

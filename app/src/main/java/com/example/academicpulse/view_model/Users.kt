@@ -15,9 +15,9 @@ import com.google.firebase.firestore.Filter
 class Users : ViewModel() {
 	private val collection = "user"
 	private val auth = Firebase.auth
+	private var listCache = arrayListOf<User>()
 	private val currentUser = MutableLiveData<User>()
 	val current: LiveData<User> = currentUser
-	private var listCache = arrayListOf<User>()
 
 	private fun cacheList(list: ArrayList<User>) {
 		list.forEach {

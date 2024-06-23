@@ -1,15 +1,15 @@
 package com.example.academicpulse.router
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.academicpulse.Index
 import com.example.academicpulse.utils.context
-import com.example.academicpulse.utils.useAtom
 
 class Router private constructor(private var navController: NavHostController) {
-	private var route = MutableLiveData("auth/sign-in")
+	private val startDestination = "auth/sign-in"
+	private var route = mutableStateOf(startDestination)
 
 	// Note: Static variables and methods are used just to hold the global Router instance and be accessible in anywhere.
 	companion object {
@@ -28,7 +28,7 @@ class Router private constructor(private var navController: NavHostController) {
 		/** Bottom NavBar UI element containing main root routes with their icons, allowing direct navigation to them */
 		@Composable
 		fun NavBar() {
-			return NavBar(useAtom(appRouter[0].route, "auth/sign-in"))
+			return NavBar(appRouter[0].route.value)
 		}
 
 		/** NavGraph is a schema that contains all the pages used in the App.
@@ -36,8 +36,7 @@ class Router private constructor(private var navController: NavHostController) {
 		 */
 		@Composable
 		fun NavGraph() {
-			val route = appRouter[0].route.value ?: "auth/sign-in"
-			NavGraph(navController = appRouter[0].navController, startDestination = route)
+			NavGraph(appRouter[0].navController, appRouter[0].startDestination)
 		}
 
 		/** Use a normal navigation by adding the current page to backstack and redirect to the next page. */

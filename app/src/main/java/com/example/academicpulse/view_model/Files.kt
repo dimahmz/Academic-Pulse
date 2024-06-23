@@ -10,13 +10,10 @@ import com.google.firebase.storage.storage
 import java.io.File
 
 class Files : ViewModel() {
-	// Firebase cloud storage instance
 	private val storage = Firebase.storage.reference
-
-	// Storage folders paths
 	private val publications = "publications"
-
 	private val listCache = arrayListOf<Pair<String, MutableLiveData<Uri>>>()
+
 	private fun cacheFile(id: String, file: Uri?) {
 		val index = listCache.indexOfFirst { (filename) -> id == filename }
 		if (index == -1) listCache.add(Pair(id, MutableLiveData(file)))
