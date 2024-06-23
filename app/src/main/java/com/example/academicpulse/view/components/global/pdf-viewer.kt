@@ -5,10 +5,10 @@ import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import android.os.ParcelFileDescriptor
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.*
-import androidx.compose.material3.Card
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
@@ -29,25 +29,25 @@ fun PdfViewer(
 		val renderer = PdfRenderer(
 			ParcelFileDescriptor.open(source.toFile(), ParcelFileDescriptor.MODE_READ_ONLY)
 		)
-		val list = (
-			(0 until renderer.pageCount).map { pageNumber ->
-				val page = renderer.openPage(pageNumber)
-				val bitmap = Bitmap.createBitmap(1240, 1754, Bitmap.Config.ARGB_8888)
-				page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-				page.close()
-				bitmap.asImageBitmap()
-			}
-		)
+		val list = ((0 until renderer.pageCount).map { pageNumber ->
+			val page = renderer.openPage(pageNumber)
+			val bitmap = Bitmap.createBitmap(1240, 1754, Bitmap.Config.ARGB_8888)
+			page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+			page.close()
+			bitmap.asImageBitmap()
+		})
 		renderer.close()
 		list
 	}
 
 	val lazyState = rememberLazyListState()
-	LazyColumn(state = lazyState, verticalArrangement = arrangement) {
+	LazyColumn(modifier = modifier, state = lazyState, verticalArrangement = arrangement) {
 		items(images) {
-			Card(modifier = Modifier.background(white)) {
-				ZoomableImage(painter = BitmapPainter(it), scrollState = lazyState)
-			}
+			Image(
+				modifier = Modifier.background(white),
+				painter = BitmapPainter(it),
+				contentDescription = null
+			)
 		}
 	}
 }
