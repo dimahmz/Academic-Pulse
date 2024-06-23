@@ -18,7 +18,6 @@ class Users : ViewModel() {
 	private val currentUser = MutableLiveData<User>()
 	val current: LiveData<User> = currentUser
 	private var listCache = arrayListOf<User>()
-	var currentForm = MutableLiveData(arrayListOf<User>())
 
 	private fun cacheList(list: ArrayList<User>) {
 		list.forEach {

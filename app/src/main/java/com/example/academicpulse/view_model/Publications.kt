@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.academicpulse.R
 import com.example.academicpulse.model.Publication
+import com.example.academicpulse.model.User
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.forms.*
 import com.example.academicpulse.utils.useCast
@@ -108,7 +109,7 @@ class Publications : ViewModel() {
 						selectedPublicationId = id
 						redirectedFromForm = true
 						form.form.clearAll()
-						Store.users.currentForm.value = arrayListOf()
+						form.authors.value = arrayListOf()
 						Router.navigate("publications/one-publication")
 					}
 				}
@@ -129,5 +130,6 @@ class Publications : ViewModel() {
 		val file = Field.simple(form = form, required = false)
 		val doi = Field.simple(form = form, required = false)
 		val date = Field.simple(form = form, ifEmpty = R.string.date_required)
+		var authors = MutableLiveData(arrayListOf<User>())
 	}
 }

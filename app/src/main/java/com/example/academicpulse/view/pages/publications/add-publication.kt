@@ -34,7 +34,7 @@ import com.google.firebase.Timestamp
 @Composable
 fun AddPublicationPage() {
 	val form = Store.publications.form
-	val authors = useAtom(Store.users.currentForm, arrayListOf())
+	val authors = useAtom(form.authors, arrayListOf())
 	val typeOptions = useAtom(Store.publicationsTypes.list)
 	val (typesFetched, setTypesFetched) = useState { false }
 	val (loading, setLoading) = useState { false }
@@ -70,7 +70,7 @@ fun AddPublicationPage() {
 
 	fun back() {
 		form.form.clearAll()
-		Store.users.currentForm.value = arrayListOf()
+		form.authors.value = arrayListOf()
 		Router.back("profile")
 	}
 
