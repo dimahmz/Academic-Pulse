@@ -16,6 +16,9 @@ import com.example.academicpulse.view.pages.publications.*
 @Composable
 fun NavGraph(navController: NavHostController, startDestination: String) {
 	NavHost(navController = navController, startDestination = startDestination) {
+		// ---------------------------- At App Start -----------------------------
+		// navigate: home || auth/activation || auth/sign-in
+
 		// ---------------------------- Unique Routes ----------------------------
 		composable(route = "home") {
 			HomePage()
