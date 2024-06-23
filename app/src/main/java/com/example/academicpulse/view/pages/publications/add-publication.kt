@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.model.Publication
+import com.example.academicpulse.model.PublicationType
 import com.example.academicpulse.model.User
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.gap
@@ -34,15 +35,16 @@ import com.google.firebase.Timestamp
 fun AddPublicationPage() {
 	val form = Store.publications.form
 	val authors = useAtom(form.authors, arrayListOf())
-	val typeOptions = useAtom(Store.publicationsTypes.list)
-	val (typesFetched, setTypesFetched) = useState { false }
+	val (types, setTypes) = useState<List<PublicationType>?> { null }
 	val (loading, setLoading) = useState { false }
 
 	// Fetch the available types
 	LaunchedEffect(Unit) {
 		Store.publicationsTypes.getAll(
 			onError = { Router.back("profile") },
-			onSuccess = { setTypesFetched(true) },
+			onSuccess = {
+				setTypes(it)
+			},
 		)
 	}
 
@@ -73,7 +75,7 @@ fun AddPublicationPage() {
 		Router.back("profile")
 	}
 
-	if (!typesFetched) {
+	if (types == null) {
 		Spinner()
 		return
 	}
@@ -90,7 +92,7 @@ fun AddPublicationPage() {
 			Select(
 				field = form.type,
 				label = R.string.type,
-				items = typeOptions!!,
+				items = types,
 				getValue = { it.id },
 				getLabel = { it.label },
 				icon = R.drawable.icon_down_arrow

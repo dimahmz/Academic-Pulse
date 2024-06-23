@@ -22,7 +22,7 @@ fun <Item> Select(
 
 	/** [items] is the list of options rendered withing the dropdown menu.
 	 * - See also: [getValue] and [getLabel] if the items are not shown or stored correctly. */
-	items: ArrayList<Item>,
+	items: List<Item>,
 
 	/** [label] is a supporting text placed above the field.
 	 * - Note: It can automatically request a focus on the field when it's clicked. */
