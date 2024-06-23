@@ -1,4 +1,4 @@
-package com.example.academicpulse.view.pages.publication
+package com.example.academicpulse.view.pages.publications
 
 import android.content.Intent
 import android.net.Uri

@@ -8,7 +8,7 @@ import com.example.academicpulse.view.pages.auth.*
 import com.example.academicpulse.view.pages.home.*
 import com.example.academicpulse.view.pages.notifications.*
 import com.example.academicpulse.view.pages.profile.*
-import com.example.academicpulse.view.pages.publication.*
+import com.example.academicpulse.view.pages.publications.*
 
 /** NavGraph is a schema that contains all the pages used in the App.
  * - Each page is declared with its instance, path key and comments indicate all pages that it can navigate to.

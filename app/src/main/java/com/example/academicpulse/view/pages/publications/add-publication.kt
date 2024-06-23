@@ -1,4 +1,4 @@
-package com.example.academicpulse.view.pages.publication
+package com.example.academicpulse.view.pages.publications
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
