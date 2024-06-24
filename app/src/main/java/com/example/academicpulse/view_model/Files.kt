@@ -21,47 +21,60 @@ class Files : ViewModel() {
 	}
 
 	fun readFile(id: String, onError: (Int) -> Unit, onSuccess: (Uri?) -> Unit) {
-		val fullPath = "$publications/$id"
-		val cachedFile = listCache.find { (id) -> fullPath == id }
-		if (cachedFile != null) return onSuccess(cachedFile.second.value)
-		val localFile = File.createTempFile("file1", ".pdf")
-		storage.child(fullPath).getFile(localFile).addOnCompleteListener { uploading ->
-			if (uploading.isSuccessful) {
-				val file = Uri.fromFile(localFile)
-				cacheFile(fullPath, file)
-				onSuccess(file)
-			} else {
-				if (uploading.exception?.message?.contains("does not exist") == true) {
-					logcat("Warning: File with ID name {$id} is not found in the path {$publications}")
-					cacheFile(fullPath,  null)
-					onSuccess(null)
+		try {
+			val fullPath = "$publications/$id"
+			val cachedFile = listCache.find { (id) -> fullPath == id }
+			if (cachedFile != null) return onSuccess(cachedFile.second.value)
+			val localFile = File.createTempFile("file1", ".pdf")
+			storage.child(fullPath).getFile(localFile).addOnCompleteListener { uploading ->
+				if (uploading.isSuccessful) {
+					val file = Uri.fromFile(localFile)
+					cacheFile(fullPath, file)
+					onSuccess(file)
+				} else {
+					if (uploading.exception?.message?.contains("does not exist") == true) {
+						logcat("Warning: File with ID name {$id} is not found in the path {$publications}")
+						cacheFile(fullPath, null)
+						onSuccess(null)
+					} else logcat("Error reading file with ID name {$id}", uploading.exception)
+					onError(R.string.unknown_error)
 				}
-				else logcat("Error reading file with ID name {$id}", uploading.exception)
-				onError(R.string.unknown_error)
 			}
+		} catch (_: Exception) {
+			onError(R.string.unknown_error)
 		}
 	}
 
 	fun uploadFile(file: Uri?, id: String, onError: (Int) -> Unit, onSuccess: () -> Unit) {
-		val fullPath = "$publications/$id"
-		if (file == null) {
-			cacheFile(fullPath, null)
-			return onSuccess()
-		}
-		storage.child(fullPath).putFile(file).addOnCompleteListener { uploading ->
-			if (uploading.isSuccessful) {
-				cacheFile(fullPath, file)
-				onSuccess()
-			} else {
-				logcat("Error uploading new file with ID name {$id}", uploading.exception)
-				onError(R.string.unknown_error)
+		try {
+			val fullPath = "$publications/$id"
+			if (file == null) {
+				cacheFile(fullPath, null)
+				return onSuccess()
 			}
+			storage.child(fullPath).putFile(file).addOnCompleteListener { uploading ->
+				if (uploading.isSuccessful) {
+					cacheFile(fullPath, file)
+					onSuccess()
+				} else {
+					logcat("Error uploading new file with ID name {$id}", uploading.exception)
+					onError(R.string.unknown_error)
+				}
+			}
+		} catch (exception: Exception) {
+			logcat(exception = exception)
+			onError(R.string.unknown_error)
 		}
 	}
 
 	fun deleteFile(id: String, onFinish: () -> Unit) {
-		val fullPath = "$publications/$id"
-		listCache.removeIf { (filename) -> fullPath == filename }
-		// TODO: Delete the file fullPath if exists
+		try {
+			val fullPath = "$publications/$id"
+			listCache.removeIf { (filename) -> fullPath == filename }
+			// TODO: Delete the file fullPath if exists
+		} catch (exception: Exception) {
+			logcat(exception = exception)
+			onFinish()
+		}
 	}
 }

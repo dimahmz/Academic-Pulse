@@ -25,18 +25,23 @@ class StoreDB private constructor() {
 			onError: (error: Int) -> Unit,
 			onSuccess: (data: Map<String, Any?>, ref: DocumentReference) -> Unit,
 		) {
-			val ref = refOf(collection, id)
-			ref.get().addOnCompleteListener { doc ->
-				val data = doc.result.data
-				if (doc.isSuccessful && data != null) onSuccess(data, ref)
-				else if (data == null) {
-					logcat("Warning: Document with id {$id} is not found in the collection {$collection}")
-					onError(R.string.unknown_error)
-				} else {
-					val message = "Error getting document by id {$id} from the collection {$collection}"
-					logcat(message, doc.exception)
-					onError(R.string.unknown_error)
+			try {
+				val ref = refOf(collection, id)
+				ref.get().addOnCompleteListener { doc ->
+					val data = doc.result.data
+					if (doc.isSuccessful && data != null) onSuccess(data, ref)
+					else if (data == null) {
+						logcat("Warning: Document with id {$id} is not found in the collection {$collection}")
+						onError(R.string.unknown_error)
+					} else {
+						val message = "Error getting document by id {$id} from the collection {$collection}"
+						logcat(message, doc.exception)
+						onError(R.string.unknown_error)
+					}
 				}
+			} catch (exception: Exception) {
+				logcat(exception = exception)
+				onError(R.string.unknown_error)
 			}
 		}
 
@@ -48,35 +53,41 @@ class StoreDB private constructor() {
 			onAsyncCast: ((id: String, map: Map<String, Any?>, resolver: (T) -> Unit) -> Unit)? = null,
 			onSuccess: (list: ArrayList<T>) -> Unit
 		) {
-			if (ids.isEmpty()) return onSuccess(arrayListOf())
-			val list = arrayListOf<T>()
-			val size = mutableIntStateOf(ids.size)
-			val errors = mutableIntStateOf(0)
+			try {
+				if (ids.isEmpty()) return onSuccess(arrayListOf())
+				val list = arrayListOf<T>()
+				val size = mutableIntStateOf(ids.size)
+				val errors = mutableIntStateOf(0)
 
-			fun countDown() {
-				size.intValue--
-				if (size.intValue == 0) {
-					if (errors.intValue != ids.size) onSuccess(list)
-					else onError(R.string.unknown_error)
-				}
-			}
-
-			ids.forEach { id ->
-				refOf(collection, id).get().addOnCompleteListener { doc ->
-					if (doc.isSuccessful && doc.result.data != null) {
-						castDocument(doc.result, onCast, onAsyncCast, ::countDown) { list.add(it) }
-					} else {
-						if (doc.result.data == null) {
-							logcat("Warning: Document with id {$id} is not found in the collection {$collection}")
-						} else {
-							val message = "Error getting document with id {$id} from the collection {$collection}"
-							errors.intValue = errors.intValue.plus(1)
-							logcat(message, doc.exception)
-							onError(R.string.unknown_error)
-						}
-						countDown()
+				fun countDown() {
+					size.intValue--
+					if (size.intValue == 0) {
+						if (errors.intValue != ids.size) onSuccess(list)
+						else onError(R.string.unknown_error)
 					}
 				}
+
+				ids.forEach { id ->
+					refOf(collection, id).get().addOnCompleteListener { doc ->
+						if (doc.isSuccessful && doc.result.data != null) {
+							castDocument(doc.result, onCast, onAsyncCast, ::countDown) { list.add(it) }
+						} else {
+							if (doc.result.data == null) {
+								logcat("Warning: Document with id {$id} is not found in the collection {$collection}")
+							} else {
+								val message =
+									"Error getting document with id {$id} from the collection {$collection}"
+								errors.intValue = errors.intValue.plus(1)
+								logcat(message, doc.exception)
+								onError(R.string.unknown_error)
+							}
+							countDown()
+						}
+					}
+				}
+			} catch (exception: Exception) {
+				logcat(exception = exception)
+				onError(R.string.unknown_error)
 			}
 		}
 
@@ -89,22 +100,27 @@ class StoreDB private constructor() {
 			onAsyncCast: ((id: String, map: Map<String, Any?>, resolver: (T) -> Unit) -> Unit)? = null,
 			onSuccess: (list: ArrayList<T>) -> Unit
 		) {
-			var ref: Query = db.collection(collection)
-			where?.forEach { condition -> ref = ref.where(condition) }
-			if (limit != null) ref = ref.limit(limit.toLong())
+			try {
+				var ref: Query = db.collection(collection)
+				where?.forEach { condition -> ref = ref.where(condition) }
+				if (limit != null) ref = ref.limit(limit.toLong())
 
-			ref.get().addOnCompleteListener { docs ->
-				if (docs.isSuccessful) {
-					val size = mutableIntStateOf(docs.result.size())
-					val list = arrayListOf<T>()
-					fun countDown() {
-						size.intValue--
-						if (size.intValue == 0) onSuccess(list)
-					}
-					docs.result.forEach { document ->
-						castDocument(document, onCast, onAsyncCast, ::countDown) { list.add(it) }
-					}
-				} else onError(R.string.unknown_error)
+				ref.get().addOnCompleteListener { docs ->
+					if (docs.isSuccessful) {
+						val size = mutableIntStateOf(docs.result.size())
+						val list = arrayListOf<T>()
+						fun countDown() {
+							size.intValue--
+							if (size.intValue == 0) onSuccess(list)
+						}
+						docs.result.forEach { document ->
+							castDocument(document, onCast, onAsyncCast, ::countDown) { list.add(it) }
+						}
+					} else onError(R.string.unknown_error)
+				}
+			} catch (exception: Exception) {
+				logcat(exception = exception)
+				onError(R.string.unknown_error)
 			}
 		}
 
@@ -114,13 +130,18 @@ class StoreDB private constructor() {
 			onError: (error: Int) -> Unit,
 			onSuccess: (id: String) -> Unit,
 		) {
-			db.collection(collection).add(data).addOnCompleteListener { inserting ->
-				if (inserting.isSuccessful) onSuccess(inserting.result.id)
-				else {
-					val message = "Error inserting new document in the collection {$collection}"
-					logcat(message, inserting.exception)
-					onError(R.string.unknown_error)
+			try {
+				db.collection(collection).add(data).addOnCompleteListener { inserting ->
+					if (inserting.isSuccessful) onSuccess(inserting.result.id)
+					else {
+						val message = "Error inserting new document in the collection {$collection}"
+						logcat(message, inserting.exception)
+						onError(R.string.unknown_error)
+					}
 				}
+			} catch (exception: Exception) {
+				logcat(exception = exception)
+				onError(R.string.unknown_error)
 			}
 		}
 
@@ -130,12 +151,17 @@ class StoreDB private constructor() {
 			onError: (error: Int) -> Unit,
 			onSuccess: () -> Unit,
 		) {
-			ref.set(data, SetOptions.merge()).addOnCompleteListener { updating ->
-				if (updating.isSuccessful) onSuccess()
-				else {
-					logcat("Error updating document by ref", updating.exception)
-					onError(R.string.unknown_error)
+			try {
+				ref.set(data, SetOptions.merge()).addOnCompleteListener { updating ->
+					if (updating.isSuccessful) onSuccess()
+					else {
+						logcat("Error updating document by ref", updating.exception)
+						onError(R.string.unknown_error)
+					}
 				}
+			} catch (exception: Exception) {
+				logcat(exception = exception)
+				onError(R.string.unknown_error)
 			}
 		}
 
@@ -145,12 +171,17 @@ class StoreDB private constructor() {
 			onError: (error: Int) -> Unit,
 			onSuccess: () -> Unit,
 		) {
-			refOf(collection, id).delete().addOnCompleteListener { deleting ->
-				if (deleting.isSuccessful) onSuccess()
-				else {
-					logcat("Error deleting document by id {$id}", deleting.exception)
-					onError(R.string.unknown_error)
+			try {
+				refOf(collection, id).delete().addOnCompleteListener { deleting ->
+					if (deleting.isSuccessful) onSuccess()
+					else {
+						logcat("Error deleting document by id {$id}", deleting.exception)
+						onError(R.string.unknown_error)
+					}
 				}
+			} catch (exception: Exception) {
+				logcat(exception = exception)
+				onError(R.string.unknown_error)
 			}
 		}
 

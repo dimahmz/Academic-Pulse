@@ -49,57 +49,71 @@ class Auth : ViewModel() {
 	}
 
 	fun signIn(info: SignInInfo, onError: (Int) -> Unit) {
-		signInInfo = info
-		auth.signInWithEmailAndPassword(info.email, info.password).addOnCompleteListener { signIn ->
-			if (signIn.exception != null) logcat(exception = signIn.exception)
-			if (signIn.exception?.message?.contains("credential is incorrect") == true)
-				return@addOnCompleteListener onError(R.string.invalid_credentials)
-			if (!signIn.isSuccessful)
-				return@addOnCompleteListener onError(R.string.unknown_error)
-			val currentUser = auth.currentUser
-			if (currentUser != null && !currentUser.isEmailVerified)
-				return@addOnCompleteListener onError(R.string.verify_email_first)
+		try {
+			signInInfo = info
+			auth.signInWithEmailAndPassword(info.email, info.password).addOnCompleteListener { signIn ->
+				if (signIn.exception != null) logcat(exception = signIn.exception)
+				if (signIn.exception?.message?.contains("credential is incorrect") == true)
+					return@addOnCompleteListener onError(R.string.invalid_credentials)
+				if (!signIn.isSuccessful)
+					return@addOnCompleteListener onError(R.string.unknown_error)
+				val currentUser = auth.currentUser
+				if (currentUser != null && !currentUser.isEmailVerified)
+					return@addOnCompleteListener onError(R.string.verify_email_first)
 
-			// Check the user account activation.
-			Store.users.getCurrent(onError = onError) { user, _ ->
-				if (user.activated) {
-					signInInfo = SignInInfo("", "")
-					clearSignUp()
-					Router.navigate("home")
-				} else Router.navigate("auth/activation")
+				// Check the user account activation.
+				Store.users.getCurrent(onError = onError) { user, _ ->
+					if (user.activated) {
+						signInInfo = SignInInfo("", "")
+						clearSignUp()
+						Router.navigate("home")
+					} else Router.navigate("auth/activation")
+				}
 			}
+		} catch (exception: Exception) {
+			logcat(exception = exception)
+			onError(R.string.unknown_error)
 		}
 	}
 
 	fun signUp(info: SignInInfo, onError: (Int) -> Unit) {
-		auth.createUserWithEmailAndPassword(info.email, info.password)
-			.addOnCompleteListener { creating ->
-				val user = auth.currentUser
-				// Exit if the user is null or anything went wrong
-				if (user == null || !creating.isSuccessful)
-					return@addOnCompleteListener onError(R.string.unknown_error)
+		try {
+			auth.createUserWithEmailAndPassword(info.email, info.password)
+				.addOnCompleteListener { creating ->
+					val user = auth.currentUser
+					// Exit if the user is null or anything went wrong
+					if (user == null || !creating.isSuccessful)
+						return@addOnCompleteListener onError(R.string.unknown_error)
 
-				// create a new user collection and fill its content
-				db.collection("user").document(user.uid).set(signUpInfo.toMap())
-					.addOnCompleteListener { saving ->
-						if (!saving.isSuccessful) onError(R.string.unknown_error)
-						else {
-							// Send a verification email to the user
-							user.sendEmailVerification().addOnCompleteListener { sending ->
-								if (sending.isSuccessful) {
-									clearSignUp()
-									signInInfo = info
-									Router.navigate("auth/verification")
-								} else onError(R.string.unknown_error)
+					// create a new user collection and fill its content
+					db.collection("user").document(user.uid).set(signUpInfo.toMap())
+						.addOnCompleteListener { saving ->
+							if (!saving.isSuccessful) onError(R.string.unknown_error)
+							else {
+								// Send a verification email to the user
+								user.sendEmailVerification().addOnCompleteListener { sending ->
+									if (sending.isSuccessful) {
+										clearSignUp()
+										signInInfo = info
+										Router.navigate("auth/verification")
+									} else onError(R.string.unknown_error)
+								}
 							}
 						}
-					}
-			}
+				}
+		} catch (exception: Exception) {
+			logcat(exception = exception)
+			onError(R.string.unknown_error)
+		}
 	}
 
 	fun logOut() {
-		auth.signOut()
-		Store.clear(false)
-		Router.navigate("auth/sign-in")
+		try {
+			auth.signOut()
+			Store.clear(false)
+			Router.navigate("auth/sign-in")
+		} catch (exception: Exception) {
+			logcat(exception = exception)
+		}
 	}
 }
