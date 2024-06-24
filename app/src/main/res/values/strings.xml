@@ -12,7 +12,7 @@
     <string name="no_data">Nothing here yet</string>
     <string name="modify">Modify</string>
     <string name="search">Search</string>
-    <string name="file_is_loading">file is loading</string>
+    <string name="cancel">Cancel</string>
 
     <string name="sign_in">Log in</string>
     <string name="log_out">Log out</string>
@@ -63,7 +63,6 @@
 
     <string name="delete_message">Confirm deletion</string>
     <string name="delete_confirm">Delete</string>
-    <string name="delete_cancel">Cancel</string>
     <string name="delete_title">Delete Item</string>
 
     <string name="pending_status">Pending</string>
@@ -88,5 +87,6 @@
     <string name="abstract_required">The abstract is required.</string>
     <string name="date_required">The date is required.</string>
     <string name="authors_length">You can only select a maximum of 6 authors.</string>
-    <string name="full_text">full-text</string>
+    <string name="view_file">View file</string>
+    <string name="file_is_loading">File is loading</string>
 </resources>

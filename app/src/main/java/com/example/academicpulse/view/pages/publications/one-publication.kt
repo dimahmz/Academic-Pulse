@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -56,6 +57,7 @@ fun OnePublicationPage() {
 	}
 
 	fun back() {
+		if (loading) return
 		val fromForm = Store.publications.redirectedFromForm
 		val fromProfile = Store.publications.redirectedFromProfile
 		Store.publications.redirectedFromForm = false
@@ -73,7 +75,7 @@ fun OnePublicationPage() {
 	) {
 		Header(title = R.string.publication, onClick = ::back, suffix = {
 			if (Store.publications.belongsToThisUser(publication)) {
-				PublicationSettings(::back)
+				PublicationSettings(onLoadingChange = setLoading, onDelete = ::back)
 			}
 		})
 		Spacer(Modifier.height(14.dp))
@@ -99,11 +101,18 @@ fun OnePublicationPage() {
 
 			// Publication's File
 			publication.fetchFile()
-			if (!publication.fileAvailability) Spinner()
-			else if (publication.file != null) {
+			if (!publication.fileAvailability) {
+				Row {
+					Spacer(Modifier.weight(1f))
+					Spinner(inline = true)
+					Spacer(Modifier.width(4.dp))
+					Text(text = R.string.file_is_loading)
+					Spacer(Modifier.weight(1f))
+				}
+			} else if (publication.file != null) {
 				Spacer(Modifier.height(10.dp))
 				Button(
-					text = R.string.full_text,
+					text = R.string.view_file,
 					icon = R.drawable.icon_open_link,
 					modifier = Modifier.wrapContentWidth()
 				) { Router.navigate("publications/pdf-viewer") }

@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.pagePaddingX
+import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.Icon
 import com.example.academicpulse.view.components.basic.Text
 import com.example.academicpulse.view.components.global.Header
@@ -27,23 +28,26 @@ import com.example.academicpulse.view_model.Store
 
 @Composable
 fun SettingsPage() {
+	val (loggedOut, setLogOut) = useState { false }
+
 	Column(
 		modifier = Modifier
 			.fillMaxHeight()
 			.padding(horizontal = pagePaddingX),
 	) {
-		Header(title = R.string.settings) { Router.back("profile") }
+		Header(title = R.string.settings) { if (!loggedOut) Router.back("profile") }
 		Spacer(Modifier.height(14.dp))
-		
+
 		Element(R.string.about, R.drawable.icon_about) {
-			Router.navigate("profile/about")
+			if (!loggedOut) Router.navigate("profile/about")
 		}
 		Element(R.string.log_out, R.drawable.icon_logout) {
+			setLogOut(true)
 			Store.auth.logOut()
 		}
 	}
 
-	BackHandler { Router.back("profile") }
+	BackHandler { if (!loggedOut) Router.back("profile") }
 }
 
 @Composable

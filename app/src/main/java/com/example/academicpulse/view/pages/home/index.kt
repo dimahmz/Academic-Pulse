@@ -67,5 +67,5 @@ fun HomePage() {
 		}
 	}
 
-	BackHandler { Router.exit() }
+	BackHandler { if (!loading) Router.exit() }
 }

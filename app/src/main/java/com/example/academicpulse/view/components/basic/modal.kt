@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import com.example.academicpulse.R
 import com.example.academicpulse.theme.error
 import com.example.academicpulse.theme.primary
 import com.example.academicpulse.theme.white
@@ -24,7 +25,7 @@ import com.maxkeppeler.sheets.info.models.InfoSelection
 fun Modal(
 	@StringRes title: Int,
 	@StringRes message: Int,
-	@StringRes cancelText: Int,
+	@StringRes cancelText: Int = R.string.cancel,
 	@StringRes okText: Int,
 	danger: Boolean = false,
 	onCancel: (() -> Unit)? = null,

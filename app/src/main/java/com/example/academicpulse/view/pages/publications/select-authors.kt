@@ -50,8 +50,35 @@ fun SelectAuthorsPage() {
 			search.value,
 			selectedList,
 		) { array ->
-			setList(array)
-			setLoading(false)
+			try {
+				setList(array)
+				setLoading(false)
+			} finally {
+			}
+		}
+	}
+
+	fun onRemoveUser(it: User) {
+		val array = ArrayList<User>(selectedList.toMutableList())
+		array.remove(it)
+		form.authors.value = array
+		val array2 = ArrayList<User>((list).toMutableList())
+		array2.add(it)
+		setList(array2)
+	}
+
+	fun addUser(it: User) {
+		if (selectedList.size >= 5) {
+			Toast
+				.makeText(context, R.string.authors_length, Toast.LENGTH_LONG)
+				.show()
+		} else {
+			val array2 = ArrayList<User>((list).toMutableList())
+			array2.remove(it)
+			setList(array2)
+			val array = ArrayList<User>(selectedList.toMutableList())
+			array.add(it)
+			form.authors.value = array
 		}
 	}
 
@@ -79,15 +106,7 @@ fun SelectAuthorsPage() {
 		}
 		Line(height = 1.dp)
 		Spacer(Modifier.height(10.dp))
-		AuthorsRow(authors = selectedList, appendCurrentUser = true) {
-			// At click on X icon: unselect the user and add it to the non-selected ones
-			val array = ArrayList<User>(selectedList.toMutableList())
-			array.remove(it)
-			form.authors.value = array
-			val array2 = ArrayList<User>((list).toMutableList())
-			array2.add(it)
-			setList(array2)
-		}
+		AuthorsRow(authors = selectedList, appendCurrentUser = true, onRemoveItem = ::onRemoveUser)
 		Input(
 			field = search,
 			icon = R.drawable.icon_search,
@@ -108,20 +127,7 @@ fun SelectAuthorsPage() {
 					Row(
 						Modifier
 							.fillMaxWidth()
-							.clickable {
-								if (selectedList.size >= 5) {
-									Toast
-										.makeText(context, R.string.authors_length, Toast.LENGTH_LONG)
-										.show()
-								} else {
-									val array2 = ArrayList<User>((list).toMutableList())
-									array2.remove(it)
-									setList(array2)
-									val array = ArrayList<User>(selectedList.toMutableList())
-									array.add(it)
-									form.authors.value = array
-								}
-							}
+							.clickable { addUser(it) }
 					) {
 						Image(id = R.drawable.avatar_user, size = 18.dp)
 						Text(text = "${it.firstName} ${it.lastName}")

@@ -29,24 +29,28 @@ fun ProfilePage() {
 	LaunchedEffect(Unit) {
 		Store.users.getCurrent({}) { _, _ -> setLoadingUser(false) }
 		Store.publications.fetchUserPublications { array ->
-			setList(array)
-			setLoadingPublications(false)
+			try {
+				setList(array)
+				setLoadingPublications(false)
+			} finally {
+			}
 		}
 	}
 
 	if (loadingUser) {
 		Spinner()
-		return
-	}
-
-	LazyColumn(modifier = Modifier.padding(bottom = bottomBarHeight)) {
-		item(key = "Page header") {
+	} else if (loadingPublications) {
+		Column {
 			UserCard()
 			Line(height = 2.dp)
-			if (loadingPublications) Spinner()
+			Spinner()
 		}
-
-		if (!loadingPublications) {
+	} else {
+		LazyColumn(modifier = Modifier.padding(bottom = bottomBarHeight)) {
+			item(key = "Page header") {
+				UserCard()
+				Line(height = 2.dp)
+			}
 			items(list, key = { it.id }) {
 				Column(modifier = Modifier.padding(horizontal = (pagePaddingX.value / 2).dp)) {
 					PublicationArticle(it, true)
@@ -56,5 +60,5 @@ fun ProfilePage() {
 		}
 	}
 
-	BackHandler { Router.navigate("home") }
+	BackHandler { if (!loadingUser) Router.navigate("home") }
 }

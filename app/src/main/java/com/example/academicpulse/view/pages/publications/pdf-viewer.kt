@@ -18,12 +18,17 @@ fun PDFViewerPage() {
 	val (fileUri, setFileUri) = useState<Uri?> { null }
 
 	LaunchedEffect(Unit) {
-		Store.files.readFile(Store.publications.selectedPublicationId, {}, setFileUri)
+		Store.files.readFile(Store.publications.selectedPublicationId, {}) {
+			try {
+				setFileUri(it)
+			} finally {
+			}
+		}
 	}
 
 	if (fileUri != null) {
 		PdfViewer(modifier = Modifier.fillMaxSize(), source = fileUri)
 	}
 
-	BackHandler { Router.back("publications/one-publication")	}
+	BackHandler { Router.back("publications/one-publication") }
 }

@@ -14,8 +14,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.academicpulse.theme.AppTheme
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.context
-import com.example.academicpulse.utils.useAtom
-import com.example.academicpulse.view.components.basic.Spinner
 import com.example.academicpulse.view_model.Store
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -40,8 +38,6 @@ class Index : ComponentActivity() {
 							bottomBar = { Router.NavBar() },
 						)
 					}
-					if (useAtom(Store.isLoading, false))
-						Spinner(Modifier.fillMaxSize())
 				}
 			}
 		}

@@ -18,15 +18,18 @@ import com.example.academicpulse.view.components.basic.Text
 import com.example.academicpulse.view_model.Store
 
 @Composable
-fun PublicationSettings(onDelete: () -> Unit) {
+fun PublicationSettings(onLoadingChange: (Boolean) -> Unit, onDelete: () -> Unit) {
 	val (isOpen, setIsOpen) = useState { false }
 
-	val confirm = Modal(
-		R.string.delete_title, R.string.delete_message, R.string.delete_cancel, R.string.delete_confirm
+	val deleteModal = Modal(
+		title = R.string.delete_title,
+		message = R.string.delete_message,
+		okText = R.string.delete_confirm,
+		danger = true
 	) {
-		Store.isLoading.value = true
-		Store.publications.deleteById(
-			onError = { Store.isLoading.value = false },
+		onLoadingChange(true)
+		Store.publications.deleteSelected(
+			onError = { onLoadingChange(false) },
 			onSuccess = onDelete,
 		)
 	}
@@ -42,7 +45,7 @@ fun PublicationSettings(onDelete: () -> Unit) {
 			DropdownMenuItem(contentPadding = PaddingValues(horizontal = gap, vertical = 0.dp),
 				text = { Text(text = "Delete") },
 				onClick = {
-					confirm.show()
+					deleteModal.show()
 					setIsOpen(false)
 				}
 			)

@@ -42,9 +42,7 @@ fun AddPublicationPage() {
 	LaunchedEffect(Unit) {
 		Store.publicationsTypes.getAll(
 			onError = { Router.back("profile") },
-			onSuccess = {
-				setTypes(it)
-			},
+			onSuccess = { setTypes(it) },
 		)
 	}
 
@@ -70,6 +68,7 @@ fun AddPublicationPage() {
 	}
 
 	fun back() {
+		if (loading) return
 		form.form.clearAll()
 		form.authors.value = arrayListOf()
 		Router.back("profile")
@@ -123,7 +122,8 @@ fun AddPublicationPage() {
 				Row(modifier = Modifier.padding(bottom = inputLabelGap)) {
 					Text(text = R.string.authors)
 					Spacer(Modifier.width(inputLabelGap))
-					Text(text = "(${stringResource(R.string.modify)})", underlined = true) {
+					if (loading) Text(text = "(${stringResource(R.string.modify)})", underlined = true)
+					else Text(text = "(${stringResource(R.string.modify)})", underlined = true) {
 						Router.navigate("publications/select-authors")
 					}
 				}

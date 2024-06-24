@@ -139,7 +139,7 @@ class Publications : ViewModel() {
 		}
 	}
 
-	fun deleteById(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
+	fun deleteSelected(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
 		val id = selectedPublicationId
 		StoreDB.deleteOneById(collection, id, onError) {
 			listCache?.let { listCache = ArrayList(it.filter { p -> p.id != id }) }

@@ -109,13 +109,17 @@ fun SignInPage() {
 				horizontalArrangement = Arrangement.Center
 			) {
 				Text(text = R.string.new_member, modifier = Modifier.padding(end = 10.dp))
+
 				Text(
 					text = R.string.register_now,
 					color = MaterialTheme.colorScheme.primary,
-					weight = FontWeight.Bold
-				) {
-					Router.navigate("auth/sign-up-institution")
-				}
+					weight = FontWeight.Bold,
+					onClick =
+					if (loading) null
+					else {
+						{ Router.navigate("auth/sign-up-institution") }
+					}
+				)
 			}
 		}
 	}

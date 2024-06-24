@@ -61,7 +61,7 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
 		composable(route = "profile") {
 			ProfilePage()
 			// BackHandler = navigate: home
-			// UserCard icon_settings = navigate: profile/settings
+			// UserCard Settings Icon = navigate: profile/settings
 			// UserCard Add research = navigate: publications/add-publication
 			// PublicationArticle Click = navigate: publications/one-publication
 		}
@@ -81,6 +81,7 @@ fun NavGraph(navController: NavHostController, startDestination: String) {
 			AddPublicationPage()
 			// BackHandler = back: profile
 			// Authors (Modify) = navigate: publications/select-authors
+			// Add research = navigate: publications/one-publication
 		}
 		composable(route = "publications/select-authors") {
 			SelectAuthorsPage()
