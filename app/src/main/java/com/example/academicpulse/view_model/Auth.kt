@@ -11,10 +11,8 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 
 class Auth : ViewModel() {
-	// Firebase cloud database instance
 	private val db = Firebase.firestore
 	private val auth = Firebase.auth
-
 	var signInInfo: SignInInfo = SignInInfo("", "")
 	val signUpInfo: User = User()
 
@@ -64,7 +62,7 @@ class Auth : ViewModel() {
 
 			// Check the user account activation.
 			Store.users.getCurrent(onError = onError) { user, _ ->
-				if (user.activated == true) {
+				if (user.activated) {
 					signInInfo = SignInInfo("", "")
 					clearSignUp()
 					Router.navigate("home")

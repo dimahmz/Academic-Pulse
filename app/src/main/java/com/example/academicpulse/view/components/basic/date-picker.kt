@@ -7,7 +7,9 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalFocusManager
 import com.example.academicpulse.R
-import com.example.academicpulse.theme.*
+import com.example.academicpulse.theme.primary
+import com.example.academicpulse.theme.textColor
+import com.example.academicpulse.theme.white
 import com.example.academicpulse.utils.forms.*
 import com.example.academicpulse.utils.useAtom
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
