@@ -10,7 +10,7 @@ import java.util.Date
 import java.util.Locale
 
 class Publication(
-	val id: String = "",
+	var id: String = "",
 	val typeId: String,
 	val title: String,
 	val abstract: String,

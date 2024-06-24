@@ -7,34 +7,40 @@ import com.example.academicpulse.model.Publication
 import com.example.academicpulse.model.User
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.forms.*
-import com.example.academicpulse.utils.useCast
 import com.google.firebase.firestore.Filter
 
 class Publications : ViewModel() {
 	private val collection = "publication"
-	private var listCache = arrayListOf<Publication>()
+	private var listCache: ArrayList<Publication>? = null
+	private var cacheInvalid = true
+	private var cacheProfileInvalid = true
 	var selectedPublicationId = ""
 	var redirectedFromForm = false
 	var redirectedFromProfile = false
 	val form = PublicationForm()
 
 	private fun cacheList(list: List<Publication>) {
-		list.forEach {
-			val index = listCache.indexOfFirst { author -> author.id == it.id }
-			if (index == -1) listCache.add(it)
-			else listCache[index] = it
+		if (listCache == null) listCache = ArrayList(list)
+		else list.forEach {
+			val index = listCache!!.indexOfFirst { o -> o.id == it.id }
+			if (index == -1) listCache!!.add(it)
+			else listCache!![index] = it
 		}
 	}
 
 	fun search(query: String, onFinish: (ArrayList<Publication>) -> Unit) {
 		fun finish() {
+			if (listCache == null) return onFinish(arrayListOf())
 			val searchQuery = query.trim().lowercase()
 			onFinish(
-				if (searchQuery.isBlank()) listCache
-				else ArrayList(listCache.filter { it.title.lowercase().contains(searchQuery) })
+				ArrayList(listCache!!.filter {
+					(searchQuery.isBlank() || it.title.lowercase().contains(searchQuery))
+							&& it.status == "accepted"
+				})
 			)
 		}
 
+		if (listCache != null && !cacheInvalid) return finish()
 		Store.publicationsTypes.getAll({ finish() }) {
 			StoreDB.getMany<Publication>(
 				collection,
@@ -46,6 +52,7 @@ class Publications : ViewModel() {
 				},
 				onError = { finish() },
 				onSuccess = { result ->
+					cacheInvalid = false
 					cacheList(result)
 					finish()
 				}
@@ -55,14 +62,16 @@ class Publications : ViewModel() {
 
 	fun fetchUserPublications(onFinish: (ArrayList<Publication>) -> Unit) {
 		fun finish() {
-			onFinish(ArrayList(listCache.filter { belongsToThisUser(it) }))
+			if (listCache == null) return onFinish(arrayListOf())
+			onFinish(ArrayList(listCache!!.filter { belongsToThisUser(it) }))
 		}
 
+		if (listCache != null && !cacheProfileInvalid) return finish()
 		Store.publicationsTypes.getAll({ finish() }) {
-			Store.users.getCurrentUser({ finish() }) { user, _ ->
+			Store.users.getCurrent({ finish() }) { user, _ ->
 				StoreDB.getManyByIds<Publication>(
 					collection,
-					ids = useCast(user, "publications", arrayListOf()),
+					ids = user.publications,
 					onAsyncCast = { id, data, resolve ->
 						Store.users.fetchAuthors(data) { list ->
 							resolve(Publication.fromMap(id, data, list))
@@ -70,6 +79,7 @@ class Publications : ViewModel() {
 					},
 					onError = { finish() },
 					onSuccess = { result ->
+						cacheProfileInvalid = false
 						cacheList(result)
 						finish()
 					}
@@ -81,13 +91,15 @@ class Publications : ViewModel() {
 	fun fetchSelected(onSuccess: (Publication) -> Unit, onError: (error: Int) -> Unit) {
 		Store.publicationsTypes.getAll(onError) {
 			val id = selectedPublicationId
-			val cachedPub = listCache.find { it.id == selectedPublicationId }
+			val cachedPub = listCache?.find { it.id == selectedPublicationId }
 			if (cachedPub != null) onSuccess(cachedPub)
+			cacheInvalid = true
+			cacheProfileInvalid = true
 			StoreDB.getOneById(collection, id, onError) { data, _ ->
 				Store.users.fetchAuthors(data) { list ->
-					val pub = Publication.fromMap(id, data, list)
-					cacheList(listOf(pub))
-					onSuccess(pub)
+					val publication = Publication.fromMap(id, data, list)
+					cacheList(listOf(publication))
+					onSuccess(publication)
 				}
 			}
 		}
@@ -100,11 +112,12 @@ class Publications : ViewModel() {
 
 	fun insert(publication: Publication, onError: (error: Int) -> Unit) {
 		// Get the current user ref because we need to update its publications list
-		Store.users.getCurrentUser(onError) { user, userRef ->
+		Store.users.getCurrent(onError) { user, userRef ->
 			// Insert the publication and get its generated id
 			StoreDB.insert(collection, publication.toMap(), onError) { id ->
+				publication.id = id
 				// Insert the new publication id in the user publications then update it
-				val publications = useCast(user, "publications", arrayListOf<String>())
+				val publications = ArrayList(user.publications)
 				publications.add(id)
 				StoreDB.updateOneByRef(
 					ref = userRef,
@@ -113,6 +126,8 @@ class Publications : ViewModel() {
 				) {
 					// Upload the publication file IF EXISTS
 					Store.files.uploadFile(publication.file, id, onError) {
+						cacheList(listOf(publication))
+						user.publications.add(publication.id)
 						selectedPublicationId = id
 						redirectedFromForm = true
 						form.form.clearAll()
@@ -126,7 +141,10 @@ class Publications : ViewModel() {
 
 	fun deleteById(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
 		val id = selectedPublicationId
-		StoreDB.deleteOneById(collection, id, onError, onSuccess)
+		StoreDB.deleteOneById(collection, id, onError) {
+			listCache?.let { listCache = ArrayList(it.filter { p -> p.id != id }) }
+			onSuccess()
+		}
 	}
 
 	class PublicationForm {

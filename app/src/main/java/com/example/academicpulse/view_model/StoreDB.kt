@@ -15,13 +15,17 @@ class StoreDB private constructor() {
 	companion object {
 		private val db by lazy { Firebase.firestore }
 
+		fun refOf(collection: String, id: String): DocumentReference {
+			return db.collection(collection).document(id)
+		}
+
 		fun getOneById(
 			collection: String,
 			id: String,
 			onError: (error: Int) -> Unit,
 			onSuccess: (data: Map<String, Any?>, ref: DocumentReference) -> Unit,
 		) {
-			val ref = db.collection(collection).document(id)
+			val ref = refOf(collection, id)
 			ref.get().addOnCompleteListener { doc ->
 				val data = doc.result.data
 				if (doc.isSuccessful && data != null) onSuccess(data, ref)
@@ -58,7 +62,7 @@ class StoreDB private constructor() {
 			}
 
 			ids.forEach { id ->
-				db.collection(collection).document(id).get().addOnCompleteListener { doc ->
+				refOf(collection, id).get().addOnCompleteListener { doc ->
 					if (doc.isSuccessful && doc.result.data != null) {
 						castDocument(doc.result, onCast, onAsyncCast, ::countDown) { list.add(it) }
 					} else {
@@ -141,7 +145,7 @@ class StoreDB private constructor() {
 			onError: (error: Int) -> Unit,
 			onSuccess: () -> Unit,
 		) {
-			db.collection(collection).document(id).delete().addOnCompleteListener { deleting ->
+			refOf(collection, id).delete().addOnCompleteListener { deleting ->
 				if (deleting.isSuccessful) onSuccess()
 				else {
 					logcat("Error deleting document by id {$id}", deleting.exception)

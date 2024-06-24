@@ -13,6 +13,7 @@ data class User(
 	var institution: String = "",
 	var email: String = "",
 	var activated: Boolean = false,
+	var publications: ArrayList<String> = arrayListOf(),
 	val createdAt: Timestamp = Timestamp(Date()),
 ) {
 	val institutionSkipped: Boolean
@@ -43,6 +44,7 @@ data class User(
 				institution = institution,
 				email = useCast(map, "email", ""),
 				activated = useCast(map, "activated", false),
+				publications = useCast(map, "publications", arrayListOf()),
 				createdAt = useCast(map, "createdAt", Timestamp(Date())),
 			)
 		}

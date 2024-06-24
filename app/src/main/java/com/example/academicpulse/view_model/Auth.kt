@@ -43,9 +43,9 @@ class Auth : ViewModel() {
 
 	fun signInOnStart(vm: Users, setIsReady: () -> Unit) {
 		// If no user is logged in, keep the router in the sign up page, otherwise check for account activation.
-		vm.getCurrentUser(onError = { setIsReady() }) { user, _ ->
-			if (user["activated"] == true) Router.navigate("home")
-			else if (user["activated"] == false) Router.navigate("auth/activation")
+		vm.getCurrent(onError = { setIsReady() }) { user, _ ->
+			if (user.activated) Router.navigate("home")
+			else Router.navigate("auth/activation")
 			setIsReady()
 		}
 	}
@@ -63,8 +63,8 @@ class Auth : ViewModel() {
 				return@addOnCompleteListener onError(R.string.verify_email_first)
 
 			// Check the user account activation.
-			Store.users.getCurrentUser(onError = onError) { user, _ ->
-				if (user["activated"] == true) {
+			Store.users.getCurrent(onError = onError) { user, _ ->
+				if (user.activated == true) {
 					signInInfo = SignInInfo("", "")
 					clearSignUp()
 					Router.navigate("home")

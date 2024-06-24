@@ -27,7 +27,7 @@ fun ProfilePage() {
 	val (list, setList) = useState { arrayListOf<Publication>() }
 
 	LaunchedEffect(Unit) {
-		Store.users.getCurrentUser({}) { _, _ -> setLoadingUser(false) }
+		Store.users.getCurrent({}) { _, _ -> setLoadingUser(false) }
 		Store.publications.fetchUserPublications { array ->
 			setList(array)
 			setLoadingPublications(false)
