@@ -67,11 +67,14 @@ fun AddPublicationPage() {
 		}
 	}
 
-	fun back() {
-		if (loading) return
-		form.form.clearAll()
-		form.authors.value = arrayListOf()
-		Router.back("profile")
+	val (back, setBack) = useState { {} }
+	LaunchedEffect(loading) {
+		if (loading) setBack {}
+		else setBack {
+			form.form.clearAll()
+			form.authors.value = arrayListOf()
+			Router.back("profile")
+		}
 	}
 
 	if (types == null) {
@@ -84,7 +87,7 @@ fun AddPublicationPage() {
 			.fillMaxHeight()
 			.padding(horizontal = pagePaddingX),
 	) {
-		Header(title = R.string.add_research, onClick = ::back)
+		Header(title = R.string.add_research, onClick = back)
 		Spacer(Modifier.height(14.dp))
 
 		Column(verticalArrangement = Arrangement.spacedBy(gap)) {
@@ -139,5 +142,5 @@ fun AddPublicationPage() {
 		)
 	}
 
-	BackHandler(onBack = ::back)
+	BackHandler(onBack = back)
 }

@@ -56,16 +56,19 @@ fun OnePublicationPage() {
 		)
 	}
 
-	fun back() {
-		if (loading) return
-		val fromForm = Store.publications.redirectedFromForm
-		val fromProfile = Store.publications.redirectedFromProfile
-		Store.publications.redirectedFromForm = false
-		Store.publications.redirectedFromProfile = false
-		Router.back(
-			target = if (fromForm || fromProfile) "profile" else "home",
-			step = if (fromForm) 2 else 1,
-		)
+	val (back, setBack) = useState { {} }
+	LaunchedEffect(loading) {
+		if (loading) setBack {}
+		else setBack {
+			val fromForm = Store.publications.redirectedFromForm
+			val fromProfile = Store.publications.redirectedFromProfile
+			Store.publications.redirectedFromForm = false
+			Store.publications.redirectedFromProfile = false
+			Router.back(
+				target = if (fromForm || fromProfile) "profile" else "home",
+				step = if (fromForm) 2 else 1,
+			)
+		}
 	}
 
 	Column(
@@ -73,9 +76,9 @@ fun OnePublicationPage() {
 			.fillMaxHeight()
 			.padding(horizontal = pagePaddingX),
 	) {
-		Header(title = R.string.publication, onClick = ::back, suffix = {
+		Header(title = R.string.publication, onClick = back, suffix = {
 			if (Store.publications.belongsToThisUser(publication)) {
-				PublicationSettings(onLoadingChange = setLoading, onDelete = ::back)
+				PublicationSettings(onLoadingChange = setLoading, onDelete = back)
 			}
 		})
 		Spacer(Modifier.height(14.dp))
@@ -146,5 +149,5 @@ fun OnePublicationPage() {
 		}
 	}
 
-	BackHandler(onBack = ::back)
+	BackHandler(onBack = back)
 }

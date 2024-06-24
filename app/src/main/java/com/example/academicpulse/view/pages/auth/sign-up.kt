@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -65,10 +66,13 @@ fun SignUpPage() {
 		}
 	}
 
-	fun back() {
-		if (loading) return
-		auth.saveSignUpInfo(firstName.trim(), lastName.trim(), email.trim())
-		Router.back("auth/sign-up-institution")
+	val (back, setBack) = useState { {} }
+	LaunchedEffect(loading) {
+		if (loading) setBack {}
+		else setBack {
+			auth.saveSignUpInfo(firstName.trim(), lastName.trim(), email.trim())
+			Router.back("auth/sign-up-institution")
+		}
 	}
 
 	Column(
@@ -76,7 +80,7 @@ fun SignUpPage() {
 			.fillMaxHeight()
 			.padding(horizontal = pagePaddingX),
 	) {
-		Header(title = R.string.sign_up, onClick = ::back)
+		Header(title = R.string.sign_up, onClick = back)
 
 		Column(modifier = Modifier.padding(bottom = 30.dp)) {
 			Title(text = R.string.institution_info)
@@ -119,5 +123,5 @@ fun SignUpPage() {
 		)
 	}
 
-	BackHandler(onBack = ::back)
+	BackHandler(onBack = back)
 }
