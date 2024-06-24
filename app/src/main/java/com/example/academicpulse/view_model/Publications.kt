@@ -91,8 +91,8 @@ class Publications : ViewModel() {
 	fun fetchSelected(onSuccess: (Publication) -> Unit, onError: (error: Int) -> Unit) {
 		Store.publicationsTypes.getAll(onError) {
 			val id = selectedPublicationId
-			val cachedPub = listCache?.find { it.id == selectedPublicationId }
-			if (cachedPub != null) onSuccess(cachedPub)
+			val cachedPublication = listCache?.find { it.id == selectedPublicationId }
+			if (cachedPublication != null) return@getAll onSuccess(cachedPublication)
 			cacheInvalid = true
 			cacheProfileInvalid = true
 			StoreDB.getOneById(collection, id, onError) { data, _ ->
