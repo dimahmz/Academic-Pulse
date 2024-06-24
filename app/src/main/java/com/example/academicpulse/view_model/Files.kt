@@ -14,9 +14,9 @@ class Files : ViewModel() {
 	private val publications = "publications"
 	private val listCache = arrayListOf<Pair<String, MutableLiveData<Uri>>>()
 
-	private fun cacheFile(id: String, file: Uri?) {
-		val index = listCache.indexOfFirst { (filename) -> id == filename }
-		if (index == -1) listCache.add(Pair(id, MutableLiveData(file)))
+	private fun cacheFile(name: String, file: Uri?) {
+		val index = listCache.indexOfFirst { (filename) -> name == filename }
+		if (index == -1) listCache.add(Pair(name, MutableLiveData(file)))
 		else listCache[index].second.value = file
 	}
 
@@ -43,18 +43,25 @@ class Files : ViewModel() {
 	}
 
 	fun uploadFile(file: Uri?, id: String, onError: (Int) -> Unit, onSuccess: () -> Unit) {
+		val fullPath = "$publications/$id"
 		if (file == null) {
-			cacheFile("$publications/$id", null)
+			cacheFile(fullPath, null)
 			return onSuccess()
 		}
-		storage.child("$publications/$id").putFile(file).addOnCompleteListener { uploading ->
+		storage.child(fullPath).putFile(file).addOnCompleteListener { uploading ->
 			if (uploading.isSuccessful) {
-				cacheFile("$publications/$id", file)
+				cacheFile(fullPath, file)
 				onSuccess()
 			} else {
 				logcat("Error uploading new file with ID name {$id}", uploading.exception)
 				onError(R.string.unknown_error)
 			}
 		}
+	}
+
+	fun deleteFile(id: String, onFinish: () -> Unit) {
+		val fullPath = "$publications/$id"
+		listCache.removeIf { (filename) -> fullPath == filename }
+		// TODO: Delete the file fullPath if exists
 	}
 }

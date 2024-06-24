@@ -142,8 +142,16 @@ class Publications : ViewModel() {
 	fun deleteSelected(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {
 		val id = selectedPublicationId
 		StoreDB.deleteOneById(collection, id, onError) {
-			listCache?.let { listCache = ArrayList(it.filter { p -> p.id != id }) }
-			onSuccess()
+			val publication = listCache!!.find { it.id == id }
+			listCache!!.removeIf { p -> p.id == id }
+			Store.users.current.value!!.publications.remove(id)
+			publication!!.authors.forEach { author ->
+				author.publications.remove(id)
+				// TODO: Remove the publication id from the publications array of all authors collections
+			}
+			Store.files.deleteFile(id) {
+				onSuccess()
+			}
 		}
 	}
 
