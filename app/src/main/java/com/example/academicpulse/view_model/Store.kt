@@ -11,16 +11,20 @@ import kotlinx.coroutines.launch
 class Store private constructor() : ViewModel() {
 	// Is app ready
 	private val isReady = MutableStateFlow(false)
-	private var isLoading = MutableLiveData(false)
+	private val isLoading = MutableLiveData(false)
 
 	// Store modules
-	private val auth = Auth()
-	private val publications = Publications()
-	private val publicationsTypes = PublicationsTypes()
-	private val users = Users()
-	private val files = Files()
+	private var auth = Auth()
+	private var publications = Publications()
+	private var publicationsTypes = PublicationsTypes()
+	private var users = Users()
+	private var files = Files()
 
 	init {
+		onInit()
+	}
+
+	private fun onInit() {
 		// The splash screen will disappear only when the logo animation finish and the user account is verified.
 		val tasksCounter = MutableLiveData(2)
 		fun setIsReady() {
@@ -64,5 +68,23 @@ class Store private constructor() : ViewModel() {
 			get() = appStore[0].publicationsTypes
 		val files: Files
 			get() = appStore[0].files
+
+		fun clear(resetLoading: Boolean = true) {
+			if (appStore.isNotEmpty()) {
+				if (resetLoading) {
+					appStore[0].isReady.value = false
+					appStore[0].isLoading.value = false
+				}
+				appStore[0].auth = Auth()
+				appStore[0].publications = Publications()
+				appStore[0].publicationsTypes = PublicationsTypes()
+				appStore[0].users = Users()
+				appStore[0].files = Files()
+			}
+		}
+
+		fun init() {
+			if (appStore.isNotEmpty()) appStore[0].onInit()
+		}
 	}
 }

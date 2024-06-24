@@ -101,6 +101,7 @@ class Auth : ViewModel() {
 
 	fun logOut() {
 		auth.signOut()
+		Store.clear(false)
 		Router.navigate("auth/sign-in")
 	}
 }
