@@ -25,3 +25,34 @@ export const addmessage = v2.https.onRequest(async (req, res) => {
   // Send back a message that we've successfully written the message
   res.json({result: `Message with ID: ${writeResult.id} is added.`});
 });
+
+// delete the publication's ID from the user document when its deleted
+export const onDeletePublication = onDocumentDeleted(
+  "publication/{docId}",
+  async (event) => {
+    const snapshot: any = event.data;
+    if (!snapshot) {
+      console.log("No data associated with the event");
+      return;
+    }
+
+    const data = snapshot.data();
+    const authors: string[] = data.authors;
+
+    for (const author of authors) {
+      const userRef = getFirestore().collection("user").doc(author);
+
+      const userDoc = await userRef.get();
+
+      const user = userDoc.data();
+
+      if (!user) return;
+
+      const filteredPublications = user.publications.filter(
+        (pubId: string) => pubId !== event.params.docId
+      );
+
+      await userRef.update({publications: filteredPublications});
+    }
+  }
+);
