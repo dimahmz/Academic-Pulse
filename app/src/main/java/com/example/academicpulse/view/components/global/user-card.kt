@@ -1,7 +1,10 @@
 package com.example.academicpulse.view.components.global
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +21,7 @@ import com.example.academicpulse.utils.useAtom
 import com.example.academicpulse.view.components.basic.*
 import com.example.academicpulse.view_model.Store
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun UserCard() {
 	val user = useAtom(Store.users.current)
@@ -39,21 +43,28 @@ fun UserCard() {
 			Image(id = R.drawable.avatar_user, size = 80.dp)
 			H2(text = "${user.firstName} ${user.lastName}")
 
-			if (!user.institutionSkipped)
-				Row(
-					horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp),
-					verticalAlignment = Alignment.CenterVertically,
-				) {
+			if (!user.institutionSkipped) FlowRow(
+				horizontalArrangement = Arrangement.spacedBy(gap),
+			) {
+				if (user.institution.isNotBlank()) {
+					Box(modifier = Modifier.align(Alignment.CenterVertically)) {
+						Icon(id = R.drawable.icon_dot, size = 7.dp)
+					}
 					Text(text = user.institution)
-					if (user.department.isNotBlank()) {
-						Icon(id = R.drawable.icon_dot, size = 7.dp)
-						Text(text = user.department)
-					}
-					if (user.position.isNotBlank()) {
-						Icon(id = R.drawable.icon_dot, size = 7.dp)
-						Text(text = user.position)
-					}
 				}
+				if (user.department.isNotBlank()) {
+					Box(modifier = Modifier.align(Alignment.CenterVertically)) {
+						Icon(id = R.drawable.icon_dot, size = 7.dp)
+					}
+					Text(text = user.department)
+				}
+				if (user.position.isNotBlank()) {
+					Box(modifier = Modifier.align(Alignment.CenterVertically)) {
+						Icon(id = R.drawable.icon_dot, size = 7.dp)
+					}
+					Text(text = user.position)
+				}
+			}
 
 			Row(
 				modifier = Modifier.padding(top = 26.dp, bottom = 14.dp),
