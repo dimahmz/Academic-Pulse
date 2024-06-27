@@ -18,7 +18,7 @@ import com.example.academicpulse.view_model.Store
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.firestoreSettings
+import com.google.firebase.storage.storage
 
 class Index : ComponentActivity() {
 	@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -47,9 +47,7 @@ class Index : ComponentActivity() {
 		if (DEV_ENV) {
 			Firebase.auth.useEmulator(LOCALHOST, AUTH_PORT)
 			Firebase.firestore.useEmulator(LOCALHOST, FIRE_STORE_PORT)
-			Firebase.firestore.firestoreSettings = firestoreSettings {
-				isPersistenceEnabled = false
-			}
+			Firebase.storage.useEmulator(LOCALHOST, STORAGE_PORT)
 		}
 	}
 }
