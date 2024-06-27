@@ -10,12 +10,12 @@ import {
 } from "firebase-functions/v2/firestore";
 import * as dotenv from "dotenv";
 import axios from "axios";
+import { getAppSettings } from "./settings";
 
 // Load environment variables from .env file
 dotenv.config();
 
 initializeApp();
-
 
 // text function
 export const textapi = v2.https.onRequest(async (req, res) => {
@@ -53,7 +53,6 @@ export const onDeletePublication = onDocumentDeleted(
   }
 );
 
-
 // Automatically verify new publication
 export const onCreatePublication = onDocumentCreated(
   "publication/{docId}",
@@ -64,9 +63,16 @@ export const onCreatePublication = onDocumentCreated(
     }
 
     const pubId: string = event.params.docId;
-
+    // missing api URL
     if (!process.env.VERIFY_PUBLICATION_API) return;
 
+    // get the app settings
+    const setting = await getAppSettings();
+    if (!setting) return;
+
+    //automatic verification is disabled
+    if (!setting.autoVerifyNewPublications) return;
+    
     axios
       .get(`${process.env.VERIFY_PUBLICATION_API}/${pubId}`)
       .then()
