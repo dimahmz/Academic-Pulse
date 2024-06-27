@@ -60,6 +60,7 @@ fun AddPublicationPage() {
 				doi = form.doi.value,
 				date = Timestamp(stringToDate(form.date.value, "dd/MM/yyyy")),
 				authors = list,
+				hasFile =  form.file.uri != null
 			)
 		) { error ->
 			form.form.error = error

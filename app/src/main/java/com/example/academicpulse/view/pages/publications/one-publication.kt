@@ -102,23 +102,25 @@ fun OnePublicationPage() {
 			Spacer(Modifier.height(10.dp))
 			Text(text = Publication.formatDate(publication.date))
 
-			// Publication's File
-			publication.fetchFile()
-			if (!publication.fileAvailability) {
-				Row {
-					Spacer(Modifier.weight(1f))
-					Spinner(inline = true)
-					Spacer(Modifier.width(4.dp))
-					Text(text = R.string.file_is_loading)
-					Spacer(Modifier.weight(1f))
+			if (publication.hasFile) {
+				// Publication's File
+				publication.fetchFile()
+				if (!publication.fileAvailability) {
+					Row {
+						Spacer(Modifier.weight(1f))
+						Spinner(inline = true)
+						Spacer(Modifier.width(4.dp))
+						Text(text = R.string.file_is_loading)
+						Spacer(Modifier.weight(1f))
+					}
+				} else if (publication.file != null) {
+					Spacer(Modifier.height(10.dp))
+					Button(
+						text = R.string.view_file,
+						icon = R.drawable.icon_open_link,
+						modifier = Modifier.wrapContentWidth()
+					) { Router.navigate("publications/pdf-viewer") }
 				}
-			} else if (publication.file != null) {
-				Spacer(Modifier.height(10.dp))
-				Button(
-					text = R.string.view_file,
-					icon = R.drawable.icon_open_link,
-					modifier = Modifier.wrapContentWidth()
-				) { Router.navigate("publications/pdf-viewer") }
 			}
 
 			// Publication's DOI

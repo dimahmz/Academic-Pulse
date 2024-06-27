@@ -21,6 +21,7 @@ class Publication(
 	val reads: Long = 0,
 	val uploads: Long = 0,
 	val status: String = "pending",
+	val hasFile: Boolean = false,
 	val createdAt: Timestamp = Timestamp(Date()),
 ) {
 	private var typeLabel: String? = null
@@ -61,6 +62,7 @@ class Publication(
 			"authors" to authors.map { it.id },
 			"status" to status,
 			"createdAt" to Timestamp(Date()),
+			"hasFile" to hasFile
 		)
 	}
 
@@ -78,6 +80,7 @@ class Publication(
 				uploads = useCast(map, "uploads", 0),
 				status = useCast(map, "status", "pending"),
 				createdAt = useCast(map, "createdAt", Timestamp(Date())),
+				hasFile = useCast(map, "hasFile", false),
 			)
 		}
 
