@@ -29,19 +29,17 @@ class Publications : ViewModel() {
 	}
 
 	fun search(query: String, onFinish: (ArrayList<Publication>) -> Unit) {
-		fun finish() {
-			if (listCache == null) return onFinish(arrayListOf())
+		fun finish(fetchedPublications : ArrayList<Publication>) {
 			val searchQuery = query.trim().lowercase()
 			onFinish(
-				ArrayList(listCache!!.filter {
+				ArrayList(fetchedPublications!!.filter {
 					(searchQuery.isBlank() || it.title.lowercase().contains(searchQuery))
 							&& it.status == "accepted"
 				})
 			)
 		}
 
-		if (listCache != null && !cacheInvalid) return finish()
-		Store.publicationsTypes.getAll({ finish() }) {
+		Store.publicationsTypes.getAll({ }) {
 			StoreDB.getMany<Publication>(
 				collection,
 				where = listOf(Filter.equalTo("status", "accepted")),
@@ -50,25 +48,18 @@ class Publications : ViewModel() {
 						resolve(Publication.fromMap(id, data, list))
 					}
 				},
-				onError = { finish() },
+				onError = {  },
 				onSuccess = { result ->
-					cacheInvalid = false
-					cacheList(result)
-					finish()
+					finish(result)
 				}
 			)
 		}
 	}
 
 	fun fetchUserPublications(onFinish: (ArrayList<Publication>) -> Unit) {
-		fun finish() {
-			if (listCache == null) return onFinish(arrayListOf())
-			onFinish(ArrayList(listCache!!.filter { belongsToThisUser(it) }))
-		}
 
-		if (listCache != null && !cacheProfileInvalid) return finish()
-		Store.publicationsTypes.getAll({ finish() }) {
-			Store.users.getCurrent({ finish() }) { user, _ ->
+		Store.publicationsTypes.getAll({  }) {
+			Store.users.getCurrent({}) { user, _ ->
 				StoreDB.getManyByIds<Publication>(
 					collection,
 					ids = user.publications,
@@ -77,11 +68,9 @@ class Publications : ViewModel() {
 							resolve(Publication.fromMap(id, data, list))
 						}
 					},
-					onError = { finish() },
+					onError = {  },
 					onSuccess = { result ->
-						cacheProfileInvalid = false
-						cacheList(result)
-						finish()
+						onFinish(result)
 					}
 				)
 			}
