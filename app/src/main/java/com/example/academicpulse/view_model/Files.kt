@@ -7,12 +7,17 @@ import com.example.academicpulse.R
 import com.example.academicpulse.utils.logcat
 import com.google.firebase.Firebase
 import com.google.firebase.storage.storage
+import com.google.firebase.storage.storageMetadata
 import java.io.File
 
 class Files : ViewModel() {
 	private val storage = Firebase.storage.reference
 	private val publications = "publications"
 	private val listCache = arrayListOf<Pair<String, MutableLiveData<Uri>>>()
+	var metadata = storageMetadata {
+		contentType = "application/pdf "
+	}
+
 
 	private fun cacheFile(name: String, file: Uri?) {
 		val index = listCache.indexOfFirst { (filename) -> name == filename }
@@ -52,7 +57,7 @@ class Files : ViewModel() {
 				cacheFile(fullPath, null)
 				return onSuccess()
 			}
-			storage.child(fullPath).putFile(file).addOnCompleteListener { uploading ->
+			storage.child(fullPath).putFile(file, metadata).addOnCompleteListener { uploading ->
 				if (uploading.isSuccessful) {
 					cacheFile(fullPath, file)
 					onSuccess()
