@@ -2,7 +2,9 @@
 /* eslint-disable max-len */
 
 import * as v2 from "firebase-functions/v2";
+const functions = require("firebase-functions/v1");
 import { getFirestore } from "firebase-admin/firestore";
+import { getAuth } from "firebase-admin/auth";
 import { initializeApp } from "firebase-admin/app";
 import {
   onDocumentCreated,
@@ -11,6 +13,7 @@ import {
 import * as dotenv from "dotenv";
 import axios from "axios";
 import { getAppSettings } from "./settings";
+import { sendCustomVerificationEmail } from "./emails";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -28,7 +31,6 @@ export const onDeletePublication = onDocumentDeleted(
   async (event) => {
     const snapshot: any = event.data;
     if (!snapshot) {
-      console.log("No data associated with the event");
       return;
     }
 
@@ -72,10 +74,23 @@ export const onCreatePublication = onDocumentCreated(
 
     //automatic verification is disabled
     if (!setting.autoVerifyNewPublications) return;
-    
+
     axios
       .get(`${process.env.VERIFY_PUBLICATION_API}/${pubId}`)
       .then()
       .catch((e) => console.error(e.message));
   }
 );
+
+// send confirmation link to new user
+exports.sendConfirmationEmail = functions.auth.user().onCreate((user: any) => {
+  return getAuth()
+    .generateEmailVerificationLink(user.email)
+    .then(async (link) => {
+      sendCustomVerificationEmail(user.email, link);
+    })
+    .catch((err) => {
+      console.error("sendConfirmationEmail Error:", err.message);
+      return Promise.reject(err);
+    });
+});
