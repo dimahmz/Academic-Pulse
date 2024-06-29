@@ -82,6 +82,34 @@ export const onCreatePublication = onDocumentCreated(
   }
 );
 
+// Automatically activate new users account
+export const onCreateUserDocument = onDocumentCreated(
+  "user/{docId}",
+  async (event) => {
+    const settings = await getAppSettings();
+    if (!settings) return;
+
+    //automatic verification is disabled
+    if (!settings.autoVerifyNewUsers) return;
+
+    const snapshot: any = event.data;
+    if (!snapshot) {
+      return;
+    }
+
+    // missing api URL
+    if (!process.env.VERIFY_USER_API) return;
+
+    const userId: string = event.params.docId;
+
+    // request the api for auto-activation
+    axios
+      .get(`${process.env.VERIFY_USER_API}/${userId}`)
+      .then()
+      .catch((e) => console.error("activate user account Error : ", e.message));
+  }
+);
+
 // send confirmation link to new user
 exports.sendConfirmationEmail = functions.auth.user().onCreate((user: any) => {
   return getAuth()
