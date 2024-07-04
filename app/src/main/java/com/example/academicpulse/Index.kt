@@ -14,9 +14,15 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.academicpulse.theme.AppTheme
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.context
+import com.example.academicpulse.utils.logcat
 import com.example.academicpulse.view_model.Store
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
+import com.google.firebase.database.getValue
 import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.storage
 
@@ -42,12 +48,12 @@ class Index : ComponentActivity() {
 			}
 		}
 	}
-
 	private fun configureFirebaseServices() {
 		if (DEV_ENV) {
 			Firebase.auth.useEmulator(LOCALHOST, AUTH_PORT)
 			Firebase.firestore.useEmulator(LOCALHOST, FIRE_STORE_PORT)
 			Firebase.storage.useEmulator(LOCALHOST, STORAGE_PORT)
+			Firebase.database.useEmulator(LOCALHOST, REALTIME_DB_PORT)
 		}
 	}
 }

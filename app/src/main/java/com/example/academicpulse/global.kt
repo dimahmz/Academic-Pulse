@@ -4,4 +4,5 @@ const val LOCALHOST = "10.0.2.2"
 const val AUTH_PORT = 9099
 const val FIRE_STORE_PORT = 8080
 const val STORAGE_PORT = 9199
-const val DEV_ENV = false
+const val REALTIME_DB_PORT = 9000
+const val DEV_ENV = true
