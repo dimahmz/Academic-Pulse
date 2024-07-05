@@ -16,3 +16,5 @@
 local.properties
 firebase-export*
 *.local.*
+firebase-debug.log
+ui-debug.log
