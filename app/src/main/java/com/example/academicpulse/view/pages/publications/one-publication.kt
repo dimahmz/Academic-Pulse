@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +16,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,6 +37,7 @@ import com.example.academicpulse.view.components.basic.Text
 import com.example.academicpulse.view.components.global.Header
 import com.example.academicpulse.view_model.Store
 import com.example.academicpulse.model.Publication
+import com.example.academicpulse.theme.bottomBarHeight
 import com.example.academicpulse.theme.descriptionTextSize
 import com.example.academicpulse.view.components.basic.Title
 import com.example.academicpulse.view.components.global.Line
@@ -73,8 +78,8 @@ fun OnePublicationPage() {
 
 	Column(
 		modifier = Modifier
-			.fillMaxHeight()
-			.padding(horizontal = pagePaddingX),
+			.padding(horizontal = pagePaddingX)
+			.verticalScroll(rememberScrollState()),
 	) {
 		Header(title = R.string.publication, onClick = back, suffix = {
 			if (Store.publications.belongsToThisUser(publication)) {
@@ -147,7 +152,7 @@ fun OnePublicationPage() {
 			H2(text = "Abstract")
 			Spacer(Modifier.height(10.dp))
 			Text(text = publication.abstract, size = descriptionTextSize)
-			Spacer(Modifier.height(5.dp))
+			Spacer(Modifier.height(25.dp))
 		}
 	}
 
