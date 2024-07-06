@@ -27,7 +27,11 @@ fun ProfilePage() {
 	val (list, setList) = useState { arrayListOf<Publication>() }
 
 	LaunchedEffect(Unit) {
-		Store.users.getCurrent({}) { _, _ -> setLoadingUser(false) }
+		Store.users.getCurrent({ setLoadingUser(false); Router.navigate("auth/sign-in"); }) { _, _ ->
+			setLoadingUser(
+				false
+			)
+		}
 		Store.publications.fetchUserPublications { array ->
 			try {
 				setList(array)
@@ -59,6 +63,5 @@ fun ProfilePage() {
 			}
 		}
 	}
-
 	BackHandler { if (!loadingUser) Router.navigate("home") }
 }

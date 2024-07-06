@@ -26,6 +26,7 @@ import com.example.academicpulse.theme.pagePaddingX
 import com.example.academicpulse.utils.forms.*
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.*
+import com.example.academicpulse.view.components.global.Header
 import com.example.academicpulse.view_model.Store
 
 @Composable
@@ -59,6 +60,11 @@ fun SignInPage() {
 	}
 
 	Column(modifier = Modifier.fillMaxHeight()) {
+		Box(modifier = Modifier.padding(15.dp)) {
+			Header(title = R.string.sign_in, onClick = {
+				Router.navigate("home")
+			})
+		}
 		Box(
 			modifier = Modifier
 				.fillMaxWidth()
@@ -110,16 +116,13 @@ fun SignInPage() {
 			) {
 				Text(text = R.string.new_member, modifier = Modifier.padding(end = 10.dp))
 
-				Text(
-					text = R.string.register_now,
+				Text(text = R.string.register_now,
 					color = MaterialTheme.colorScheme.primary,
 					weight = FontWeight.Bold,
-					onClick =
-					if (loading) null
+					onClick = if (loading) null
 					else {
 						{ Router.navigate("auth/sign-up-institution") }
-					}
-				)
+					})
 			}
 		}
 	}
