@@ -30,7 +30,7 @@ private val navbarItems = listOf(
 	NavbarItem("notifications", R.string.notification, R.drawable.icon_notifications),
 	NavbarItem("profile", R.string.profile, R.drawable.icon_profile),
 )
-private val visibleWhen = listOf("home", "notifications", "profile")
+private val visibleWhen = listOf("home", "notifications", "profile", "auth/activation")
 
 /** Bottom NavBar UI element containing main root routes with their icons, allowing direct navigation to them */
 @Composable

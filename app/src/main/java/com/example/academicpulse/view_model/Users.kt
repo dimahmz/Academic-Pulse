@@ -5,9 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.academicpulse.R
 import com.example.academicpulse.model.User
+import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.useCast
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
+import com.google.firebase.database.getValue
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.Filter
@@ -15,6 +21,7 @@ import com.google.firebase.firestore.Filter
 class Users : ViewModel() {
 	private val collection = "user"
 	private val auth = Firebase.auth
+	private val realtimeDB = Firebase.database
 	private var listCache: ArrayList<User>? = null
 	private var cacheInvalid = true
 	private val currentUser = MutableLiveData<User>()
@@ -30,8 +37,7 @@ class Users : ViewModel() {
 	}
 
 	fun getCurrent(
-		onError: (error: Int) -> Unit,
-		onSuccess: (data: User, ref: DocumentReference) -> Unit
+		onError: (error: Int) -> Unit, onSuccess: (data: User, ref: DocumentReference) -> Unit
 	) {
 		if (currentUser.value != null) {
 			onSuccess(currentUser.value!!, StoreDB.refOf(collection, currentUser.value!!.id))
@@ -44,10 +50,29 @@ class Users : ViewModel() {
 		}
 	}
 
+	fun getCurrentActivated(
+		onError: (error: Int) -> Unit, onSuccess: (data: User, ref: DocumentReference) -> Unit
+	) {
+		getCurrent(onError = { onError(R.string.unknown_error) }) { user, ref ->
+			run {
+				val userRef = realtimeDB.getReference("users/${user.id}/activated")
+				userRef.addValueEventListener(object : ValueEventListener {
+					override fun onDataChange(dataSnapshot: DataSnapshot) {
+						val isActivated: Boolean? = dataSnapshot.getValue<Boolean>()
+						if (isActivated != null && isActivated) onSuccess(user, ref)
+						else Router.navigate("auth/activation")
+					}
+					override fun onCancelled(error: DatabaseError) {
+						if (!user.activated) Router.navigate("auth/activation")
+						onSuccess(user, ref)
+					}
+				})
+			}
+		}
+	}
+
 	fun search(
-		query: String,
-		selectedList: List<User>,
-		onFinish: (ArrayList<User>) -> Unit
+		query: String, selectedList: List<User>, onFinish: (ArrayList<User>) -> Unit
 	) {
 		val selected = ArrayList<String>(selectedList.map { it.id })
 		selected.add(current.value!!.id)

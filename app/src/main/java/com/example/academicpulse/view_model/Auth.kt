@@ -48,21 +48,10 @@ class Auth : ViewModel() {
 
 	fun signInOnStart(vm: Users, setIsReady: () -> Unit) {
 		// If no user is logged in, keep the router in the sign up page, otherwise check for account activation.
-		vm.getCurrent(onError = { setIsReady() }) { user, _ ->
-			val userRef = realtimeDB.getReference("users/${user.id}/activated")
-			userRef.addValueEventListener(object : ValueEventListener {
-				override fun onDataChange(dataSnapshot: DataSnapshot) {
-					val isActivated: Boolean? = dataSnapshot.getValue<Boolean>()
-					if (isActivated != null && isActivated) Router.navigate("home")
-					else Router.navigate("auth/activation")
-					setIsReady()
-				}
-				override fun onCancelled(error: DatabaseError) {
-					if (user.activated) Router.navigate("home")
-					else Router.navigate("auth/activation")
-					setIsReady()
-				}
-			})
+		vm.getCurrentActivated(onError = { Router.navigate("home"); setIsReady() }) { user, _ ->
+			Router.navigate(
+				"home"
+			); setIsReady()
 		}
 	}
 

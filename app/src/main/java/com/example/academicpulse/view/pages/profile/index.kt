@@ -27,7 +27,7 @@ fun ProfilePage() {
 	val (list, setList) = useState { arrayListOf<Publication>() }
 
 	LaunchedEffect(Unit) {
-		Store.users.getCurrent({ setLoadingUser(false); Router.navigate("auth/sign-in"); }) { _, _ ->
+		Store.users.getCurrentActivated({ setLoadingUser(false); Router.navigate("auth/sign-in"); }) { _, _ ->
 			setLoadingUser(
 				false
 			)
