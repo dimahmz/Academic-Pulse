@@ -8,13 +8,10 @@ import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.logcat
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.firestore
 import com.google.firebase.database.database
-import com.google.firebase.database.getValue
+
 
 class Auth : ViewModel() {
 	private val db = Firebase.firestore
@@ -47,12 +44,8 @@ class Auth : ViewModel() {
 	}
 
 	fun signInOnStart(vm: Users, setIsReady: () -> Unit) {
-		// If no user is logged in, keep the router in the sign up page, otherwise check for account activation.
-		vm.getCurrentActivated(onError = { Router.navigate("home"); setIsReady() }) { user, _ ->
-			Router.navigate(
-				"home"
-			); setIsReady()
-		}
+		// All user are starting with the default route
+		setIsReady();
 	}
 
 	fun signIn(info: SignInInfo, onError: (Int) -> Unit) {
