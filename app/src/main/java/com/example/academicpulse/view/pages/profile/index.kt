@@ -30,23 +30,25 @@ import com.example.academicpulse.view_model.Store
 
 @Composable
 fun ProfilePage() {
-	val (loadingUser, setLoadingUser) = useState { true }
-	val (loadingPublications, setLoadingPublications) = useState { true }
+	val (loadingUser, setLoadingUser) = useState { false }
+	val (loadingPublications, setLoadingPublications) = useState { false }
 	val (list, setList) = useState { arrayListOf<Publication>() }
 	val userFilteredPublications by Store.publications.userFilteredPublications.collectAsState()
+	val (isUserpublicationsFetched, setIsUserpublicationsFetched) = useState { false }
 
 	LaunchedEffect(userFilteredPublications) {
-		logcat("user is trying to filter")
-		if (Store.publications.isUserpublicationsFetched.value == true) {
+		if (isUserpublicationsFetched) {
 			if (Store.publications.userFilteredPublications.value != null) setList(Store.publications.userFilteredPublications.value!!)
 			return@LaunchedEffect
 		}
+		setLoadingUser(true)
 		Store.users.getCurrentActivated({ setLoadingUser(false); Router.navigate("auth/sign-in"); }) { _, _ ->
 			setLoadingUser(false)
 			setLoadingPublications(true)
 			Store.publications.fetchUserPublications { array ->
 				setList(array)
 				setLoadingPublications(false)
+				setIsUserpublicationsFetched(true)
 			}
 		}
 	}
