@@ -60,7 +60,7 @@ fun AddPublicationPage() {
 				doi = form.doi.value,
 				date = Timestamp(stringToDate(form.date.value, "dd/MM/yyyy")),
 				authors = list,
-				hasFile =  form.file.uri != null
+				hasFile = form.file.uri != null
 			)
 		) { error ->
 			form.form.error = error
@@ -101,14 +101,10 @@ fun AddPublicationPage() {
 				icon = R.drawable.icon_down_arrow
 			)
 			Input(
-				field = form.title,
-				label = R.string.title,
-				focusNext = form.abstract,
+				field = form.title, label = R.string.title, focusNext = form.abstract, height = 50.dp
 			)
 			Input(
-				field = form.abstract,
-				label = R.string._abstract,
-				focusNext = form.doi,
+				field = form.abstract, label = R.string._abstract, focusNext = form.doi, height = 140.dp
 			)
 			FilePicker(
 				field = form.file,
