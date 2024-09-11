@@ -89,4 +89,6 @@
     <string name="authors_length">You can only select a maximum of 6 authors.</string>
     <string name="view_file">View file</string>
     <string name="file_is_loading">File is loading</string>
+    <string name="no_publication">There is no publication</string>
+    <string name="no_publication_description">There is no publication of this type</string>
 </resources>

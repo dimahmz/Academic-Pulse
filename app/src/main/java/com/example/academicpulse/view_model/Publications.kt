@@ -3,11 +3,13 @@ package com.example.academicpulse.view_model
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.academicpulse.R
+import com.example.academicpulse.model.Notification
 import com.example.academicpulse.model.Publication
 import com.example.academicpulse.model.User
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.forms.*
 import com.google.firebase.firestore.Filter
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class Publications : ViewModel() {
 	private val collection = "publication"
@@ -15,6 +17,9 @@ class Publications : ViewModel() {
 	private var cacheInvalid = true
 	private var cacheProfileInvalid = true
 	var selectedPublicationId = ""
+	val userPublications = MutableLiveData(arrayListOf<Publication>())
+	val userFilteredPublications = MutableStateFlow(arrayListOf<Publication>())
+	val isUserpublicationsFetched = MutableLiveData(false)
 	var redirectedFromForm = false
 	var redirectedFromProfile = false
 	val form = PublicationForm()
@@ -29,50 +34,49 @@ class Publications : ViewModel() {
 	}
 
 	fun search(query: String, onFinish: (ArrayList<Publication>) -> Unit) {
-		fun finish(fetchedPublications : ArrayList<Publication>) {
+		fun finish(fetchedPublications: ArrayList<Publication>) {
 			val searchQuery = query.trim().lowercase()
 			onFinish(
 				ArrayList(fetchedPublications!!.filter {
-					(searchQuery.isBlank() || it.title.lowercase().contains(searchQuery))
-							&& it.status == "accepted"
+					(searchQuery.isBlank() || it.title.lowercase()
+						.contains(searchQuery)) && it.status == "accepted"
 				})
 			)
 		}
 
 		Store.publicationsTypes.getAll({ }) {
-			StoreDB.getMany<Publication>(
-				collection,
+			StoreDB.getMany<Publication>(collection,
 				where = listOf(Filter.equalTo("status", "accepted")),
 				onAsyncCast = { id, data, resolve ->
 					Store.users.fetchAuthors(data) { list ->
 						resolve(Publication.fromMap(id, data, list))
 					}
 				},
-				onError = {  },
+				onError = { },
 				onSuccess = { result ->
 					finish(result)
-				}
-			)
+				})
 		}
 	}
 
 	fun fetchUserPublications(onFinish: (ArrayList<Publication>) -> Unit) {
 
-		Store.publicationsTypes.getAll({  }) {
+		Store.publicationsTypes.getAll({ }) {
 			Store.users.getCurrent({}) { user, _ ->
-				StoreDB.getManyByIds<Publication>(
-					collection,
+				StoreDB.getManyByIds<Publication>(collection,
 					ids = user.publications,
 					onAsyncCast = { id, data, resolve ->
 						Store.users.fetchAuthors(data) { list ->
 							resolve(Publication.fromMap(id, data, list))
 						}
 					},
-					onError = {  },
+					onError = { },
 					onSuccess = { result ->
+						isUserpublicationsFetched.value = true
+						userPublications.value = result
+						userFilteredPublications.value = result
 						onFinish(result)
-					}
-				)
+					})
 			}
 		}
 	}
