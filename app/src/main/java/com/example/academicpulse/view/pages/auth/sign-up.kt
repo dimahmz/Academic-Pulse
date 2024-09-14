@@ -60,10 +60,13 @@ fun SignUpPage() {
 		if (loading || !form.validate()) return
 		setLoading(true)
 		auth.saveSignUpInfo(firstName.value, lastName.value, email.value)
-		auth.signUp(SignInInfo(email.value, password.value)) { message ->
+		auth.signUp(SignInInfo(email.value, password.value), onError = { message ->
 			setLoading(false)
 			form.error = message
-		}
+		}, onSuccess = {
+			setLoading(false)
+			Router.navigate("auth/verification")
+		})
 	}
 
 	val (back, setBack) = useState { {} }
