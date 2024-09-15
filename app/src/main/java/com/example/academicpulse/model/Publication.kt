@@ -18,6 +18,7 @@ class Publication(
 	val doi: String,
 	val date: Timestamp,
 	val authors: List<User>,
+	val authorID: String,
 	val reads: Long = 0,
 	val uploads: Long = 0,
 	val status: String = "pending",
@@ -60,6 +61,7 @@ class Publication(
 			"reads" to reads,
 			"uploads" to uploads,
 			"authors" to authors.map { it.id },
+			"authorID" to authorID,
 			"status" to status,
 			"createdAt" to Timestamp(Date()),
 			"hasFile" to hasFile
@@ -76,6 +78,7 @@ class Publication(
 				doi = useCast(map, "doi", ""),
 				date = useCast(map, "date", Timestamp(Date())),
 				authors = authors,
+				authorID = useCast(map, "authorID", ""),
 				reads = useCast(map, "reads", 0),
 				uploads = useCast(map, "uploads", 0),
 				status = useCast(map, "status", "pending"),

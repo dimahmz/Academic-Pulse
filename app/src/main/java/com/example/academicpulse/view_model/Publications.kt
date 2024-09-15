@@ -3,7 +3,6 @@ package com.example.academicpulse.view_model
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.academicpulse.R
-import com.example.academicpulse.model.Notification
 import com.example.academicpulse.model.Publication
 import com.example.academicpulse.model.User
 import com.example.academicpulse.router.Router
