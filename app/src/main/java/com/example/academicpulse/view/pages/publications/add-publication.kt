@@ -61,7 +61,7 @@ fun AddPublicationPage() {
 				date = Timestamp(stringToDate(form.date.value, "dd/MM/yyyy")),
 				authors = list,
 				hasFile = form.file.uri != null,
-				authorID = Store.users.current.value!!.id!!
+				authorID = Store.users.current.value!!.id
 			)
 		) { error ->
 			form.form.error = error
