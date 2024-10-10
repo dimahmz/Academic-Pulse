@@ -32,18 +32,18 @@ class Publications : ViewModel() {
 		}
 	}
 
-	fun search(query: String, onFinish: (ArrayList<Publication>) -> Unit) {
+	fun search(query: String, onFinish: (ArrayList<Publication>) -> Unit, onError: () -> Unit) {
 		fun finish(fetchedPublications: ArrayList<Publication>) {
 			val searchQuery = query.trim().lowercase()
 			onFinish(
-				ArrayList(fetchedPublications!!.filter {
+				ArrayList(fetchedPublications.filter {
 					(searchQuery.isBlank() || it.title.lowercase()
 						.contains(searchQuery)) && it.status == "accepted"
 				})
 			)
 		}
 
-		Store.publicationsTypes.getAll({ }) {
+		Store.publicationsTypes.getAll(onError = { onError() }) {
 			StoreDB.getMany<Publication>(collection,
 				where = listOf(Filter.equalTo("status", "accepted")),
 				onAsyncCast = { id, data, resolve ->
@@ -51,7 +51,7 @@ class Publications : ViewModel() {
 						resolve(Publication.fromMap(id, data, list))
 					}
 				},
-				onError = { },
+				onError = { onError() },
 				onSuccess = { result ->
 					finish(result)
 				})
@@ -59,9 +59,8 @@ class Publications : ViewModel() {
 	}
 
 	fun fetchUserPublications(onFinish: (ArrayList<Publication>) -> Unit) {
-
-		Store.publicationsTypes.getAll({ }) {
-			Store.users.getCurrent({}) { user, _ ->
+		Store.publicationsTypes.getAll({ onFinish(userFilteredPublications.value) }) {
+			Store.users.getCurrent({ onFinish(userFilteredPublications.value) }) { user, _ ->
 				StoreDB.getManyByIds<Publication>(collection,
 					ids = user.publications,
 					onAsyncCast = { id, data, resolve ->
@@ -69,7 +68,7 @@ class Publications : ViewModel() {
 							resolve(Publication.fromMap(id, data, list))
 						}
 					},
-					onError = { },
+					onError = { onFinish(userFilteredPublications.value) },
 					onSuccess = { result ->
 						isUserpublicationsFetched.value = true
 						userPublications.value = result

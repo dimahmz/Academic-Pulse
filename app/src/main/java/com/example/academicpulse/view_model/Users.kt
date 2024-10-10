@@ -15,7 +15,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.google.firebase.database.getValue
 import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.Filter
 
 class Users : ViewModel() {
@@ -56,17 +55,19 @@ class Users : ViewModel() {
 		getCurrent(onError = { onError(R.string.unknown_error) }) { user, ref ->
 			run {
 				val userRef = realtimeDB.getReference("users/${user.id}/activated")
-				userRef.addValueEventListener(object : ValueEventListener {
-					override fun onDataChange(dataSnapshot: DataSnapshot) {
-						val isActivated: Boolean? = dataSnapshot.getValue<Boolean>()
-						if (isActivated != null && isActivated) onSuccess(user, ref)
-						else Router.navigate("auth/activation")
-					}
-					override fun onCancelled(error: DatabaseError) {
-						if (!user.activated) Router.navigate("auth/activation")
-						onSuccess(user, ref)
-					}
-				})
+				userRef.addValueEventListener(
+					object : ValueEventListener {
+						override fun onDataChange(dataSnapshot: DataSnapshot) {
+							val isActivated: Boolean? = dataSnapshot.getValue<Boolean>()
+							if (isActivated != null && isActivated) onSuccess(user, ref)
+							else Router.navigate("auth/activation")
+						}
+						override fun onCancelled(error: DatabaseError) {
+							if (!user.activated) Router.navigate("auth/activation")
+							onSuccess(user, ref)
+						}
+					},
+				)
 			}
 		}
 	}

@@ -31,7 +31,6 @@ class StoreDB private constructor() {
 					val data = doc.result.data
 					if (doc.isSuccessful && data != null) onSuccess(data, ref)
 					else if (data == null) {
-						logcat("Warning: Document with id {$id} is not found in the collection {$collection}")
 						onError(R.string.unknown_error)
 					} else {
 						val message = "Error getting document by id {$id} from the collection {$collection}"
@@ -61,7 +60,7 @@ class StoreDB private constructor() {
 
 				fun countDown() {
 					size.intValue--
-					if (size.intValue == 0) {
+					if (size.intValue <= 0) {
 						if (errors.intValue != ids.size) onSuccess(list)
 						else onError(R.string.unknown_error)
 					}
@@ -111,12 +110,19 @@ class StoreDB private constructor() {
 						val list = arrayListOf<T>()
 						fun countDown() {
 							size.intValue--
-							if (size.intValue == 0) onSuccess(list)
+							if (size.intValue <= 0) {
+								onSuccess(list)
+							}
 						}
+						// there is no document
+						if(docs.result.isEmpty) onSuccess(list)
+						// iterate throughout the documents
 						docs.result.forEach { document ->
 							castDocument(document, onCast, onAsyncCast, ::countDown) { list.add(it) }
 						}
 					} else onError(R.string.unknown_error)
+				}.addOnFailureListener {
+					onError(R.string.unknown_error)
 				}
 			} catch (exception: Exception) {
 				logcat(exception = exception)
