@@ -24,20 +24,23 @@ import com.example.academicpulse.view.components.basic.Input
 import com.example.academicpulse.view.components.basic.Spinner
 import com.example.academicpulse.view.components.global.Line
 import com.example.academicpulse.view.components.global.PublicationArticle
+import com.example.academicpulse.view.pages.home.components.EmptyHomeMessage
 import com.example.academicpulse.view_model.Store
 
 @Composable
 fun HomePage() {
 	val search = Field.use(form = null)
-	val (loading, setLoading) = useState { true }
+	val (loading, setLoading) = useState { false }
 	val (list, setList) = useState { arrayListOf<Publication>() }
 
 	LaunchedEffect(search.value.trim()) {
 		setLoading(true)
-		Store.publications.search(search.value) { array ->
+		Store.publications.search(search.value, onFinish = { array ->
 			setList(array)
 			setLoading(false)
-		}
+		}, onError = {
+			setLoading(false)
+		})
 	}
 
 	LazyColumn(Modifier.padding(bottom = bottomBarHeight)) {
@@ -58,10 +61,16 @@ fun HomePage() {
 		}
 
 		if (!loading) {
-			items(list, key = { it.id }) {
-				Column(modifier = Modifier.padding(horizontal = (pagePaddingX.value / 2).dp)) {
-					PublicationArticle(it)
-					Line(height = 1.dp)
+			if (list.size == 0) {
+				item {
+					EmptyHomeMessage()
+				}
+			} else {
+				items(list, key = { it.id }) {
+					Column(modifier = Modifier.padding(horizontal = (pagePaddingX.value / 2).dp)) {
+						PublicationArticle(it)
+						Line(height = 1.dp)
+					}
 				}
 			}
 		}

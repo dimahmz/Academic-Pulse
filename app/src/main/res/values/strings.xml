@@ -14,6 +14,9 @@
     <string name="search">Search</string>
     <string name="cancel">Cancel</string>
 
+    <string name="no_publication_in_home">There is no publication</string>
+    <string name="no_publication_in_home_description">Our database or empty</string>
+
     <string name="sign_in">Log in</string>
     <string name="log_out">Log out</string>
     <string name="sign_up">Sign Up</string>
