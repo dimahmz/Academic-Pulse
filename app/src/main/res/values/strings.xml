@@ -13,9 +13,17 @@
     <string name="modify">Modify</string>
     <string name="search">Search</string>
     <string name="cancel">Cancel</string>
+    <string name="server_error_title">Server Error</string>
+    <string name="server_error_description">A server error has occurred. Please try again later.</string>
+    <string name="document_not_found">Document not found.</string>
+    <string name="try_again">Try Again</string>
+    <string name="server_error_icon_desc">Server error icon</string>
+    <string name="close">Close</string>
 
     <string name="no_publication_in_home">There is no publication</string>
     <string name="no_publication_in_home_description">Our database or empty</string>
+    <string name="reload_button">Reload</string>
+
 
     <string name="sign_in">Log in</string>
     <string name="log_out">Log out</string>
