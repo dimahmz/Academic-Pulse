@@ -27,19 +27,28 @@ class StoreDB private constructor() {
 		) {
 			try {
 				val ref = refOf(collection, id)
-				ref.get().addOnCompleteListener { doc ->
-					val data = doc.result.data
-					if (doc.isSuccessful && data != null) onSuccess(data, ref)
-					else if (data == null) {
-						onError(R.string.unknown_error)
+				ref.get().addOnCompleteListener { task ->
+					if (task.isSuccessful) {
+						val data = task.result.data
+						if (data != null) {
+							onSuccess(data, ref)
+						} else {
+							// Document not found
+							val message = "Document with id $id not found in collection $collection"
+							logcat(message)
+							onError(R.string.document_not_found) // Assuming you have a specific error for not found
+						}
 					} else {
-						val message = "Error getting document by id {$id} from the collection {$collection}"
-						logcat(message, doc.exception)
+						// Error while retrieving document
+						val message = "Error getting document by id $id from collection $collection"
+						logcat(message, task.exception)
+						Store.applicationState.ShowServerErrorAlertDialog()
 						onError(R.string.unknown_error)
 					}
 				}
 			} catch (exception: Exception) {
 				logcat(exception = exception)
+				Store.applicationState.ShowServerErrorAlertDialog()
 				onError(R.string.unknown_error)
 			}
 		}
@@ -115,7 +124,7 @@ class StoreDB private constructor() {
 							}
 						}
 						// there is no document
-						if(docs.result.isEmpty) onSuccess(list)
+						if (docs.result.isEmpty) onSuccess(list)
 						// iterate throughout the documents
 						docs.result.forEach { document ->
 							castDocument(document, onCast, onAsyncCast, ::countDown) { list.add(it) }
