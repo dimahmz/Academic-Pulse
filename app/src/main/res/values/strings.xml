@@ -18,6 +18,7 @@
     <string name="document_not_found">Document not found.</string>
     <string name="try_again">Try Again</string>
     <string name="server_error_icon_desc">Server error icon</string>
+    <string name="publication_not_found">No publication found.</string>
     <string name="close">Close</string>
 
     <string name="no_publication_in_home">There is no publication</string>

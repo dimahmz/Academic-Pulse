@@ -25,22 +25,31 @@ import com.example.academicpulse.view.components.basic.Spinner
 import com.example.academicpulse.view.components.global.Line
 import com.example.academicpulse.view.components.global.PublicationArticle
 import com.example.academicpulse.view.pages.home.components.EmptyHomeMessage
+import com.example.academicpulse.view.pages.home.components.HomeServerErrorMessage
 import com.example.academicpulse.view_model.Store
 
 @Composable
 fun HomePage() {
 	val search = Field.use(form = null)
 	val (loading, setLoading) = useState { false }
+	val (isServerError, setIsServerError) = useState { false }
 	val (list, setList) = useState { arrayListOf<Publication>() }
 
-	LaunchedEffect(search.value.trim()) {
+	// fetch the publication of the home page
+	fun fetchHomePublication() {
 		setLoading(true)
 		Store.publications.search(search.value, onFinish = { array ->
 			setList(array)
 			setLoading(false)
+			setIsServerError(false)
 		}, onError = {
+			setIsServerError(true)
 			setLoading(false)
 		})
+	}
+
+	LaunchedEffect(search.value.trim()) {
+		fetchHomePublication()
 	}
 
 	LazyColumn(Modifier.padding(bottom = bottomBarHeight)) {
@@ -57,21 +66,33 @@ fun HomePage() {
 					placeholder = R.string.search,
 				)
 			}
-			if (loading) Spinner()
 		}
 
-		if (!loading) {
-			if (list.size == 0) {
-				item {
-					EmptyHomeMessage()
+		if (loading) {
+			item {
+				Spinner()
+			}
+			return@LazyColumn
+		}
+		// a server error has occurred
+		if (isServerError) {
+			item {
+				HomeServerErrorMessage() {
+					fetchHomePublication()
 				}
-			} else {
-				items(list, key = { it.id }) {
-					Column(modifier = Modifier.padding(horizontal = (pagePaddingX.value / 2).dp)) {
-						PublicationArticle(it)
-						Line(height = 1.dp)
-					}
-				}
+			}
+			return@LazyColumn
+		}
+		// there is no publication
+		if (list.size == 0) {
+			item { EmptyHomeMessage() }
+			return@LazyColumn
+		}
+		// list of the publication
+		items(list, key = { it.id }) {
+			Column(modifier = Modifier.padding(horizontal = (pagePaddingX.value / 2).dp)) {
+				PublicationArticle(it)
+				Line(height = 1.dp)
 			}
 		}
 	}

@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.example.academicpulse.model.Notification
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.bottomBarHeight
+import com.example.academicpulse.utils.logcat
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.Spinner
 import com.example.academicpulse.view.components.global.Line
@@ -49,13 +50,17 @@ fun NotificationPage() {
 		}
 		// launched for the first time
 		setIsLoading(true)
-		Store.notifications.getUserNotifications({
-			updateNotificationsUI(it)
-			setIsLoading(false)
-		}) {
+		Store.notifications.getUserNotifications(onError = {
 			setShowEmptyNotifications(true)
 			setIsLoading(false)
-		}
+		}, onServerError = {
+			Store.applicationState.ShowServerErrorAlertDialog()
+			setIsLoading(false)
+			setShowEmptyNotifications(true)
+		}, onSuccess = {
+			updateNotificationsUI(it)
+			setIsLoading(false)
+		})
 	}
 
 

@@ -1,10 +1,7 @@
 package com.example.academicpulse.view.pages.profile
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,9 +15,9 @@ import com.example.academicpulse.model.Publication
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.theme.bottomBarHeight
 import com.example.academicpulse.theme.pagePaddingX
-import com.example.academicpulse.utils.logcat
 import com.example.academicpulse.utils.useState
 import com.example.academicpulse.view.components.basic.Spinner
+import com.example.academicpulse.view.components.global.ComponentServerErrorMessage
 import com.example.academicpulse.view.components.global.Line
 import com.example.academicpulse.view.components.global.UserCard
 import com.example.academicpulse.view.components.global.PublicationArticle
@@ -35,14 +32,15 @@ fun ProfilePage() {
 	val (list, setList) = useState { arrayListOf<Publication>() }
 	val userFilteredPublications by Store.publications.userFilteredPublications.collectAsState()
 	val (isUserpublicationsFetched, setIsUserpublicationsFetched) = useState { false }
+	val (isServerError, setIsServerError) = useState { false }
 
-	LaunchedEffect(userFilteredPublications) {
-		if (isUserpublicationsFetched) {
-			if (Store.publications.userFilteredPublications.value != null) setList(Store.publications.userFilteredPublications.value!!)
-			return@LaunchedEffect
-		}
+
+	fun fetchUserAndHisPublications() {
 		setLoadingUser(true)
-		Store.users.getCurrentActivated({ setLoadingUser(false); Router.navigate("auth/sign-in"); }) { _, _ ->
+		Store.users.getCurrentActivated({
+			setLoadingUser(false);
+			setIsServerError(true);
+		}) { _, _ ->
 			setLoadingUser(false)
 			setLoadingPublications(true)
 			Store.publications.fetchUserPublications { array ->
@@ -51,41 +49,65 @@ fun ProfilePage() {
 				setIsUserpublicationsFetched(true)
 			}
 		}
+
 	}
 
+	LaunchedEffect(userFilteredPublications) {
+		setIsServerError(false)
+		if (isUserpublicationsFetched) {
+			setList(Store.publications.userFilteredPublications.value)
+			return@LaunchedEffect
+		}
+		fetchUserAndHisPublications()
+	}
+
+	// the user card is loading
 	if (loadingUser) {
 		Spinner()
-	} else if (loadingPublications) {
+		return
+	}
+
+	// the publications section is loading
+	if (loadingPublications) {
 		Column {
 			UserCard()
 			Line(height = 2.dp)
 			Spinner()
 		}
-	} else {
-		LazyColumn(modifier = Modifier.padding(bottom = bottomBarHeight)) {
-			item(key = "Page header") {
-				UserCard()
-				Line(height = 2.dp)
-			}
+		return
+	}
+
+	// there a server error
+	if (isServerError) {
+		ComponentServerErrorMessage {
+			fetchUserAndHisPublications()
+		}
+		return
+	}
+
+	LazyColumn(modifier = Modifier.padding(bottom = bottomBarHeight)) {
+		item(key = "Page header") {
+			UserCard()
+			Line(height = 2.dp)
+		}
+		item {
+			UserPublicationsTab()
+		}
+		if (list.size == 0) {
 			item {
-				UserPublicationsTab()
-			}
-			items(list, key = { it.id }) {
-				Column(modifier = Modifier.padding(horizontal = (pagePaddingX.value / 2).dp)) {
-					PublicationArticle(it, true)
-					Line(height = 1.dp)
+				Column(
+					modifier = Modifier.padding(40.dp)
+				) {
+					EmptyPublicationsMessage()
 				}
 			}
-			if (list.size == 0) {
-				item {
-					Column(
-						modifier = Modifier.padding(40.dp)
-					) {
-						EmptyPublicationsMessage()
-					}
-				}
+		} else items(list, key = { it.id }) {
+			Column(modifier = Modifier.padding(horizontal = (pagePaddingX.value / 2).dp)) {
+				PublicationArticle(it, true)
+				Line(height = 1.dp)
 			}
 		}
 	}
+
 	BackHandler { if (!loadingUser) Router.navigate("home") }
 }
