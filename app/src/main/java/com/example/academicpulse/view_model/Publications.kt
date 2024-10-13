@@ -43,24 +43,24 @@ class Publications : ViewModel() {
 			)
 		}
 
-		Store.publicationsTypes.getAll(onError = { onError() }) {
-			StoreDB.getMany<Publication>(collection,
-				where = listOf(Filter.equalTo("status", "accepted")),
-				onAsyncCast = { id, data, resolve ->
-					Store.users.fetchAuthors(data) { list ->
-						resolve(Publication.fromMap(id, data, list))
-					}
-				},
-				onError = { onError() },
-				onSuccess = { result ->
-					finish(result)
-				})
-		}
+		StoreDB.getMany<Publication>(collection,
+			where = listOf(Filter.equalTo("status", "accepted")),
+			onAsyncCast = { id, data, resolve ->
+				Store.users.fetchAuthors(data) { list ->
+					resolve(Publication.fromMap(id, data, list))
+				}
+			},
+			onError = { Store.applicationState.ShowServerErrorAlertDialog(); onError(); },
+			onSuccess = { result ->
+				finish(result)
+			})
 	}
 
 	fun fetchUserPublications(onFinish: (ArrayList<Publication>) -> Unit) {
-		Store.publicationsTypes.getAll({ onFinish(userFilteredPublications.value) }) {
-			Store.users.getCurrent({ onFinish(userFilteredPublications.value) }) { user, _ ->
+		onFinish(userFilteredPublications.value)
+		Store.users.getCurrent(onError = { onFinish(userFilteredPublications.value) },
+			onServerError = { onFinish(userFilteredPublications.value) },
+			onSuccess = { user, _ ->
 				StoreDB.getManyByIds<Publication>(collection,
 					ids = user.publications,
 					onAsyncCast = { id, data, resolve ->
@@ -68,15 +68,16 @@ class Publications : ViewModel() {
 							resolve(Publication.fromMap(id, data, list))
 						}
 					},
-					onError = { onFinish(userFilteredPublications.value) },
+					onError = {
+						onFinish(userFilteredPublications.value)
+					},
 					onSuccess = { result ->
 						isUserpublicationsFetched.value = true
 						userPublications.value = result
 						userFilteredPublications.value = result
 						onFinish(result)
 					})
-			}
-		}
+			})
 	}
 
 	fun fetchSelected(onSuccess: (Publication) -> Unit, onError: (error: Int) -> Unit) {
@@ -103,31 +104,33 @@ class Publications : ViewModel() {
 
 	fun insert(publication: Publication, onError: (error: Int) -> Unit) {
 		// Get the current user ref because we need to update its publications list
-		Store.users.getCurrent(onError) { user, userRef ->
-			// Insert the publication and get its generated id
-			StoreDB.insert(collection, publication.toMap(), onError) { id ->
-				publication.id = id
-				// Insert the new publication id in the user publications then update it
-				val publications = ArrayList(user.publications)
-				publications.add(id)
-				StoreDB.updateOneByRef(
-					ref = userRef,
-					data = hashMapOf("publications" to publications),
-					onError = onError, // TODO : if this fails we should remove the publication
-				) {
-					// Upload the publication file IF EXISTS
-					Store.files.uploadFile(publication.file, id, onError) {
-						cacheList(listOf(publication))
-						user.publications.add(publication.id)
-						selectedPublicationId = id
-						redirectedFromForm = true
-						form.form.clearAll()
-						form.authors.value = arrayListOf()
-						Router.navigate("publications/one-publication")
+		Store.users.getCurrent(onError = onError,
+			onServerError = { onError(R.string.unknown_error) },
+			onSuccess = { user, userRef ->
+				// Insert the publication and get its generated id
+				StoreDB.insert(collection, publication.toMap(), onError) { id ->
+					publication.id = id
+					// Insert the new publication id in the user publications then update it
+					val publications = ArrayList(user.publications)
+					publications.add(id)
+					StoreDB.updateOneByRef(
+						ref = userRef,
+						data = hashMapOf("publications" to publications),
+						onError = onError, // TODO : if this fails we should remove the publication
+					) {
+						// Upload the publication file IF EXISTS
+						Store.files.uploadFile(publication.file, id, onError) {
+							cacheList(listOf(publication))
+							user.publications.add(publication.id)
+							selectedPublicationId = id
+							redirectedFromForm = true
+							form.form.clearAll()
+							form.authors.value = arrayListOf()
+							Router.navigate("publications/one-publication")
+						}
 					}
 				}
-			}
-		}
+			})
 	}
 
 	fun deleteSelected(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {

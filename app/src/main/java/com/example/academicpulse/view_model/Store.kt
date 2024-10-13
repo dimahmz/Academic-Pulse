@@ -37,7 +37,7 @@ class Store private constructor() : ViewModel() {
 					isReady.value = true
 					Router.navigate("home")
 					// get the user notifications
-					Store.notifications.getUserNotifications({ }, { })
+					Store.notifications.getUserNotifications({ }, { }, { })
 				}
 			}
 		}
@@ -75,7 +75,7 @@ class Store private constructor() : ViewModel() {
 			get() = appStore[0].files
 		val notifications: Notifications
 			get() = appStore[0].notifications
-		val applicationState : ApplicationState
+		val applicationState: ApplicationState
 			get() = appStore[0].applicationState
 
 		fun clear(resetLoading: Boolean = true) {

@@ -18,7 +18,6 @@ class Files : ViewModel() {
 		contentType = "application/pdf "
 	}
 
-
 	private fun cacheFile(name: String, file: Uri?) {
 		val index = listCache.indexOfFirst { (filename) -> name == filename }
 		if (index == -1) listCache.add(Pair(name, MutableLiveData(file)))
@@ -42,6 +41,7 @@ class Files : ViewModel() {
 						cacheFile(fullPath, null)
 						onSuccess(null)
 					} else logcat("Error reading file with ID name {$id}", uploading.exception)
+					Store.applicationState.ShowServerErrorAlertDialog()
 					onError(R.string.unknown_error)
 				}
 			}

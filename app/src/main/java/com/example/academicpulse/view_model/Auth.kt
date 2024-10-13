@@ -62,16 +62,19 @@ class Auth : ViewModel() {
 				)
 
 				// Check the user account activation.
-				Store.users.getCurrent(onError = onError) { user, _ ->
-					if (user.activated) {
-						signInInfo = SignInInfo("", "")
-						clearSignUp()
-						Router.navigate("home")
-					} else Router.navigate("auth/activation")
-				}
+				Store.users.getCurrent(onError = onError,
+					onServerError = { onError(R.string.unknown_error) },
+					onSuccess = { user, _ ->
+						if (user.activated) {
+							signInInfo = SignInInfo("", "")
+							clearSignUp()
+							Router.navigate("home")
+						} else Router.navigate("auth/activation")
+					})
 			}
 		} catch (exception: Exception) {
 			logcat(exception = exception)
+			Store.applicationState.ShowServerErrorAlertDialog()
 			onError(R.string.unknown_error)
 		}
 	}

@@ -36,14 +36,23 @@ class Users : ViewModel() {
 	}
 
 	fun getCurrent(
-		onError: (error: Int) -> Unit, onSuccess: (data: User, ref: DocumentReference) -> Unit
+		onError: (error: Int) -> Unit, onSuccess: (data: User, ref: DocumentReference) -> Unit,
+		onServerError: () -> Unit,
 	) {
 		if (currentUser.value != null) {
-			onSuccess(currentUser.value!!, StoreDB.refOf(collection, currentUser.value!!.id))
-			return
+			return onSuccess(currentUser.value!!, StoreDB.refOf(collection, currentUser.value!!.id))
 		}
-		val user = auth.currentUser ?: return onError(R.string.unknown_error)
-		StoreDB.getOneById(collection, user.uid, onError) { data, ref ->
+		// the user isn't logged in
+		val user = auth.currentUser
+
+		if (user == null) {
+			Router.navigate("auth/sign-in");
+			return onError(R.string.unknown_error)
+		}
+		//
+		StoreDB.getOneById(collection, user!!.uid, onError = {
+			onServerError()
+		}) { data, ref ->
 			currentUser.value = User.fromMap(user.uid, data)
 			onSuccess(currentUser.value!!, ref)
 		}
@@ -52,7 +61,10 @@ class Users : ViewModel() {
 	fun getCurrentActivated(
 		onError: (error: Int) -> Unit, onSuccess: (data: User, ref: DocumentReference) -> Unit
 	) {
-		getCurrent(onError = { onError(R.string.unknown_error) }) { user, ref ->
+		getCurrent(onError = { onError(R.string.unknown_error) }, onServerError = {
+			Store.applicationState.ShowServerErrorAlertDialog()
+			onError(R.string.unknown_error)
+		}, onSuccess = { user, ref ->
 			run {
 				val userRef = realtimeDB.getReference("users/${user.id}/activated")
 				userRef.addValueEventListener(
@@ -62,14 +74,17 @@ class Users : ViewModel() {
 							if (isActivated != null && isActivated) onSuccess(user, ref)
 							else Router.navigate("auth/activation")
 						}
+
 						override fun onCancelled(error: DatabaseError) {
 							if (!user.activated) Router.navigate("auth/activation")
 							onSuccess(user, ref)
 						}
 					},
 				)
+			}.runCatching {
+				onSuccess(user, ref)
 			}
-		}
+		})
 	}
 
 	fun search(

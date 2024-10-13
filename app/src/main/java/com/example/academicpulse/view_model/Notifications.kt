@@ -20,73 +20,79 @@ class Notifications : ViewModel() {
 	val unReadNotificationsTotal = MutableStateFlow<Int>(0)
 	val userNotifications = MutableStateFlow(arrayListOf<Notification>())
 
-
 	fun getUserNotifications(
-		onSuccess: (ArrayList<Notification>) -> Unit, onError: (error: Int) -> Unit
+		onSuccess: (ArrayList<Notification>) -> Unit,
+		onError: (error: Int) -> Unit,
+		onServerError: () -> Unit
 	) {
 		// get the current user
-		Store.users.getCurrent(onError = { it -> onError(it) }, onSuccess = { user, ref ->
-			// Listen to all the changes inside this user's notifications
-			val userNotificationsRef = realtimeDB.getReference("/users/${user.id}/notifications")
-			userNotificationsRef.addValueEventListener(object : ValueEventListener {
-				override fun onDataChange(dataSnapshot: DataSnapshot) {
-					val userNotificationsList = ArrayList<Notification>()
-					// counter for notifications size
-					var counter: Int = dataSnapshot.children.count()
-					var unReadNotificationsCounter = 0
+		Store.users.getCurrent(onError = { onError(it) },
+			onServerError = { onServerError() },
+			onSuccess = { user, _ ->
+				run {
+					// Listen to all the changes inside this user's notifications
+					val userNotificationsRef = realtimeDB.getReference("/users/${user.id}/notifications")
+					userNotificationsRef.addValueEventListener(object : ValueEventListener {
+						override fun onDataChange(dataSnapshot: DataSnapshot) {
+							val userNotificationsList = ArrayList<Notification>()
+							// counter for notifications size
+							var counter: Int = dataSnapshot.children.count()
+							var unReadNotificationsCounter = 0
 
-					// Function to check if all asynchronous operations are complete
-					fun checkCompletion() {
-						if (counter == 0) {
-							retrievedNotification.value = true
-							userNotifications.value = userNotificationsList
-							unReadNotificationsTotal.value = unReadNotificationsCounter
-							logcat(unReadNotificationsTotal.value.toString())
-							onSuccess(userNotificationsList)
-						}
-					}
-					// iterate through the user notifications snapshot
-					for (notificationSnapshot in dataSnapshot.children) {
-						if (!notificationSnapshot.exists() || notificationSnapshot.key == null) {
-							counter--
-							checkCompletion()
-						} else {
-							// get each notifications
-							database.child("notifications").child("${notificationSnapshot.key}").get()
-								.addOnSuccessListener {
-									counter--
-									if (it.exists()) {
-										val notification = it.getValue<Notification>()
-										if (notification?.collection == "publication") {
-											notification.id = it.key!!
-											// boolean values are not casted propertly
-											val isRead =
-												notificationSnapshot.child("isRead").getValue(Boolean::class.java) ?: false
-											notification.isRead = isRead
-											if (!isRead) unReadNotificationsCounter++
-											notification.isAcceptance =
-												it.child("isAcceptance").getValue(Boolean::class.java) ?: false
-											// LAST IN FIRST OUT
-											// I don't wanna use a Stack
-											userNotificationsList.add(0, notification)
-										}
-									}
-									checkCompletion()
-								}.addOnFailureListener {
-									counter--
-									checkCompletion()
+							// Function to check if all asynchronous operations are complete
+							fun checkCompletion() {
+								if (counter == 0) {
+									retrievedNotification.value = true
+									userNotifications.value = userNotificationsList
+									unReadNotificationsTotal.value = unReadNotificationsCounter
+									onSuccess(userNotificationsList)
 								}
+							}
+							// iterate through the user notifications snapshot
+							for (notificationSnapshot in dataSnapshot.children) {
+								if (!notificationSnapshot.exists() || notificationSnapshot.key == null) {
+									counter--
+									checkCompletion()
+								} else {
+									// get each notifications
+									database.child("notifications").child("${notificationSnapshot.key}").get()
+										.addOnSuccessListener {
+											counter--
+											if (it.exists()) {
+												val notification = it.getValue<Notification>()
+												if (notification?.collection == "publication") {
+													notification.id = it.key!!
+													// boolean values are not casted propertly
+													val isRead =
+														notificationSnapshot.child("isRead").getValue(Boolean::class.java)
+															?: false
+													notification.isRead = isRead
+													if (!isRead) unReadNotificationsCounter++
+													notification.isAcceptance =
+														it.child("isAcceptance").getValue(Boolean::class.java) ?: false
+													// LAST IN FIRST OUT
+													// I don't wanna use a Stack
+													userNotificationsList.add(0, notification)
+												}
+											}
+											checkCompletion()
+										}.addOnFailureListener {
+											counter--
+											checkCompletion()
+										}
+								}
+							}
 						}
-					}
-				}
 
-				override fun onCancelled(error: DatabaseError) {
-					logcat(error.message)
-					onError(R.string.unknown_error)
+						override fun onCancelled(error: DatabaseError) {
+							logcat(error.message)
+							onError(R.string.unknown_error)
+						}
+					})
+				}.runCatching {
+					onServerError()
 				}
 			})
-
-		})
 	}
 
 	fun markNotificationAsRead(notificationId: String) {
