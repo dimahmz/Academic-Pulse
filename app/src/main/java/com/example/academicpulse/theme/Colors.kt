@@ -15,6 +15,8 @@ val borderColor = Color(0xFFC5C6CC)
 val textColor = Color(0xFF0B0B0B)
 val titleColor = Color(0xFF0B0B0B)
 val descriptionColor = Color(0xFF71727A)
+val unReadNotificationIcon = Color(0xFF90CDF4)
+val unReadNotificationIconBorder= Color(0xFF4299E1)
 
 val inputGray = Color(0xFFCCCCCC)
 

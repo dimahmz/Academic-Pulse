@@ -13,6 +13,18 @@
     <string name="modify">Modify</string>
     <string name="search">Search</string>
     <string name="cancel">Cancel</string>
+    <string name="server_error_title">Server Error</string>
+    <string name="server_error_description">A server error has occurred. Please try again later.</string>
+    <string name="document_not_found">Document not found.</string>
+    <string name="try_again">Try Again</string>
+    <string name="server_error_icon_desc">Server error icon</string>
+    <string name="publication_not_found">No publication found.</string>
+    <string name="close">Close</string>
+
+    <string name="no_publication_in_home">There is no publication</string>
+    <string name="no_publication_in_home_description">Our database or empty</string>
+    <string name="reload_button">Reload</string>
+
 
     <string name="sign_in">Log in</string>
     <string name="log_out">Log out</string>
@@ -89,4 +101,12 @@
     <string name="authors_length">You can only select a maximum of 6 authors.</string>
     <string name="view_file">View file</string>
     <string name="file_is_loading">File is loading</string>
+    <string name="no_publication">There is no publication</string>
+    <string name="no_publication_description">There is no publication of this type</string>
+
+    <string name="no_notifications">No notifications yet</string>
+    <string name="no_notifications_description">We will let you know when we have got something new for you.</string>
+    <string name="your_publication">Your publication</string>
+    <string name="publication_accepted">Has been accepted</string>
+    <string name="publication_rejected">Has been rejected</string>
 </resources>

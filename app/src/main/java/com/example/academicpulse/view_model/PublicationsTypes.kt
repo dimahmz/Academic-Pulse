@@ -13,11 +13,9 @@ class PublicationsTypes : ViewModel() {
 
 	fun getAll(onError: (error: Int) -> Unit, onSuccess: (List<PublicationType>) -> Unit) {
 		if (listCache != null) return onSuccess(listCache!!)
-		StoreDB.getMany(
-			collection,
-			onError = onError,
-			onCast = { id, data -> PublicationType.fromMap(id, data) }
-		) { list ->
+		StoreDB.getMany(collection, onError = {
+			onError(it)
+		}, onCast = { id, data -> PublicationType.fromMap(id, data) }) { list ->
 			listCache = list
 			onSuccess(list)
 		}

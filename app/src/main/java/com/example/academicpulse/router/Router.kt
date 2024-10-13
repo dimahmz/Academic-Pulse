@@ -10,7 +10,7 @@ import com.example.academicpulse.utils.useAtom
 import com.example.academicpulse.view_model.Store
 
 class Router private constructor(private var navController: NavHostController) {
-	private val startDestination = "auth/sign-in"
+	private val startDestination = "home"
 	private var route = MutableLiveData(startDestination)
 
 	// Note: Static variables and methods are used just to hold the global Router instance and be accessible in anywhere.

@@ -8,6 +8,7 @@ import com.example.academicpulse.model.User
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.forms.*
 import com.google.firebase.firestore.Filter
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class Publications : ViewModel() {
 	private val collection = "publication"
@@ -15,6 +16,9 @@ class Publications : ViewModel() {
 	private var cacheInvalid = true
 	private var cacheProfileInvalid = true
 	var selectedPublicationId = ""
+	val userPublications = MutableLiveData(arrayListOf<Publication>())
+	val userFilteredPublications = MutableStateFlow(arrayListOf<Publication>())
+	val isUserpublicationsFetched = MutableLiveData(false)
 	var redirectedFromForm = false
 	var redirectedFromProfile = false
 	val form = PublicationForm()
@@ -28,53 +32,52 @@ class Publications : ViewModel() {
 		}
 	}
 
-	fun search(query: String, onFinish: (ArrayList<Publication>) -> Unit) {
-		fun finish(fetchedPublications : ArrayList<Publication>) {
+	fun search(query: String, onFinish: (ArrayList<Publication>) -> Unit, onError: () -> Unit) {
+		fun finish(fetchedPublications: ArrayList<Publication>) {
 			val searchQuery = query.trim().lowercase()
 			onFinish(
-				ArrayList(fetchedPublications!!.filter {
-					(searchQuery.isBlank() || it.title.lowercase().contains(searchQuery))
-							&& it.status == "accepted"
+				ArrayList(fetchedPublications.filter {
+					(searchQuery.isBlank() || it.title.lowercase()
+						.contains(searchQuery)) && it.status == "accepted"
 				})
 			)
 		}
 
-		Store.publicationsTypes.getAll({ }) {
-			StoreDB.getMany<Publication>(
-				collection,
-				where = listOf(Filter.equalTo("status", "accepted")),
-				onAsyncCast = { id, data, resolve ->
-					Store.users.fetchAuthors(data) { list ->
-						resolve(Publication.fromMap(id, data, list))
-					}
-				},
-				onError = {  },
-				onSuccess = { result ->
-					finish(result)
+		StoreDB.getMany<Publication>(collection,
+			where = listOf(Filter.equalTo("status", "accepted")),
+			onAsyncCast = { id, data, resolve ->
+				Store.users.fetchAuthors(data) { list ->
+					resolve(Publication.fromMap(id, data, list))
 				}
-			)
-		}
+			},
+			onError = { Store.applicationState.ShowServerErrorAlertDialog(); onError(); },
+			onSuccess = { result ->
+				finish(result)
+			})
 	}
 
 	fun fetchUserPublications(onFinish: (ArrayList<Publication>) -> Unit) {
-
-		Store.publicationsTypes.getAll({  }) {
-			Store.users.getCurrent({}) { user, _ ->
-				StoreDB.getManyByIds<Publication>(
-					collection,
+		onFinish(userFilteredPublications.value)
+		Store.users.getCurrent(onError = { onFinish(userFilteredPublications.value) },
+			onServerError = { onFinish(userFilteredPublications.value) },
+			onSuccess = { user, _ ->
+				StoreDB.getManyByIds<Publication>(collection,
 					ids = user.publications,
 					onAsyncCast = { id, data, resolve ->
 						Store.users.fetchAuthors(data) { list ->
 							resolve(Publication.fromMap(id, data, list))
 						}
 					},
-					onError = {  },
+					onError = {
+						onFinish(userFilteredPublications.value)
+					},
 					onSuccess = { result ->
+						isUserpublicationsFetched.value = true
+						userPublications.value = result
+						userFilteredPublications.value = result
 						onFinish(result)
-					}
-				)
-			}
-		}
+					})
+			})
 	}
 
 	fun fetchSelected(onSuccess: (Publication) -> Unit, onError: (error: Int) -> Unit) {
@@ -101,31 +104,33 @@ class Publications : ViewModel() {
 
 	fun insert(publication: Publication, onError: (error: Int) -> Unit) {
 		// Get the current user ref because we need to update its publications list
-		Store.users.getCurrent(onError) { user, userRef ->
-			// Insert the publication and get its generated id
-			StoreDB.insert(collection, publication.toMap(), onError) { id ->
-				publication.id = id
-				// Insert the new publication id in the user publications then update it
-				val publications = ArrayList(user.publications)
-				publications.add(id)
-				StoreDB.updateOneByRef(
-					ref = userRef,
-					data = hashMapOf("publications" to publications),
-					onError = onError, // TODO : if this fails we should remove the publication
-				) {
-					// Upload the publication file IF EXISTS
-					Store.files.uploadFile(publication.file, id, onError) {
-						cacheList(listOf(publication))
-						user.publications.add(publication.id)
-						selectedPublicationId = id
-						redirectedFromForm = true
-						form.form.clearAll()
-						form.authors.value = arrayListOf()
-						Router.navigate("publications/one-publication")
+		Store.users.getCurrent(onError = onError,
+			onServerError = { onError(R.string.unknown_error) },
+			onSuccess = { user, userRef ->
+				// Insert the publication and get its generated id
+				StoreDB.insert(collection, publication.toMap(), onError) { id ->
+					publication.id = id
+					// Insert the new publication id in the user publications then update it
+					val publications = ArrayList(user.publications)
+					publications.add(id)
+					StoreDB.updateOneByRef(
+						ref = userRef,
+						data = hashMapOf("publications" to publications),
+						onError = onError, // TODO : if this fails we should remove the publication
+					) {
+						// Upload the publication file IF EXISTS
+						Store.files.uploadFile(publication.file, id, onError) {
+							cacheList(listOf(publication))
+							user.publications.add(publication.id)
+							selectedPublicationId = id
+							redirectedFromForm = true
+							form.form.clearAll()
+							form.authors.value = arrayListOf()
+							Router.navigate("publications/one-publication")
+						}
 					}
 				}
-			}
-		}
+			})
 	}
 
 	fun deleteSelected(onSuccess: () -> Unit, onError: (error: Int) -> Unit) {

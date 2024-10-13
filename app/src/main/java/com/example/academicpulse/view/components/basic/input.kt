@@ -32,6 +32,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.academicpulse.R
 import com.example.academicpulse.theme.inputGray
@@ -46,6 +47,8 @@ import com.example.academicpulse.utils.useState
 @Composable
 fun Input(
 	field: Field,
+
+	height: Dp = inputHeight,
 
 	renderedValue: String? = null,
 
@@ -158,7 +161,7 @@ fun Input(
 
 	val modified = Modifier
 		.fillMaxWidth()
-		.height(inputHeight)
+		.height(height)
 		.composed { interactModifier }
 		.composed { styleModifier }
 

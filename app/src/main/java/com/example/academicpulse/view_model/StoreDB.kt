@@ -27,20 +27,27 @@ class StoreDB private constructor() {
 		) {
 			try {
 				val ref = refOf(collection, id)
-				ref.get().addOnCompleteListener { doc ->
-					val data = doc.result.data
-					if (doc.isSuccessful && data != null) onSuccess(data, ref)
-					else if (data == null) {
-						logcat("Warning: Document with id {$id} is not found in the collection {$collection}")
-						onError(R.string.unknown_error)
+				ref.get().addOnCompleteListener { task ->
+					if (task.isSuccessful) {
+						val data = task.result.data
+						if (data != null) {
+							onSuccess(data, ref)
+						} else {
+							// Document not found
+							val message = "Document with id $id not found in collection $collection"
+							logcat(message)
+							onError(R.string.document_not_found) // Assuming you have a specific error for not found
+						}
 					} else {
-						val message = "Error getting document by id {$id} from the collection {$collection}"
-						logcat(message, doc.exception)
+						// Error while retrieving document
+						val message = "Error getting document by id $id from collection $collection"
+						logcat(message, task.exception)
 						onError(R.string.unknown_error)
 					}
 				}
 			} catch (exception: Exception) {
 				logcat(exception = exception)
+				Store.applicationState.ShowServerErrorAlertDialog()
 				onError(R.string.unknown_error)
 			}
 		}
@@ -54,32 +61,40 @@ class StoreDB private constructor() {
 			onSuccess: (list: ArrayList<T>) -> Unit
 		) {
 			try {
-				if (ids.isEmpty()) return onSuccess(arrayListOf())
+				// Immediately return an empty list if no IDs
+				if (ids.isEmpty()) {
+					onSuccess(arrayListOf())
+					return
+				}
 				val list = arrayListOf<T>()
-				val size = mutableIntStateOf(ids.size)
-				val errors = mutableIntStateOf(0)
+				var remaining = ids.size
+				var errors = 0
 
+				// Function to decrement the remaining counter and check if fetching is complete
 				fun countDown() {
-					size.intValue--
-					if (size.intValue == 0) {
-						if (errors.intValue != ids.size) onSuccess(list)
+					remaining--
+					if (remaining <= 0) {
+						if (errors != ids.size) onSuccess(list)
 						else onError(R.string.unknown_error)
 					}
 				}
-
+				// Iterate over each document ID to fetch the document from Firestore
 				ids.forEach { id ->
+					// Get a reference to the document and attempt to fetch it
 					refOf(collection, id).get().addOnCompleteListener { doc ->
 						if (doc.isSuccessful && doc.result.data != null) {
 							castDocument(doc.result, onCast, onAsyncCast, ::countDown) { list.add(it) }
 						} else {
+							// If the document does not exist or there is an error
 							if (doc.result.data == null) {
 								logcat("Warning: Document with id {$id} is not found in the collection {$collection}")
 							} else {
+								// Log an error if there was a problem retrieving the document
 								val message =
 									"Error getting document with id {$id} from the collection {$collection}"
-								errors.intValue = errors.intValue.plus(1)
+								// Increment the error count if the retrieval failed
+								errors++
 								logcat(message, doc.exception)
-								onError(R.string.unknown_error)
 							}
 							countDown()
 						}
@@ -111,12 +126,20 @@ class StoreDB private constructor() {
 						val list = arrayListOf<T>()
 						fun countDown() {
 							size.intValue--
-							if (size.intValue == 0) onSuccess(list)
+							if (size.intValue <= 0) {
+								onSuccess(list)
+							}
 						}
+						// there is no document
+						if (docs.result.isEmpty) onSuccess(list)
+						// iterate throughout the documents
 						docs.result.forEach { document ->
 							castDocument(document, onCast, onAsyncCast, ::countDown) { list.add(it) }
 						}
 					} else onError(R.string.unknown_error)
+				}.addOnFailureListener {
+					logcat("$it")
+					onError(R.string.unknown_error)
 				}
 			} catch (exception: Exception) {
 				logcat(exception = exception)

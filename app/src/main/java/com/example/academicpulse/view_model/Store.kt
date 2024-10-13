@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.academicpulse.router.Router
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -18,6 +19,8 @@ class Store private constructor() : ViewModel() {
 	private var publicationsTypes = PublicationsTypes()
 	private var users = Users()
 	private var files = Files()
+	private var notifications = Notifications()
+	private var applicationState = ApplicationState()
 
 	init {
 		onInit()
@@ -30,7 +33,12 @@ class Store private constructor() : ViewModel() {
 			viewModelScope.launch {
 				delay(600) // Wait for the navigation transition.
 				tasksCounter.value = tasksCounter.value?.minus(1)
-				if (tasksCounter.value == 0) isReady.value = true
+				if (tasksCounter.value == 0) {
+					isReady.value = true
+					Router.navigate("home")
+					// get the user notifications
+					Store.notifications.getUserNotifications({ }, { }, { })
+				}
 			}
 		}
 		// A default splash screen animation delay.
@@ -65,6 +73,10 @@ class Store private constructor() : ViewModel() {
 			get() = appStore[0].publicationsTypes
 		val files: Files
 			get() = appStore[0].files
+		val notifications: Notifications
+			get() = appStore[0].notifications
+		val applicationState: ApplicationState
+			get() = appStore[0].applicationState
 
 		fun clear(resetLoading: Boolean = true) {
 			if (appStore.isNotEmpty()) {
@@ -74,6 +86,8 @@ class Store private constructor() : ViewModel() {
 				appStore[0].publicationsTypes = PublicationsTypes()
 				appStore[0].users = Users()
 				appStore[0].files = Files()
+				appStore[0].notifications = Notifications()
+				appStore[0].applicationState = ApplicationState()
 			}
 		}
 
