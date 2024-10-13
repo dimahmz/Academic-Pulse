@@ -15,7 +15,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.academicpulse.theme.AppTheme
 import com.example.academicpulse.router.Router
 import com.example.academicpulse.utils.context
-import com.example.academicpulse.utils.logcat
 import com.example.academicpulse.view.components.global.ServerErrorAlertDialog
 import com.example.academicpulse.view_model.Store
 import com.google.firebase.Firebase
