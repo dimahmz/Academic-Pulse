@@ -1,6 +1,6 @@
-# AcademicPulse
+# Academic Pulse
 
-**AcademicPulse** is an open-source Android application tailored for scientists, clinicians, students, engineers, public health workers, lab technicians, and computer scientists. This app aims to provide an all-encompassing platform for academic and professional needs.
+**Academic Pulse** is an open-source Android application tailored for academic researches to share their scientific publications.
 
 ## Overview
 
@@ -19,10 +19,50 @@
 ### Prerequisites
 - [Android Studio](https://developer.android.com/studio)
 - [Kotlin](https://kotlinlang.org/)
-- [Firebase Account](https://firebase.google.com/)
+- [Firebase Project](https://console.firebase.google.com)
 
 ### Installation
 
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/yourusername/AcademicPulse.git
+
+2. **Open the project in Android Studio.**
+
+3. **Configure Firebase:**
+   - Add the google-services.json file from your Firebase project
+   - It should be exactly in this location ./academicpulse/app/google-services.json  
+   - Follow this guide  [Add Firebase to your Android project](https://firebase.google.com/docs/android/setup)
+
+4. **Build and Run:**
+   - Build the project and run it on an emulator or physical device
+
+### Documentation
+
+[Kotlin documentation](https://kotlinlang.org/)
+
+[Jetpack Compose documentation](https://developer.android.com/compose)
+
+[Firebase documentation For Android](https://firebase.google.com/docs/android/setup)
+
+[Firebase Console](https://console.firebase.google.com)
+
+
+### Contribution
+
+1. Fork the repository.
+
+2. Create a new branch (git checkout -b feature-branch).
+
+3. Commit your changes (git commit -m 'Add some feature').
+
+4. Push to the branch (git push origin feature-branch).
+
+5. Open a pull request.
+
+
+### License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+
