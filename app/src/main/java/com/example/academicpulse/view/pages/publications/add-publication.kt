@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -84,61 +85,63 @@ fun AddPublicationPage() {
 		return
 	}
 
-	Column(
+	LazyColumn(
 		modifier = Modifier
 			.fillMaxHeight()
 			.padding(horizontal = pagePaddingX),
 	) {
-		Header(title = R.string.add_research, onClick = back)
-		Spacer(Modifier.height(14.dp))
+		item {
 
-		Column(verticalArrangement = Arrangement.spacedBy(gap)) {
-			Select(
-				field = form.type,
-				label = R.string.type,
-				items = types,
-				getValue = { it.id },
-				getLabel = { it.label },
-				icon = R.drawable.icon_down_arrow
-			)
-			Input(
-				field = form.title, label = R.string.title, focusNext = form.abstract, height = 50.dp
-			)
-			Input(
-				field = form.abstract, label = R.string._abstract, focusNext = form.doi, height = 140.dp
-			)
-			FilePicker(
-				field = form.file,
-				label = R.string.pdf_file,
-				mimeTypes = arrayOf("application/pdf"),
-				defaultFileName = "Article",
-			)
-			Input(
-				field = form.doi,
-				label = R.string.doi,
-				focusNext = form.date,
-			)
-			DatePicker(field = form.date, label = R.string.date)
-			Column {
-				Row(modifier = Modifier.padding(bottom = inputLabelGap)) {
-					Text(text = R.string.authors)
-					Spacer(Modifier.width(inputLabelGap))
-					if (loading) Text(text = "(${stringResource(R.string.modify)})", underlined = true)
-					else Text(text = "(${stringResource(R.string.modify)})", underlined = true) {
-						Router.navigate("publications/select-authors")
+			Header(title = R.string.add_research, onClick = back)
+			Spacer(Modifier.height(14.dp))
+
+			Column(verticalArrangement = Arrangement.spacedBy(gap)) {
+				Select(
+					field = form.type,
+					label = R.string.type,
+					items = types,
+					getValue = { it.id },
+					getLabel = { it.label },
+					icon = R.drawable.icon_down_arrow
+				)
+				Input(
+					field = form.title, label = R.string.title, focusNext = form.abstract, height = 50.dp
+				)
+				Input(
+					field = form.abstract, label = R.string._abstract, focusNext = form.doi, height = 140.dp
+				)
+				FilePicker(
+					field = form.file,
+					label = R.string.pdf_file,
+					mimeTypes = arrayOf("application/pdf"),
+					defaultFileName = "Article",
+				)
+				Input(
+					field = form.doi,
+					label = R.string.doi,
+					focusNext = form.date,
+				)
+				DatePicker(field = form.date, label = R.string.date)
+				Column {
+					Row(modifier = Modifier.padding(bottom = inputLabelGap)) {
+						Text(text = R.string.authors)
+						Spacer(Modifier.width(inputLabelGap))
+						if (loading) Text(text = "(${stringResource(R.string.modify)})", underlined = true)
+						else Text(text = "(${stringResource(R.string.modify)})", underlined = true) {
+							Router.navigate("publications/select-authors")
+						}
 					}
+					AuthorsRow(authors = authors, appendCurrentUser = true)
 				}
-				AuthorsRow(authors = authors, appendCurrentUser = true)
 			}
+
+			Spacer(Modifier.height((8 + gap.value).dp))
+			form.form.Error()
+			Spacer(Modifier.height(8.dp))
+			Button(
+				text = R.string.add_research, loading = loading, onClick = ::addPublication
+			)
+			Spacer(Modifier.height(20.dp))
 		}
-
-		Spacer(Modifier.height((8 + gap.value).dp))
-		form.form.Error()
-		Spacer(Modifier.height(8.dp))
-		Button(
-			text = R.string.add_research, loading = loading, onClick = ::addPublication
-		)
 	}
-
-	BackHandler(onBack = back)
 }
