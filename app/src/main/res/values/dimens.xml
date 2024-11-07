@@ -1,2 +1,5 @@
 <resources>
+    <dimen name="header_font_size">16dp</dimen>
+    <dimen name="parag_font_size">14dp</dimen>
+    <dimen name="text_font_size">12dp</dimen>
 </resources>

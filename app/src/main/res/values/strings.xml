@@ -1,6 +1,112 @@
 <resources>
-    <string name="app_name">Academic Pulse</string>
-    <string name="title_home">Home</string>
-    <string name="title_inbox">Inbox</string>
-    <string name="title_profile">Profile</string>
+    <string name="app_name" translatable="false">Academic Pulse</string>
+    <string name="home">Home</string>
+    <string name="notification">Notification</string>
+    <string name="profile">Profile</string>
+
+    <string name="unknown_error">An error has occurred, please try again later!</string>
+    <string name="success_fetch">Successfully fetched the data</string>
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="continued">Continue</string>
+    <string name="no_data">Nothing here yet</string>
+    <string name="modify">Modify</string>
+    <string name="search">Search</string>
+    <string name="cancel">Cancel</string>
+    <string name="server_error_title">Server Error</string>
+    <string name="server_error_description">A server error has occurred. Please try again later.</string>
+    <string name="document_not_found">Document not found.</string>
+    <string name="try_again">Try Again</string>
+    <string name="server_error_icon_desc">Server error icon</string>
+    <string name="publication_not_found">No publication found.</string>
+    <string name="close">Close</string>
+
+    <string name="no_publication_in_home">There is no publication</string>
+    <string name="no_publication_in_home_description">Our database or empty</string>
+    <string name="reload_button">Reload</string>
+
+
+    <string name="sign_in">Log in</string>
+    <string name="log_out">Log out</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="welcome">Welcome!</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="new_member">Not a member ?</string>
+    <string name="register_now">Register now</string>
+    <string name="institution_info">Show where you conduct research</string>
+    <string name="institution_info_description">Enter your institution details to quickly find your colleagues and keep up with their research.</string>
+    <string name="institution">Institution</string>
+    <string name="department">Department</string>
+    <string name="position">Position</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="institution_email">Your institution email</string>
+    <string name="create_password">Create a password</string>
+    <string name="verify_email">Waiting for Email Verification</string>
+    <string name="verify_email_description">We have sent you and email that contains a verification link</string>
+    <string name="back_sign_in">Back to Login</string>
+    <string name="account_activation">Waiting for Account Activation</string>
+    <string name="account_activation_description">We have received your information. You will be able to use the app until we activate your account.</string>
+
+    <string name="email_required">The email is required.</string>
+    <string name="email_invalid">The email is invalid.</string>
+    <string name="password_required">The password is required.</string>
+    <string name="password_invalid">The password is invalid.</string>
+    <string name="password_not_strong">Register now</string>
+    <string name="institution_required">The institution is required.</string>
+    <string name="department_required">The department is required.</string>
+    <string name="position_required">The position is required.</string>
+    <string name="first_name_required">The first name is required.</string>
+    <string name="first_name_invalid">The first name is invalid.</string>
+    <string name="last_name_required">The last name is required.</string>
+    <string name="last_name_invalid">The last name is invalid.</string>
+    <string name="verify_email_first">Must verify email before Login!</string>
+    <string name="invalid_credentials">Email or Password is invalid</string>
+
+    <string name="edit_profile">Edit profile</string>
+    <string name="settings">Settings</string>
+    <string name="about">About</string>
+    <string name="about_description_1">AcademicPulse is for you: the scientist, the clinician, the student, the  engineer, the public health worker, the lab technician, the computer  scientist.",</string>
+    <string name="about_description_2">The work you do is important. But too often, you are  overworked, underpaid, have low job security, and operate under high  pressure. Becoming a researcher in the first place was no easy task, and  access all too often relies on privilege. Our purpose is to make your  life easier.",</string>
+    <string name="about_description_3">We offer a home for you—a place to share your work  and connect with peers around the globe, traversing the borders and  silos of science. We want to empower you to do your best work, advance  your field, and make a better world for all.",</string>
+    <string name="about_description_4">For the  intellectually curious, the seekers of truth, the geeks, the makers: our  members offer you a treasure trove of knowledge in areas as diverse as  materials science, agriculture, human health, and quantum physics.",</string>
+
+    <string name="delete_message">Confirm deletion</string>
+    <string name="delete_confirm">Delete</string>
+    <string name="delete_title">Delete Item</string>
+
+    <string name="pending_status">Pending</string>
+    <string name="accepted_status">Accepted</string>
+    <string name="rejected_status">Rejected</string>
+
+    <string name="add_research">Add research</string>
+    <string name="publication">Publication</string>
+    <string name="type">Type</string>
+    <string name="title">Title</string>
+    <string name="_abstract">Abstract</string>
+    <string name="doi">DOI</string>
+    <string name="pdf_file">File</string>
+    <string name="select_file">Select file</string>
+    <string name="date">Date</string>
+    <string name="date_placeholder">dd/mm/yyyy</string>
+    <string name="authors">Authors</string>
+    <string name="uploads">Uploads</string>
+    <string name="reads">Reads</string>
+    <string name="type_required">The type is required.</string>
+    <string name="title_required">The title is required.</string>
+    <string name="abstract_required">The abstract is required.</string>
+    <string name="date_required">The date is required.</string>
+    <string name="authors_length">You can only select a maximum of 6 authors.</string>
+    <string name="view_file">View file</string>
+    <string name="file_is_loading">File is loading</string>
+    <string name="no_publication">There is no publication</string>
+    <string name="no_publication_description">There is no publication of this type</string>
+
+    <string name="no_notifications">No notifications yet</string>
+    <string name="no_notifications_description">We will let you know when we have got something new for you.</string>
+    <string name="your_publication">Your publication</string>
+    <string name="publication_accepted">Has been accepted</string>
+    <string name="publication_rejected">Has been rejected</string>
 </resources>
