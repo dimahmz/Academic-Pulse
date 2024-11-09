@@ -21,19 +21,10 @@ class Users : ViewModel() {
 	private val collection = "user"
 	private val auth = Firebase.auth
 	private val realtimeDB = Firebase.database
-	private var listCache: ArrayList<User>? = null
 	private var cacheInvalid = true
 	private val currentUser = MutableLiveData<User>()
 	val current: LiveData<User> = currentUser
 
-	private fun cacheList(list: ArrayList<User>) {
-		if (listCache == null) listCache = ArrayList(list)
-		else list.forEach {
-			val index = listCache!!.indexOfFirst { o -> o.id == it.id }
-			if (index == -1) listCache!!.add(it)
-			else listCache!![index] = it
-		}
-	}
 
 	fun getCurrent(
 		onError: (error: Int) -> Unit, onSuccess: (data: User, ref: DocumentReference) -> Unit,
@@ -49,15 +40,13 @@ class Users : ViewModel() {
 			Router.navigate("auth/sign-in");
 			return onError(R.string.unknown_error)
 		}
-		//
 		StoreDB.getOneById(collection, user!!.uid, onError = {
 			onServerError()
 		}) { data, ref ->
-			currentUser.value = User.fromMap(user.uid, data)
+			currentUser.value = User.fromMap(user, data)
 			onSuccess(currentUser.value!!, ref)
 		}
 	}
-
 	fun getCurrentActivated(
 		onError: (error: Int) -> Unit, onSuccess: (data: User, ref: DocumentReference) -> Unit
 	) {
@@ -93,11 +82,10 @@ class Users : ViewModel() {
 		val selected = ArrayList<String>(selectedList.map { it.id })
 		selected.add(current.value!!.id)
 
-		fun finish() {
-			if (listCache == null) return onFinish(arrayListOf())
+		fun finish(users :ArrayList<User>) {
 			val searchQuery = query.trim().lowercase()
 			onFinish(
-				ArrayList(listCache!!.filter {
+				ArrayList(users!!.filter {
 					if (!it.activated || selected.contains(it.id)) false
 					else if (searchQuery.isBlank()) true
 					else if (("${it.firstName} ${it.lastName}").lowercase().contains(searchQuery)) true
@@ -105,17 +93,14 @@ class Users : ViewModel() {
 				})
 			)
 		}
-
-		if (listCache != null && !cacheInvalid) return finish()
 		StoreDB.getMany(
 			collection,
 			where = listOf(Filter.equalTo("activated", true)),
 			onCast = { id, data -> User.fromMap(id, data) },
-			onError = { finish() },
+			onError = { finish(arrayListOf()) },
 		) { result ->
 			cacheInvalid = false
-			cacheList(result)
-			finish()
+			finish(result)
 		}
 	}
 
@@ -124,21 +109,17 @@ class Users : ViewModel() {
 		onFinish: (List<User>) -> Unit,
 	) {
 		val ids = useCast(publicationData, "authors", listOf<String>())
-		fun finish() {
-			if (listCache == null) return onFinish(arrayListOf())
-			onFinish(listCache!!.filter { it.activated && ids.contains(it.id) })
+		fun finish(authors : List<User>) {
+			onFinish(authors!!.filter { it.activated && ids.contains(it.id) })
 		}
-
-		if (listCache != null) return finish()
 		cacheInvalid = true
 		StoreDB.getManyByIds(
 			collection,
 			ids = ids,
 			onCast = { id, data -> User.fromMap(id, data) },
-			onError = { finish() },
+			onError = { finish(listOf()) },
 		) { list ->
-			cacheList(list)
-			finish()
+			finish(list)
 		}
 	}
 }
