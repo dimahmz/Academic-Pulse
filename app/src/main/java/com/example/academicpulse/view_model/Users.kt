@@ -1,14 +1,17 @@
 package com.example.academicpulse.view_model
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.academicpulse.R
 import com.example.academicpulse.model.User
 import com.example.academicpulse.router.Router
+import com.example.academicpulse.utils.logcat
 import com.example.academicpulse.utils.useCast
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -16,24 +19,17 @@ import com.google.firebase.database.database
 import com.google.firebase.database.getValue
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.Filter
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.storageMetadata
+import kotlinx.coroutines.tasks.await
 
 class Users : ViewModel() {
 	private val collection = "user"
 	private val auth = Firebase.auth
 	private val realtimeDB = Firebase.database
-	private var listCache: ArrayList<User>? = null
 	private var cacheInvalid = true
 	private val currentUser = MutableLiveData<User>()
 	val current: LiveData<User> = currentUser
-
-	private fun cacheList(list: ArrayList<User>) {
-		if (listCache == null) listCache = ArrayList(list)
-		else list.forEach {
-			val index = listCache!!.indexOfFirst { o -> o.id == it.id }
-			if (index == -1) listCache!!.add(it)
-			else listCache!![index] = it
-		}
-	}
 
 	fun getCurrent(
 		onError: (error: Int) -> Unit, onSuccess: (data: User, ref: DocumentReference) -> Unit,
@@ -46,15 +42,45 @@ class Users : ViewModel() {
 		val user = auth.currentUser
 
 		if (user == null) {
-			Router.navigate("auth/sign-in");
+			Router.navigate("auth/sign-in")
 			return onError(R.string.unknown_error)
 		}
-		//
-		StoreDB.getOneById(collection, user!!.uid, onError = {
+		StoreDB.getOneById(collection, user.uid, onError = {
 			onServerError()
 		}) { data, ref ->
-			currentUser.value = User.fromMap(user.uid, data)
+			currentUser.value = User.fromMap(user, data)
 			onSuccess(currentUser.value!!, ref)
+		}
+	}
+
+	suspend fun changeProfilePicture(uri: Uri) {
+		val metadata = storageMetadata {
+			contentType = "image/jpeg"
+		}
+		val filepath = "profile_images/${currentUser.value?.id}"
+		val storageRef = FirebaseStorage.getInstance().reference
+		val profileImagesRef = storageRef.child(filepath)
+
+		try {
+			// add the file
+			profileImagesRef.putFile(uri, metadata).await()
+			val downloadUrl = profileImagesRef.downloadUrl.await()
+			// update the user profile
+			val profileUpdates = userProfileChangeRequest {
+				photoUri = downloadUrl
+			}
+			auth.currentUser!!.updateProfile(profileUpdates).addOnCompleteListener { task ->
+				// user profile wasn't updated
+				if (!task.isSuccessful) {
+					Store.applicationState.ShowServerErrorAlertDialog()
+					logcat("error : photoUri didn't updated")
+					return@addOnCompleteListener
+				}
+			}
+		} catch (e: Exception) {
+			// photo wasn't downloaded
+			Store.applicationState.ShowServerErrorAlertDialog()
+			logcat("Error uploading profile picture", e)
 		}
 	}
 
@@ -93,11 +119,10 @@ class Users : ViewModel() {
 		val selected = ArrayList<String>(selectedList.map { it.id })
 		selected.add(current.value!!.id)
 
-		fun finish() {
-			if (listCache == null) return onFinish(arrayListOf())
+		fun finish(users: ArrayList<User>) {
 			val searchQuery = query.trim().lowercase()
 			onFinish(
-				ArrayList(listCache!!.filter {
+				ArrayList(users.filter {
 					if (!it.activated || selected.contains(it.id)) false
 					else if (searchQuery.isBlank()) true
 					else if (("${it.firstName} ${it.lastName}").lowercase().contains(searchQuery)) true
@@ -105,17 +130,14 @@ class Users : ViewModel() {
 				})
 			)
 		}
-
-		if (listCache != null && !cacheInvalid) return finish()
 		StoreDB.getMany(
 			collection,
 			where = listOf(Filter.equalTo("activated", true)),
 			onCast = { id, data -> User.fromMap(id, data) },
-			onError = { finish() },
+			onError = { finish(arrayListOf()) },
 		) { result ->
 			cacheInvalid = false
-			cacheList(result)
-			finish()
+			finish(result)
 		}
 	}
 
@@ -124,21 +146,17 @@ class Users : ViewModel() {
 		onFinish: (List<User>) -> Unit,
 	) {
 		val ids = useCast(publicationData, "authors", listOf<String>())
-		fun finish() {
-			if (listCache == null) return onFinish(arrayListOf())
-			onFinish(listCache!!.filter { it.activated && ids.contains(it.id) })
+		fun finish(authors: List<User>) {
+			onFinish(authors.filter { it.activated && ids.contains(it.id) })
 		}
-
-		if (listCache != null) return finish()
 		cacheInvalid = true
 		StoreDB.getManyByIds(
 			collection,
 			ids = ids,
 			onCast = { id, data -> User.fromMap(id, data) },
-			onError = { finish() },
+			onError = { finish(listOf()) },
 		) { list ->
-			cacheList(list)
-			finish()
+			finish(list)
 		}
 	}
 }

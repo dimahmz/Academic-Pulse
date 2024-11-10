@@ -1,7 +1,9 @@
 package com.example.academicpulse.model
 
+import android.net.Uri
 import com.example.academicpulse.utils.useCast
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseUser
 import java.util.Date
 
 data class User(
@@ -15,6 +17,7 @@ data class User(
 	var activated: Boolean = false,
 	var publications: ArrayList<String> = arrayListOf(),
 	val createdAt: Timestamp = Timestamp(Date()),
+	var photoUrl: Uri? = null
 ) {
 	val institutionSkipped: Boolean
 		get() = institution.isBlank()
@@ -37,6 +40,24 @@ data class User(
 			val institution = useCast(map, "institution", "")
 			return User(
 				id = id,
+				firstName = useCast(map, "firstName", ""),
+				lastName = useCast(map, "lastName", ""),
+				department = useCast(map, "department", ""),
+				position = useCast(map, "position", ""),
+				institution = institution,
+				email = useCast(map, "email", ""),
+				activated = useCast(map, "activated", false),
+				publications = useCast(map, "publications", arrayListOf()),
+				createdAt = useCast(map, "createdAt", Timestamp(Date())),
+				photoUrl = null
+			)
+		}
+
+		fun fromMap(user: FirebaseUser, map: Map<String, Any?>?): User {
+			val institution = useCast(map, "institution", "")
+			return User(
+				id = user.uid,
+				photoUrl = user.photoUrl,
 				firstName = useCast(map, "firstName", ""),
 				lastName = useCast(map, "lastName", ""),
 				department = useCast(map, "department", ""),
