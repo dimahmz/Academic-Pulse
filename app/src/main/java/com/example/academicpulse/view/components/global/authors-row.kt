@@ -6,12 +6,17 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.example.academicpulse.R
 import com.example.academicpulse.model.User
 import com.example.academicpulse.router.Router
@@ -47,17 +52,27 @@ fun AuthorsRow(
 	) {
 		list.forEach { author ->
 			var modifier: Modifier = Modifier
-			if (showProfileOnClick)
-				modifier = modifier.clickable {
-					if (!isProfilePage && author.id == Store.users.current.value!!.id) Router.navigate("profile")
-					else logcat("User click: Show another user profile by id {${author.id}}")
-				}
+			if (showProfileOnClick) modifier = modifier.clickable {
+				if (!isProfilePage && author.id == Store.users.current.value!!.id) Router.navigate("profile")
+				else logcat("User click: Show another user profile by id {${author.id}}")
+			}
 			Row(
 				modifier = modifier,
 				horizontalArrangement = Arrangement.spacedBy((gap.value / 3).dp),
 				verticalAlignment = Alignment.CenterVertically,
 			) {
-				Image(id = R.drawable.avatar_user, size = 18.dp)
+				if (author.photoUrl.toString().isEmpty()) {
+					Image(id = R.drawable.avatar_user, size = 18.dp)
+				} else {
+					AsyncImage(
+						model = author.photoUrl,
+						contentDescription = null,
+						modifier = Modifier
+							.size(18.dp)
+							.clip(CircleShape),
+						contentScale = ContentScale.Crop
+					)
+				}
 				Text(text = "${author.firstName} ${author.lastName}")
 				if (onRemoveItem != null && author.id != Store.users.current.value!!.id) {
 					Icon(id = R.drawable.icon_close, color = Color.Black.copy(alpha = 0.6f)) {

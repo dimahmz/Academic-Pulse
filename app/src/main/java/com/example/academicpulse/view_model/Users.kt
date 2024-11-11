@@ -22,9 +22,12 @@ import com.google.firebase.firestore.Filter
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.storageMetadata
 import kotlinx.coroutines.tasks.await
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.firestore
 
 class Users : ViewModel() {
 	private val collection = "user"
+	val db = Firebase.firestore
 	private val auth = Firebase.auth
 	private val realtimeDB = Firebase.database
 	private var cacheInvalid = true
@@ -57,7 +60,12 @@ class Users : ViewModel() {
 		val metadata = storageMetadata {
 			contentType = "image/jpeg"
 		}
-		val filepath = "profile_images/${currentUser.value?.id}"
+		if (currentUser.value == null) {
+			Store.applicationState.ShowServerErrorAlertDialog()
+			return
+		}
+		val uid = currentUser.value!!.id
+		val filepath = "profile_images/${uid}"
 		val storageRef = FirebaseStorage.getInstance().reference
 		val profileImagesRef = storageRef.child(filepath)
 
@@ -76,6 +84,15 @@ class Users : ViewModel() {
 					logcat("error : photoUri didn't updated")
 					return@addOnCompleteListener
 				}
+
+				// Update the photoUrl field
+				val data = hashMapOf("photoUrl" to downloadUrl)
+				// TODO :
+				//  what if an error has occurred
+				db.collection("user").document(uid).set(data, SetOptions.merge()).addOnFailureListener() {
+					logcat("error adding the photo :", it)
+				}
+
 			}
 		} catch (e: Exception) {
 			// photo wasn't downloaded

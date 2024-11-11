@@ -94,7 +94,6 @@ fun UserCard() {
 				Image(id = R.drawable.avatar_user, size = 80.dp) {
 					pickImageLauncher.launch(arrayOf("image/*"))
 				}
-				return@Box
 			} else {
 				// render the user image
 				AsyncImage(

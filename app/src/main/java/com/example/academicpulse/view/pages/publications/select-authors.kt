@@ -11,14 +11,19 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.example.academicpulse.R
 import com.example.academicpulse.model.User
 import com.example.academicpulse.router.Router
@@ -69,9 +74,7 @@ fun SelectAuthorsPage() {
 
 	fun addUser(it: User) {
 		if (selectedList.size >= 5) {
-			Toast
-				.makeText(context, R.string.authors_length, Toast.LENGTH_LONG)
-				.show()
+			Toast.makeText(context, R.string.authors_length, Toast.LENGTH_LONG).show()
 		} else {
 			val array2 = ArrayList<User>((list).toMutableList())
 			array2.remove(it)
@@ -94,9 +97,7 @@ fun SelectAuthorsPage() {
 			contentAlignment = Alignment.CenterStart
 		) {
 			H3(
-				text = R.string.authors,
-				modifier = Modifier.fillMaxWidth(),
-				align = TextAlign.Center
+				text = R.string.authors, modifier = Modifier.fillMaxWidth(), align = TextAlign.Center
 			)
 
 			Row(Modifier.fillMaxWidth()) {
@@ -127,9 +128,19 @@ fun SelectAuthorsPage() {
 					Row(
 						Modifier
 							.fillMaxWidth()
-							.clickable { addUser(it) }
-					) {
-						Image(id = R.drawable.avatar_user, size = 18.dp)
+							.clickable { addUser(it) }) {
+						if (it.photoUrl.toString().isEmpty()) {
+							Image(id = R.drawable.avatar_user, size = 18.dp)
+						} else {
+							AsyncImage(
+								model = it.photoUrl,
+								contentDescription = null,
+								modifier = Modifier
+									.size(18.dp)
+									.clip(CircleShape),
+								contentScale = ContentScale.Crop
+							)
+						}
 						Text(text = "${it.firstName} ${it.lastName}")
 					}
 					Spacer(Modifier.height(7.dp))

@@ -49,7 +49,7 @@ data class User(
 				activated = useCast(map, "activated", false),
 				publications = useCast(map, "publications", arrayListOf()),
 				createdAt = useCast(map, "createdAt", Timestamp(Date())),
-				photoUrl = null
+				photoUrl = Uri.parse(map?.get("photoUrl").toString())
 			)
 		}
 
